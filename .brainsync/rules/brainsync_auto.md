@@ -1,7 +1,7 @@
 
 
 # Project Memory — UM_Authority-Check-Analyzer
-> 21 notes | Score threshold: >40
+> 25 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -18,8 +18,17 @@
 
 **Stack:** Unknown stack
 
+## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Active: `.`
+
+- **🟢 Edited UM_Authority-Check-Analyzer.html (18 changes, 2min) — confirmed 3x**
+- **convention in .gitignore**
+- **🟢 Edited UM_Authority-Check-Analyzer.html (13 changes, 4min)**
+- **🟢 Edited UM_Authority-Check-Analyzer.html (5 changes, 1min)**
+- **what-changed in UM_Authority-Check-Analyzer.html**
+
 ## Project Standards
 
+- 🟢 Edited UM_Authority-Check-Analyzer.html (18 changes, 2min) — confirmed 3x
 - convention in .gitignore
 - Version your API from day 1 (/api/v1/)
 - Use consistent response format across all endpoints
@@ -27,7 +36,6 @@
 - Handle timezone correctly — store UTC, display in user's timezone
 - Make layouts responsive from the start — mobile-first approach
 - Disable submit button during form submission — prevent double-submit
-- Always add empty states ("No items yet" with call-to-action)
 
 ## Verified Best Practices
 

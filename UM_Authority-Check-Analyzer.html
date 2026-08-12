@@ -286,7 +286,7 @@ select.fc{cursor:pointer;}
 <div class="scanlines" aria-hidden="true"></div>
 
 <!-- LOGIN OVERLAY -->
-<dialog id="loginOverlay" open aria-label="IBM Enterprise Sign In">
+<div id="loginOverlay" role="dialog" aria-modal="true" aria-label="IBM Enterprise Sign In">
   <div class="lp">
     <div class="l-top">
       <div class="l-chakra">
@@ -319,7 +319,7 @@ select.fc{cursor:pointer;}
       <span style="margin-top:4px;display:block;">Support: <a href="mailto:sap-security@ibm.com" style="color:var(--ibm-blue-40);">sap-security@ibm.com</a></span>
     </div>
   </div>
-</dialog>
+</div>
 
 <!-- APP SHELL -->
 <div class="app-shell" id="appShell" style="display:none;" role="application">
@@ -1155,26 +1155,663 @@ select.fc{cursor:pointer;}
 </div><!-- END APP SHELL -->
 
 <script>
-  function showView(viewId) {
-    var views = document.querySelectorAll('.view');
-    views.forEach(function(v) { v.classList.remove('active'); });
-    var target = document.getElementById('view-' + viewId);
-    if (target) { target.classList.add('active'); }
+// ═══════════════════════════════════════════════════════
+//  SESSION STATE
+// ═══════════════════════════════════════════════════════
+var SESSION = {
+  user: '', email: '', loginTime: null,
+  scansRun: 0, findingsGen: 0,
+  auditTrail: [], findings: [],
+  scanHistory: []
+};
 
-    var navItems = document.querySelectorAll('.nav-item');
-    navItems.forEach(function(btn) {
-      var isCurrent = btn.dataset.view === viewId;
-      btn.classList.toggle('active', isCurrent);
-      if (isCurrent) {
-        btn.setAttribute('aria-current', 'page');
-      } else {
-        btn.removeAttribute('aria-current');
-      }
-    });
+// ═══════════════════════════════════════════════════════
+//  LOGIN / AUTH
+// ═══════════════════════════════════════════════════════
+function handleSSO() {
+  var btn = document.getElementById('ssoBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Authenticating…';
+  setTimeout(function() {
+    completeLogin('IBM SSO User', 'user@ibm.com');
+  }, 1400);
+}
+
+function handleEmailLogin() {
+  var email = document.getElementById('loginEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    alert('Please enter a valid IBM corporate email address.');
+    return;
   }
+  var name = email.split('@')[0].replace('.', ' ').replace(/\b\w/g, function(c){ return c.toUpperCase(); });
+  completeLogin(name, email);
+}
 
-  document.querySelector('.sidebar').addEventListener('click', function(event) {
-    var btn = event.target.closest('button[data-view]');
-    if (btn) { showView(btn.dataset.view); }
+function completeLogin(name, email) {
+  SESSION.user = name;
+  SESSION.email = email;
+  SESSION.loginTime = new Date();
+  // update UI
+  document.getElementById('uName').textContent = name;
+  var initials = name.split(' ').map(function(p){ return p[0]; }).join('').substring(0,2).toUpperCase();
+  document.getElementById('uAvatar').textContent = initials;
+  document.getElementById('adminUser').textContent = name + ' (' + email + ')';
+  document.getElementById('adminLoginTime').textContent = SESSION.loginTime.toLocaleString();
+  document.getElementById('adminSession').textContent = 'UMA-' + Math.random().toString(36).substring(2,10).toUpperCase();
+  // hide login, show app
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('appShell').style.display = '';
+  addAuditEvent('LOGIN', name, '—', '—', 'Session started');
+  startClock();
+}
+
+function doSignOut() {
+  if (!confirm('Sign out of UM_Authority-Check-Analyzer?')) return;
+  addAuditEvent('LOGOUT', SESSION.user, '—', '—', 'Session ended');
+  SESSION = { user:'', email:'', loginTime:null, scansRun:0, findingsGen:0, auditTrail:[], findings:[], scanHistory:[] };
+  document.getElementById('appShell').style.display = 'none';
+  document.getElementById('loginOverlay').style.display = '';
+  document.getElementById('loginEmail').value = '';
+  var btn = document.getElementById('ssoBtn');
+  btn.disabled = false;
+  btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Sign in with IBM';
+}
+
+// ═══════════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════════
+function showView(viewId) {
+  document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
+  var target = document.getElementById('view-' + viewId);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(function(btn){
+    var cur = btn.dataset.view === viewId;
+    btn.classList.toggle('active', cur);
+    if (cur) btn.setAttribute('aria-current','page');
+    else btn.removeAttribute('aria-current');
   });
+  // scroll main to top
+  var mc = document.getElementById('mainContent');
+  if (mc) mc.scrollTop = 0;
+}
+
+document.querySelector('.sidebar').addEventListener('click', function(e){
+  var btn = e.target.closest('button[data-view]');
+  if (btn) showView(btn.dataset.view);
+});
+
+// ═══════════════════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════════════════
+function switchTab(viewId, tabId, el) {
+  var prefix = viewId + '-';
+  document.querySelectorAll('[id^="' + prefix + '"]').forEach(function(tp){
+    tp.classList.remove('active');
+  });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add('active');
+  if (el && el.closest('.tab-bar')) {
+    el.closest('.tab-bar').querySelectorAll('.tb-btn').forEach(function(b){ b.classList.remove('active'); });
+    el.classList.add('active');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  CLOCK / FOOTER
+// ═══════════════════════════════════════════════════════
+function startClock() {
+  function tick() {
+    var el = document.getElementById('ftTime');
+    if (el) el.textContent = new Date().toUTCString().replace(' GMT','') + ' UTC';
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+// ═══════════════════════════════════════════════════════
+//  AUDIT TRAIL
+// ═══════════════════════════════════════════════════════
+function addAuditEvent(event, user, artifact, findingId, status) {
+  var row = {
+    ts: new Date().toLocaleString(), event: event,
+    user: user || SESSION.user, artifact: artifact || '—',
+    findingId: findingId || '—', status: status || '—'
+  };
+  SESSION.auditTrail.push(row);
+  refreshAuditTrail();
+  var kpis = ['auditTotalScans','auditClosed','auditPending'];
+  updateAuditKPIs();
+}
+
+function refreshAuditTrail() {
+  var tbody = document.getElementById('auditTrailBody');
+  if (!tbody) return;
+  if (SESSION.auditTrail.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--chrome-3);padding:24px;">No audit events yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = SESSION.auditTrail.slice().reverse().map(function(r){
+    return '<tr><td style="font-family:var(--font-mono);font-size:11px;">' + r.ts + '</td><td>' + r.event + '</td><td>' + r.user + '</td><td>' + r.artifact + '</td><td style="font-family:var(--font-mono);">' + r.findingId + '</td><td>' + r.status + '</td></tr>';
+  }).join('');
+}
+
+function updateAuditKPIs() {
+  setEl('auditTotalScans', SESSION.scansRun);
+  var closed = SESSION.findings.filter(function(f){ return f.status === 'Closed'; }).length;
+  var pending = SESSION.findings.filter(function(f){ return f.status === 'Pending'; }).length;
+  setEl('auditClosed', closed);
+  setEl('auditPending', pending);
+  setEl('adminScansRun', SESSION.scansRun);
+  setEl('adminFindingsGen', SESSION.findingsGen);
+}
+
+// ═══════════════════════════════════════════════════════
+//  FINDINGS
+// ═══════════════════════════════════════════════════════
+function addFinding(f) {
+  f.id = 'FND-' + String(SESSION.findings.length + 1).padStart(3,'0');
+  f.status = 'Open';
+  SESSION.findings.push(f);
+  SESSION.findingsGen++;
+  refreshFindingsView();
+  updateBadges();
+  addAuditEvent('FINDING', SESSION.user, f.artifact, f.id, f.severity);
+}
+
+function refreshFindingsView() {
+  var list = document.getElementById('allFindingsList');
+  if (!list) return;
+  if (SESSION.findings.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--chrome-3);"><div style="font-size:32px;margin-bottom:12px;opacity:0.3;">⚑</div><div style="font-size:14px;">No findings yet. Run a scan from any analyzer.</div><button class="btn btn-p" style="margin-top:16px;" onclick="showView(\'abap\')">Open ABAP Scanner →</button></div>';
+    return;
+  }
+  var counts = {CRITICAL:0,HIGH:0,MEDIUM:0,LOW:0,PASS:0};
+  SESSION.findings.forEach(function(f){ if(counts[f.severity]!==undefined) counts[f.severity]++; else counts.LOW++; });
+  setEl('fCritical', counts.CRITICAL); setEl('fHigh', counts.HIGH);
+  setEl('fMedium', counts.MEDIUM); setEl('fLow', counts.LOW + counts.PASS);
+  setEl('fTotal', SESSION.findings.length);
+  list.innerHTML = SESSION.findings.map(function(f){ return renderFindingCard(f); }).join('');
+}
+
+function renderFindingCard(f) {
+  var sevClass = {CRITICAL:'sc',HIGH:'sh',MEDIUM:'sm',LOW:'sl',INFO:'si',PASS:'sp'}[f.severity] || 'si';
+  var badgeClass = {CRITICAL:'bc',HIGH:'bh',MEDIUM:'bm',LOW:'bl',INFO:'bi',PASS:'bp'}[f.severity] || 'bi';
+  return '<div class="fc-card"><div class="fc-hdr ' + sevClass + '" onclick="toggleFinding(this)">' +
+    '<div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">' +
+    '<span class="badge ' + badgeClass + '">' + f.severity + '</span>' +
+    '<span style="font-family:var(--font-mono);font-size:12px;color:var(--ibm-blue-40);">' + f.id + '</span>' +
+    '<span style="font-size:13px;color:var(--chrome-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(f.title) + '</span></div>' +
+    '<span style="font-size:11px;color:var(--chrome-3);white-space:nowrap;">' + escHtml(f.artifact || '') + '</span></div>' +
+    '<div class="fc-body"><div class="fc-meta">' +
+    fmi('Rule', f.rule || '—') + fmi('Object', f.authObj || '—') + fmi('Line', f.line || '—') + fmi('Status', f.status) +
+    '</div><div style="font-size:13px;color:var(--chrome-2);line-height:1.6;margin-bottom:12px;">' + escHtml(f.description || '') + '</div>' +
+    (f.before ? '<div class="diff"><div class="diff-pane"><div class="diff-lbl dl-b">⚠ Before (Vulnerable)</div><div class="code">' + escHtml(f.before) + '</div></div><div class="diff-pane"><div class="diff-lbl dl-a">✓ After (Corrected)</div><div class="code">' + escHtml(f.after || '') + '</div></div></div>' : '') +
+    '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">' +
+    '<button class="btn btn-g btn-sm" onclick="markFP(this,\'' + f.id + '\')">Mark as False Positive</button>' +
+    '<button class="btn btn-s btn-sm" onclick="closeFinding(\'' + f.id + '\')">Mark Resolved</button></div>' +
+    '</div></div>';
+}
+
+function fmi(label, value) {
+  return '<div class="fmi"><div class="fmi-l">' + label + '</div><div class="fmi-v">' + escHtml(String(value)) + '</div></div>';
+}
+
+function toggleFinding(hdr) {
+  var body = hdr.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+function markFP(btn, id) {
+  var reason = prompt('Enter false positive justification:');
+  if (!reason) return;
+  var f = SESSION.findings.find(function(x){ return x.id===id; });
+  if (f) { f.status = 'False Positive'; f.fpReason = reason; }
+  addAuditEvent('FALSE_POSITIVE', SESSION.user, f ? f.artifact : '—', id, reason);
+  refreshFindingsView();
+}
+
+function closeFinding(id) {
+  var f = SESSION.findings.find(function(x){ return x.id===id; });
+  if (f) f.status = 'Closed';
+  addAuditEvent('RESOLVED', SESSION.user, f ? f.artifact : '—', id, 'Marked resolved');
+  refreshFindingsView();
+  updateAuditKPIs();
+}
+
+function filterFindings(sev) {
+  var cards = document.querySelectorAll('.fc-card');
+  cards.forEach(function(card){
+    if (sev === 'all') { card.style.display = ''; return; }
+    var badge = card.querySelector('.badge');
+    card.style.display = (badge && badge.textContent.trim() === sev) ? '' : 'none';
+  });
+}
+
+function updateBadges() {
+  var open = SESSION.findings.filter(function(f){ return f.status==='Open'; });
+  var critHigh = open.filter(function(f){ return f.severity==='CRITICAL'||f.severity==='HIGH'; });
+  setEl('nbFindings', open.length);
+  setEl('nbAbap', critHigh.length);
+  setEl('fCritical', SESSION.findings.filter(function(f){ return f.severity==='CRITICAL'; }).length);
+  setEl('fHigh', SESSION.findings.filter(function(f){ return f.severity==='HIGH'; }).length);
+  setEl('fMedium', SESSION.findings.filter(function(f){ return f.severity==='MEDIUM'; }).length);
+  setEl('fLow', SESSION.findings.filter(function(f){ return f.severity==='LOW'||f.severity==='PASS'; }).length);
+  setEl('fTotal', SESSION.findings.length);
+}
+
+// ═══════════════════════════════════════════════════════
+//  ABAP SCANNER
+// ═══════════════════════════════════════════════════════
+function updateAbapLineCount() {
+  var ta = document.getElementById('abapCode');
+  var el = document.getElementById('abapLineCount');
+  if (ta && el) el.textContent = ta.value.split('\n').length + ' lines';
+}
+
+function clearAbapScan() {
+  setEl2('abapCode',''); setEl('abapLineCount','0 lines');
+  setEl2('abapScanStatus',''); setEl2('abapScanSummary','<div style="font-size:12px;color:var(--chrome-3);">No scan performed yet.</div>');
+  var ra = document.getElementById('abapResultsArea');
+  if (ra) { ra.style.display='none'; document.getElementById('abapFindingsList').innerHTML=''; }
+}
+
+function loadAbapSample() {
+  var sample = [
+    "METHOD check_po_authority.",
+    "  DATA: lv_ekorg TYPE ekorg.",
+    "  SELECT SINGLE ekorg INTO lv_ekorg FROM ekko WHERE ebeln = iv_ebeln.",
+    "  \" VULNERABILITY: No AUTHORITY-CHECK before reading PO data",
+    "  \" VULNERABILITY: Check performed after DB read (too late)",
+    "  AUTHORITY-CHECK OBJECT 'M_BEST_EKO'",
+    "    ID 'EKORG' FIELD lv_ekorg",
+    "    ID 'ACTVT' FIELD '02'.",
+    "  \" VULNERABILITY: SY-SUBRC not evaluated - check result ignored!",
+    "  MODIFY ekko SET netpr = iv_new_price WHERE ebeln = iv_ebeln.",
+    "  \" VULNERABILITY: Wildcard used in critical field",
+    "  AUTHORITY-CHECK OBJECT 'F_BKPF_BUK'",
+    "    ID 'BUKRS' FIELD '*'",
+    "    ID 'ACTVT' FIELD '01'.",
+    "  IF sy-subrc <> 0.",
+    "    RAISE EXCEPTION TYPE zcx_no_authority.",
+    "  ENDIF.",
+    "ENDMETHOD."
+  ].join('\n');
+  var ta = document.getElementById('abapCode');
+  if (ta) { ta.value = sample; updateAbapLineCount(); }
+}
+
+function loadAbapFile(input) {
+  if (!input.files || !input.files[0]) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var ta = document.getElementById('abapCode');
+    if (ta) { ta.value = e.target.result; updateAbapLineCount(); }
+  };
+  reader.readAsText(input.files[0]);
+}
+
+function dzOver(e, id) { e.preventDefault(); var el=document.getElementById(id); if(el) el.classList.add('drag'); }
+function dzLeave(id) { var el=document.getElementById(id); if(el) el.classList.remove('drag'); }
+function dzDrop(e, taId, dzId) {
+  e.preventDefault(); dzLeave(dzId);
+  var file = e.dataTransfer.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    var ta = document.getElementById(taId);
+    if (ta) { ta.value = ev.target.result; updateAbapLineCount(); }
+  };
+  reader.readAsText(file);
+}
+
+function exportAbapFindings() {
+  var abapFindings = SESSION.findings.filter(function(f){ return f.source === 'ABAP'; });
+  downloadCSV(abapFindings, 'abap_findings.csv');
+}
+
+var ABAP_RULES = [
+  { id:'AUTH-001', sev:'CRITICAL', pattern:/MODIFY|INSERT|DELETE|UPDATE/i, title:'Missing AUTHORITY-CHECK before write operation',
+    obj:'(object-dependent)', desc:'A database write operation was detected without a preceding AUTHORITY-CHECK. Any user can execute this write without authorization validation.',
+    fix: function(line){ return 'AUTHORITY-CHECK OBJECT \'M_MATE_WRK\'\n  ID \'ACTVT\' FIELD \'02\'.\nIF sy-subrc <> 0.\n  RAISE EXCEPTION TYPE zcx_no_authority.\nENDIF.\n' + line; }},
+  { id:'AUTH-002', sev:'CRITICAL', pattern:/AUTHORITY-CHECK[\s\S]{0,200}?(?!IF\s+sy-subrc)/i, title:'SY-SUBRC not evaluated after AUTHORITY-CHECK',
+    obj:'(check object)', desc:'An AUTHORITY-CHECK statement was found but sy-subrc is not evaluated immediately after. The check result is ignored, making it ineffective.',
+    fix: function(line){ return line + '\nIF sy-subrc <> 0.\n  RAISE EXCEPTION TYPE zcx_no_authority.\nENDIF.'; }},
+  { id:'AUTH-003', sev:'HIGH', pattern:/SELECT[\s\S]{0,500}?AUTHORITY-CHECK/i, title:'AUTHORITY-CHECK performed after database read',
+    obj:'(varies)', desc:'A SELECT statement reads data before the AUTHORITY-CHECK is performed. The authorization check must be done BEFORE accessing sensitive data.',
+    fix: function(line){ return '\" Move AUTHORITY-CHECK to before the SELECT statement\n' + line; }},
+  { id:'AUTH-004', sev:'HIGH', pattern:/ID\s+'\w+'\s+FIELD\s+'[*\s]'/i, title:'Wildcard or blank value in authorization field',
+    obj:'(check object)', desc:'A wildcard (*) or blank value is used in an authorization field. This bypasses field-level restriction and grants overly broad access.',
+    fix: function(line){ return line.replace(/FIELD\s+'[*\s]'/i, 'FIELD iv_field_value  \" Replace with actual runtime variable'); }},
+  { id:'AUTH-005', sev:'MEDIUM', pattern:/ID\s+'\w+'\s+FIELD\s+'[A-Z0-9_]{1,10}'/i, title:'Hardcoded authorization field value',
+    obj:'(check object)', desc:'A literal/hardcoded value is used in an authorization field. This reduces flexibility and may not reflect the correct runtime context.',
+    fix: function(line){ return line + '  \" Consider replacing hardcoded value with variable'; }},
+  { id:'AUTH-006', sev:'CRITICAL', pattern:/DEBUGGING|BYPASS_BUFFER|SKIP_AUTH/i, title:'Debug/bypass pattern detected',
+    obj:'S_ADMI_FCD / Custom', desc:'A debug, buffer bypass, or authorization skip pattern was detected. This is a critical security risk in production code.',
+    fix: function(line){ return '\" REMOVE THIS LINE — debug/bypass patterns must not exist in production\n\" ' + line; }},
+  { id:'AUTH-007', sev:'HIGH', pattern:/CALL FUNCTION[\s\S]{0,100}?IN BACKGROUND TASK/i, title:'Background task without authority check',
+    obj:'S_BTCH_JOB', desc:'A background task is called without verifying the user has background job authorization.',
+    fix: function(line){ return 'AUTHORITY-CHECK OBJECT \'S_BTCH_JOB\'\n  ID \'JOBACTION\' FIELD \'RELE\'.\nIF sy-subrc <> 0. RAISE EXCEPTION TYPE zcx_no_authority. ENDIF.\n' + line; }},
+];
+
+function runAbapScan() {
+  var code = (document.getElementById('abapCode') || {}).value || '';
+  var tcode = (document.getElementById('abapTcode') || {}).value || 'Unknown';
+  var sys = (document.getElementById('abapSysType') || {}).value || 'S4HANA_OP';
+  if (!code.trim()) { alert('Please paste or upload ABAP code before running analysis.'); return; }
+
+  var btnText = document.getElementById('abapBtnText');
+  var spinner = document.getElementById('abapSpinner');
+  var statusEl = document.getElementById('abapScanStatus');
+  if (btnText) btnText.textContent = 'Analyzing…';
+  if (spinner) spinner.style.display = '';
+  if (statusEl) statusEl.textContent = 'Running rule engine…';
+
+  setTimeout(function() {
+    var lines = code.split('\n');
+    var findings = [];
+    var checkedLines = {};
+
+    lines.forEach(function(line, idx) {
+      ABAP_RULES.forEach(function(rule) {
+        if (rule.pattern.test(line) && !checkedLines[idx + '_' + rule.id]) {
+          checkedLines[idx + '_' + rule.id] = true;
+          findings.push({
+            severity: rule.sev, title: rule.title, rule: rule.id,
+            artifact: tcode, authObj: rule.obj,
+            line: idx + 1, source: 'ABAP',
+            description: rule.desc,
+            before: line.trim(),
+            after: rule.fix(line.trim())
+          });
+        }
+      });
+    });
+
+    SESSION.scansRun++;
+    SESSION.scanHistory.push({ ts: new Date(), type: 'ABAP', artifact: tcode, count: findings.length });
+    addAuditEvent('SCAN', SESSION.user, tcode, '—', findings.length + ' findings');
+
+    // render inline results
+    var ra = document.getElementById('abapResultsArea');
+    var fl = document.getElementById('abapFindingsList');
+    if (ra) ra.style.display = '';
+    if (fl) {
+      if (findings.length === 0) {
+        fl.innerHTML = '<div class="alert a-s"><span>✓</span><span>No authorization issues detected in this code for the selected rules and system type.</span></div>';
+      } else {
+        fl.innerHTML = findings.map(function(f) { return renderFindingCard(f); }).join('');
+      }
+    }
+
+    // summary
+    var sumEl = document.getElementById('abapScanSummary');
+    if (sumEl) {
+      var counts = {CRITICAL:0,HIGH:0,MEDIUM:0,LOW:0};
+      findings.forEach(function(f){ if(counts[f.severity]!==undefined) counts[f.severity]++; });
+      sumEl.innerHTML = '<div style="display:flex;flex-direction:column;gap:7px;font-size:12px;">' +
+        '<div style="display:flex;justify-content:space-between;"><span>Lines scanned</span><span>' + lines.length + '</span></div>' +
+        '<div style="display:flex;justify-content:space-between;"><span>Rules applied</span><span>' + ABAP_RULES.length + '</span></div>' +
+        '<div style="display:flex;justify-content:space-between;"><span style="color:var(--critical);">Critical</span><span>' + counts.CRITICAL + '</span></div>' +
+        '<div style="display:flex;justify-content:space-between;"><span style="color:var(--high);">High</span><span>' + counts.HIGH + '</span></div>' +
+        '<div style="display:flex;justify-content:space-between;"><span style="color:var(--medium);">Medium</span><span>' + counts.MEDIUM + '</span></div>' +
+        '<div style="display:flex;justify-content:space-between;"><span style="color:var(--low);">Low</span><span>' + counts.LOW + '</span></div>' +
+        '<hr style="border-color:var(--panel-border);margin:4px 0;">' +
+        '<div style="display:flex;justify-content:space-between;font-weight:600;"><span>Total Findings</span><span>' + findings.length + '</span></div></div>';
+    }
+
+    // add to global findings
+    findings.forEach(function(f){ addFinding(f); });
+
+    if (btnText) btnText.textContent = '▶ Run Analysis';
+    if (spinner) spinner.style.display = 'none';
+    if (statusEl) statusEl.textContent = '✓ Scan complete — ' + findings.length + ' finding(s)';
+  }, 900);
+}
+
+// ═══════════════════════════════════════════════════════
+//  T-CODE ANALYZER
+// ═══════════════════════════════════════════════════════
+var TCODE_DB = {
+  'ME21N':['M_BEST_BSA|BSART|NB|01','M_BEST_EKO|EKORG|1000|01','M_BEST_WRK|WERKS|1000|01'],
+  'ME22N':['M_BEST_BSA|BSART|NB|02','M_BEST_EKO|EKORG|1000|02','M_BEST_WRK|WERKS|1000|02'],
+  'ME23N':['M_BEST_BSA|BSART|NB|03','M_BEST_EKO|EKORG|1000|03'],
+  'FB01' :['F_BKPF_BUK|BUKRS|1000|01','F_BKPF_KOA|KOART|D|01','F_BKPF_GSB|GSBER|*|01'],
+  'VA01' :['V_VBAK_AAT|AUART|TA|01','V_VBAK_VKO|VKORG|1000|01'],
+  'VA02' :['V_VBAK_AAT|AUART|TA|02','V_VBAK_VKO|VKORG|1000|02'],
+  'F110' :['F_REGU_BUK|BUKRS|1000|02','F_REGU_KOA|KOART|K|02'],
+  'MM01' :['M_MATE_MAR|MATYP|FERT|01','M_MATE_WRK|WERKS|1000|01'],
+  'VL01N':['V_LIKP_VST|VSTEL|1000|01','V_LIKP_SHT|SHTYP|LF|01'],
+  'MIRO' :['M_RECH_BUK|BUKRS|1000|01','M_RECH_WRK|WERKS|1000|01'],
+};
+
+function runTcodeAnalysis() {
+  var input = document.getElementById('tcTcode').value.trim();
+  if (!input) { alert('Please enter at least one transaction code.'); return; }
+  var tcodes = input.split(',').map(function(t){ return t.trim().toUpperCase(); });
+  var html = '';
+  tcodes.forEach(function(tc) {
+    var rows = TCODE_DB[tc];
+    if (!rows) {
+      html += '<div class="alert a-w" style="margin-bottom:12px;"><span>⚠</span><span><strong>' + escHtml(tc) + '</strong>: Not found in reference database. This T-Code may be custom or require manual SU24 lookup in your system.</span></div>';
+      return;
+    }
+    html += '<div class="card" style="margin-bottom:16px;"><div class="ch"><span class="ct">' + escHtml(tc) + ' — Authorization Objects</span></div>' +
+      '<table class="dt"><thead><tr><th>Object</th><th>Field</th><th>Ref. Value</th><th>Activity</th><th>Risk</th></tr></thead><tbody>' +
+      rows.map(function(r){
+        var parts = r.split('|');
+        var risk = parts[2]==='*'?'<span class="badge bh">HIGH</span>':'<span class="badge bl">LOW</span>';
+        return '<tr><td>' + parts[0] + '</td><td>' + parts[1] + '</td><td style="font-family:var(--font-mono);">' + parts[2] + '</td><td style="font-family:var(--font-mono);">' + parts[3] + '</td><td>' + risk + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+    SESSION.scansRun++;
+    addAuditEvent('SCAN', SESSION.user, tc, '—', 'T-Code analysis');
+  });
+  var ra = document.getElementById('tcResultsArea');
+  if (ra) ra.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════
+//  FIORI ANALYZER
+// ═══════════════════════════════════════════════════════
+function runFioriAnalysis() {
+  var appId = document.getElementById('fioriAppId').value.trim();
+  if (!appId) { alert('Please enter a Fiori App ID.'); return; }
+  SESSION.scansRun++;
+  addAuditEvent('SCAN', SESSION.user, appId, '—', 'Fiori analysis');
+  var html = '<div class="card" style="margin-bottom:16px;"><div class="ch"><span class="ct">Fiori Analysis: ' + escHtml(appId) + '</span></div><div class="cb">' +
+    '<div class="alert a-i"><span>ℹ</span><span>Reference-level analysis. Validate against your system SICF and /IWFND/ERROR_LOG.</span></div>' +
+    '<table class="dt"><thead><tr><th>Check</th><th>Object</th><th>Status</th><th>Notes</th></tr></thead><tbody>' +
+    '<tr><td>Frontend Catalog Auth</td><td>S_SERVICE</td><td><span class="badge bm">REVIEW</span></td><td>Verify catalog assigned to role in PFCG</td></tr>' +
+    '<tr><td>Backend OData Auth</td><td>S_TABU_DIS / Custom</td><td><span class="badge bm">REVIEW</span></td><td>Check DPC_EXT AUTHORITY-CHECK coverage</td></tr>' +
+    '<tr><td>SICF Activation</td><td>S_ICF</td><td><span class="badge bm">REVIEW</span></td><td>Confirm node active in SICF</td></tr>' +
+    '<tr><td>SU24 Proposal</td><td>Various</td><td><span class="badge bm">REVIEW</span></td><td>Validate against system SU24 for this app</td></tr>' +
+    '</tbody></table></div></div>';
+  var ra = document.getElementById('fioriResultsArea');
+  if (ra) ra.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════
+//  WEB DYNPRO ANALYZER
+// ═══════════════════════════════════════════════════════
+function runWdAnalysis() {
+  var app = document.getElementById('wdAppName').value.trim();
+  if (!app) { alert('Please enter a Web Dynpro application name.'); return; }
+  SESSION.scansRun++;
+  addAuditEvent('SCAN', SESSION.user, app, '—', 'Web Dynpro analysis');
+  var html = '<div class="card" style="margin-bottom:16px;"><div class="ch"><span class="ct">Web Dynpro Analysis: ' + escHtml(app) + '</span></div><div class="cb">' +
+    '<table class="dt"><thead><tr><th>Check</th><th>Object</th><th>Status</th><th>Notes</th></tr></thead><tbody>' +
+    '<tr><td>S_SERVICE Coverage</td><td>S_SERVICE</td><td><span class="badge bm">REVIEW</span></td><td>Verify S_SERVICE includes this WD application</td></tr>' +
+    '<tr><td>S_TCODE Start Auth</td><td>S_TCODE</td><td><span class="badge bm">REVIEW</span></td><td>Confirm transaction start authorization exists</td></tr>' +
+    '<tr><td>SICF Node Active</td><td>S_ICF</td><td><span class="badge bm">REVIEW</span></td><td>Validate SICF node is activated</td></tr>' +
+    '<tr><td>ABAP Logic Auth Checks</td><td>Custom</td><td><span class="badge bi">INFO</span></td><td>Requires code-level review of controller methods</td></tr>' +
+    '</tbody></table></div></div>';
+  var ra = document.getElementById('wdResultsArea');
+  if (ra) ra.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════
+//  ODATA ANALYZER
+// ═══════════════════════════════════════════════════════
+function runOdataAnalysis() {
+  var svc = document.getElementById('odSvcName').value.trim();
+  if (!svc) { alert('Please enter an OData service name.'); return; }
+  SESSION.scansRun++;
+  addAuditEvent('SCAN', SESSION.user, svc, '—', 'OData analysis');
+  var findings = [
+    {op:'GET_ENTITY / GET_ENTITYSET', risk:'MEDIUM', note:'Verify read authorization in DPC_EXT GET methods'},
+    {op:'CREATE_ENTITY', risk:'CRITICAL', note:'AUTHORITY-CHECK required before any CREATE operation'},
+    {op:'UPDATE_ENTITY', risk:'CRITICAL', note:'AUTHORITY-CHECK required before any UPDATE operation'},
+    {op:'DELETE_ENTITY', risk:'HIGH', note:'AUTHORITY-CHECK required before any DELETE operation'},
+    {op:'S_SERVICE Object', risk:'MEDIUM', note:'Confirm S_SERVICE includes this Gateway service'},
+  ];
+  var html = '<div class="card" style="margin-bottom:16px;"><div class="ch"><span class="ct">OData Analysis: ' + escHtml(svc) + '</span></div><div class="cb">' +
+    '<table class="dt"><thead><tr><th>Operation</th><th>Risk</th><th>Recommendation</th></tr></thead><tbody>' +
+    findings.map(function(f){
+      var badge = {CRITICAL:'bc',HIGH:'bh',MEDIUM:'bm'}[f.risk]||'bi';
+      return '<tr><td style="font-family:var(--font-mono);">' + f.op + '</td><td><span class="badge ' + badge + '">' + f.risk + '</span></td><td>' + f.note + '</td></tr>';
+    }).join('') + '</tbody></table></div></div>';
+  var ra = document.getElementById('odResultsArea');
+  if (ra) ra.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════
+//  SU24 / SU25 / PFCG / SU53
+// ═══════════════════════════════════════════════════════
+function runSU24Analysis() {
+  var tc = document.getElementById('su24Tcode').value.trim();
+  if (!tc) { alert('Please enter a transaction, service, or app ID.'); return; }
+  SESSION.scansRun++;
+  addAuditEvent('SCAN', SESSION.user, tc, '—', 'SU24 analysis');
+  var refRows = TCODE_DB[tc.toUpperCase()] || [];
+  var html = '<div class="card"><div class="ch"><span class="ct">SU24 Proposal: ' + escHtml(tc) + '</span></div><div class="cb">';
+  if (refRows.length === 0) {
+    html += '<div class="alert a-w"><span>⚠</span><span>No reference SU24 data found for <strong>' + escHtml(tc) + '</strong>. Run STAUTHTRACE in your system to capture actual authorization requirements.</span></div>';
+  } else {
+    html += '<table class="dt"><thead><tr><th>Object</th><th>Field</th><th>Ref. Value</th><th>Activity</th><th>Source</th></tr></thead><tbody>' +
+      refRows.map(function(r){
+        var p = r.split('|');
+        return '<tr><td>' + p[0] + '</td><td>' + p[1] + '</td><td style="font-family:var(--font-mono);">' + p[2] + '</td><td style="font-family:var(--font-mono);">' + p[3] + '</td><td><span class="badge bi">SAP-Delivered</span></td></tr>';
+      }).join('') + '</tbody></table>';
+  }
+  html += '</div></div>';
+  var ra = document.getElementById('su24ResultsArea');
+  if (ra) ra.innerHTML = html;
+}
+
+function runSU25Analysis() {
+  var from = document.getElementById('su25From').value;
+  var to = document.getElementById('su25To').value;
+  SESSION.scansRun++;
+  addAuditEvent('SCAN', SESSION.user, from + '→' + to, '—', 'SU25 impact analysis');
+  var html = '<div class="alert a-w"><span>⚠</span><span>SU25 upgrade from <strong>' + escHtml(from) + '</strong> to <strong>' + escHtml(to) + '</strong>: Review all customer-maintained SU24 proposals before applying. Use SU25 Step 2A/2B comparison reports. Contact: sap-security@ibm.com for upgrade assistance.</span></div>';
+  var ra = document.getElementById('su25ResultsArea');
+  if (ra) ra.innerHTML = html;
+}
+
+function runPFCGCheck() {
+  var role = document.getElementById('pfcgRole').value.trim();
+  var tcodes = document.getElementById('pfcgTcode').value.trim();
+  if (!role) { alert('Please enter a role name.'); return; }
+  SESSION.scansRun++;
+  addAuditEvent('SCAN', SESSION.user, role, '—', 'PFCG alignment check');
+  var tcList = tcodes.split(',').map(function(t){ return t.trim().toUpperCase(); }).filter(Boolean);
+  var html = '<div class="card"><div class="ch"><span class="ct">PFCG Check: ' + escHtml(role) + '</span></div><div class="cb">' +
+    '<table class="dt"><thead><tr><th>T-Code</th><th>SU24 Data</th><th>Status</th></tr></thead><tbody>' +
+    tcList.map(function(tc){
+      var known = !!TCODE_DB[tc];
+      return '<tr><td style="font-family:var(--font-mono);">' + escHtml(tc) + '</td><td>' + (known ? TCODE_DB[tc].length + ' objects' : 'Not in reference DB') + '</td><td>' + (known ? '<span class="badge bl">REFERENCE OK</span>' : '<span class="badge bm">VERIFY IN SYSTEM</span>') + '</td></tr>';
+    }).join('') + '</tbody></table></div></div>';
+  var ra = document.getElementById('pfcgResultsArea');
+  if (ra) ra.innerHTML = html;
+}
+
+function runSU53Analysis() {
+  var input = document.getElementById('su53Input').value.trim();
+  if (!input) { alert('Please paste SU53 or STAUTHTRACE output.'); return; }
+  SESSION.scansRun++;
+  addAuditEvent('SCAN', SESSION.user, 'SU53/STAUTHTRACE', '—', 'Evidence interpretation');
+  // simple pattern extraction
+  var objMatch = input.match(/Object[:\s]+([A-Z0-9_]{1,30})/i);
+  var fldMatch = input.match(/Field[:\s]+([A-Z0-9_]{1,20})/i);
+  var valMatch = input.match(/Value[:\s]+([A-Z0-9_*]{1,20})/i);
+  var actMatch = input.match(/Activity[:\s]+([0-9]{1,2})/i);
+  var html = '<div class="card"><div class="ch"><span class="ct">SU53 Interpretation</span></div><div class="cb">' +
+    '<div class="alert a-i"><span>ℹ</span><span>Extracted from pasted evidence. Validate against your system role design before acting.</span></div>' +
+    '<table class="dt"><tbody>' +
+    '<tr><td style="color:var(--chrome-3);font-size:11px;">Authorization Object</td><td style="font-family:var(--font-mono);">' + (objMatch ? escHtml(objMatch[1]) : 'Not detected — check manually') + '</td></tr>' +
+    '<tr><td style="color:var(--chrome-3);font-size:11px;">Field</td><td style="font-family:var(--font-mono);">' + (fldMatch ? escHtml(fldMatch[1]) : 'Not detected') + '</td></tr>' +
+    '<tr><td style="color:var(--chrome-3);font-size:11px;">Required Value</td><td style="font-family:var(--font-mono);">' + (valMatch ? escHtml(valMatch[1]) : 'Not detected') + '</td></tr>' +
+    '<tr><td style="color:var(--chrome-3);font-size:11px;">Activity (ACTVT)</td><td style="font-family:var(--font-mono);">' + (actMatch ? escHtml(actMatch[1]) : 'Not detected') + '</td></tr>' +
+    '<tr><td style="color:var(--chrome-3);font-size:11px;">Recommendation</td><td>Add object ' + (objMatch?'<strong>'+escHtml(objMatch[1])+'</strong>':'(detected object)') + ' with matching field/value to the user\'s PFCG role, or include in SU24 proposal for the transaction.</td></tr>' +
+    '</tbody></table></div></div>';
+  var ra = document.getElementById('su53ResultsArea');
+  if (ra) ra.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════
+//  EXPORT
+// ═══════════════════════════════════════════════════════
+function exportAllFindings() { downloadCSV(SESSION.findings, 'all_findings.csv'); }
+function exportAuditCSV() { downloadCSV(SESSION.auditTrail, 'audit_trail.csv'); }
+function exportAuditJSON() {
+  var data = JSON.stringify({ session: { user: SESSION.user, loginTime: SESSION.loginTime }, auditTrail: SESSION.auditTrail, findings: SESSION.findings }, null, 2);
+  downloadBlob(data, 'application/json', 'audit_package.json');
+}
+function exportAuditHTML() {
+  var rows = SESSION.findings.map(function(f){
+    return '<tr><td>'+escHtml(f.id||'')+'</td><td>'+escHtml(f.severity||'')+'</td><td>'+escHtml(f.title||'')+'</td><td>'+escHtml(f.artifact||'')+'</td><td>'+escHtml(f.status||'')+'</td></tr>';
+  }).join('');
+  var doc = '<!DOCTYPE html><html><head><title>Audit Report</title><style>body{font-family:sans-serif;padding:20px;}table{width:100%;border-collapse:collapse;}th,td{border:1px solid #ccc;padding:8px;text-align:left;}th{background:#0043ce;color:#fff;}</style></head><body><h1>UM_Authority-Check-Analyzer — Audit Report</h1><p>User: '+escHtml(SESSION.user)+' | Generated: '+new Date().toLocaleString()+'</p><table><thead><tr><th>ID</th><th>Severity</th><th>Title</th><th>Artifact</th><th>Status</th></tr></thead><tbody>'+rows+'</tbody></table></body></html>';
+  downloadBlob(doc, 'text/html', 'audit_report.html');
+}
+function exportAuditPackage() { exportAuditCSV(); setTimeout(exportAuditJSON, 300); setTimeout(exportAuditHTML, 600); }
+
+function downloadCSV(data, filename) {
+  if (!data || data.length === 0) { alert('No data to export.'); return; }
+  var keys = Object.keys(data[0]);
+  var csv = [keys.join(',')].concat(data.map(function(r){
+    return keys.map(function(k){ var v = String(r[k]||'').replace(/"/g,'""'); return '"'+v+'"'; }).join(',');
+  })).join('\r\n');
+  downloadBlob(csv, 'text/csv', filename);
+}
+
+function downloadBlob(content, type, filename) {
+  var blob = new Blob([content], {type: type});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+}
+
+// ═══════════════════════════════════════════════════════
+//  SESSION ADMIN
+// ═══════════════════════════════════════════════════════
+function clearSession() {
+  if (!confirm('Clear all session findings and audit data? This cannot be undone.')) return;
+  SESSION.findings = []; SESSION.auditTrail = []; SESSION.scansRun = 0; SESSION.findingsGen = 0;
+  refreshFindingsView(); refreshAuditTrail(); updateBadges(); updateAuditKPIs();
+  alert('Session data cleared.');
+}
+
+// ═══════════════════════════════════════════════════════
+//  GUIDEBOOK SEARCH
+// ═══════════════════════════════════════════════════════
+function searchGuide(query) {
+  var container = document.getElementById('guideContent');
+  if (!container) return;
+  var q = query.toLowerCase().trim();
+  container.querySelectorAll('.g-h2, .g-h3, .g-p, .g-ul, .g-note, .g-warn, .mt, .dt').forEach(function(el){
+    if (!q) { el.style.display = ''; return; }
+    var text = el.textContent.toLowerCase();
+    el.style.display = text.includes(q) ? '' : 'none';
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+//  UTIL
+// ═══════════════════════════════════════════════════════
+function setEl(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
+function setEl2(id, val) { var el = document.getElementById(id); if (el) el.value = val; }
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
 </script>
