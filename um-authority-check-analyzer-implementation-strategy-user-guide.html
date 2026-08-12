@@ -1,0 +1,648 @@
+
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>UM Authority-Check-Analyzer — Implementation Strategy &amp; User Guide</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:11pt;color:#1f2328;background:#fff;line-height:1.6;}
+.page{max-width:800px;margin:0 auto;padding:40px 48px;}
+.cover{background:#0f172a;color:#fff;padding:56px 48px 44px;position:relative;}
+.cover-stripe{position:absolute;top:0;left:0;width:6px;height:100%;background:#6366f1;}
+.cover-badge{display:inline-block;background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.5);color:#a5b4fc;font-size:8.5pt;letter-spacing:2px;padding:4px 12px;border-radius:2px;margin-bottom:18px;text-transform:uppercase;}
+.cover h1{font-size:24pt;font-weight:700;color:#fff;line-height:1.2;margin-bottom:6px;}
+.cover h1 em{color:#818cf8;font-style:normal;}
+.cover-sub{font-size:11.5pt;color:#c7d2fe;margin-bottom:28px;}
+.cover-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;border-top:1px solid rgba(255,255,255,0.1);padding-top:18px;margin-top:18px;font-size:9.5pt;}
+.cover-cell{color:#94a3b8;}
+.cover-cell strong{display:block;color:#e2e8f0;font-size:10pt;margin-bottom:2px;}
+.cover-url{margin-top:16px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);border-radius:3px;padding:10px 14px;font-size:10pt;color:#a5b4fc;}
+.cover-url-label{display:block;font-size:8pt;color:#64748b;margin-bottom:3px;letter-spacing:1px;text-transform:uppercase;}
+.toc{background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:22px 26px;margin:28px 0;}
+.toc h3{font-size:10.5pt;font-weight:700;color:#1e1b4b;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid #6366f1;}
+.toc-row{display:flex;justify-content:space-between;padding:3px 0;font-size:10pt;color:#374151;border-bottom:1px dotted #d1d5db;}
+.toc-row:last-child{border-bottom:none;}
+.toc-row span:first-child{color:#4338ca;}
+.toc-row span:last-child{color:#9ca3af;font-size:9pt;}
+.sec{margin:32px 0 0;}
+.sec-hd{background:#1e1b4b;color:#fff;padding:9px 16px;border-radius:3px 3px 0 0;font-size:9.5pt;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+.sec-num{color:#818cf8;margin-right:8px;}
+.sec-bd{border:1px solid #e2e8f0;border-top:none;padding:20px 22px;border-radius:0 0 3px 3px;}
+h2{font-size:12.5pt;font-weight:700;color:#1e1b4b;margin:20px 0 6px;}
+h3{font-size:11pt;font-weight:700;color:#312e81;margin:14px 0 5px;}
+h4{font-size:10pt;font-weight:700;color:#4338ca;margin:10px 0 3px;}
+p{margin-bottom:8px;font-size:10.5pt;color:#374151;}
+ul,ol{margin:5px 0 9px 20px;font-size:10.5pt;color:#374151;}
+li{margin-bottom:3px;}
+strong{color:#1f2328;}
+code{background:#f1f5f9;color:#7c3aed;padding:1px 5px;border-radius:2px;font-family:'Courier New',monospace;font-size:9.5pt;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:10pt;}
+th{background:#1e1b4b;color:#fff;padding:7px 10px;text-align:left;font-size:9pt;letter-spacing:0.5px;}
+td{padding:6px 10px;border-bottom:1px solid #f1f5f9;color:#374151;vertical-align:top;}
+tr:nth-child(even) td{background:#f8fafc;}
+.callout{border-radius:3px;padding:11px 15px;margin:10px 0;font-size:10pt;}
+.ci{background:#eff6ff;border-left:4px solid #3b82f6;color:#1e40af;}
+.cw{background:#fffbeb;border-left:4px solid #f59e0b;color:#92400e;}
+.cs{background:#f0fdf4;border-left:4px solid #22c55e;color:#14532d;}
+.cd{background:#fef2f2;border-left:4px solid #ef4444;color:#991b1b;}
+.callout strong{display:block;margin-bottom:3px;font-size:9pt;text-transform:uppercase;letter-spacing:0.5px;}
+.codebox{background:#0f172a;color:#a5b4fc;font-family:'Courier New',monospace;font-size:9pt;padding:14px 16px;border-radius:3px;margin:10px 0;white-space:pre;overflow-x:auto;line-height:1.6;}
+.ckw{color:#f472b6;}
+.cst{color:#86efac;}
+.ccm{color:#64748b;}
+.bdg{display:inline-block;padding:2px 7px;border-radius:2px;font-size:8.5pt;font-weight:700;letter-spacing:0.4px;margin:0 2px;}
+.br{background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;}
+.bo{background:#fffbeb;color:#d97706;border:1px solid #fcd34d;}
+.bg{background:#f0fdf4;color:#16a34a;border:1px solid #86efac;}
+.bb{background:#eff6ff;color:#2563eb;border:1px solid #93c5fd;}
+.bp{background:#f5f3ff;color:#7c3aed;border:1px solid #c4b5fd;}
+/* infographic */
+.infog{background:#0f172a;border-radius:6px;padding:26px;margin:14px 0;}
+.infog-title{text-align:center;color:#a5b4fc;font-size:8.5pt;letter-spacing:3px;text-transform:uppercase;margin-bottom:18px;}
+.ig-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
+.ig-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:12px 8px;text-align:center;}
+.ig-icon{font-size:20pt;margin-bottom:4px;}
+.ig-num{font-size:17pt;font-weight:700;color:#818cf8;line-height:1;}
+.ig-lbl{font-size:7.5pt;color:#94a3b8;letter-spacing:1px;text-transform:uppercase;margin-top:3px;}
+.ig-mods{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.ig-mod{background:rgba(255,255,255,0.04);border:1px solid rgba(99,102,241,0.3);border-radius:3px;padding:9px 11px;}
+.ig-mod-name{font-size:8.5pt;font-weight:700;color:#a5b4fc;letter-spacing:0.5px;}
+.ig-mod-desc{font-size:8pt;color:#94a3b8;margin-top:2px;line-height:1.4;}
+.ig-sev{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
+.sc{padding:4px 13px;border-radius:2px;font-size:8pt;font-weight:700;letter-spacing:1px;}
+.sc1{background:#200000;color:#ff4444;border:1px solid #ff4444;}
+.sc2{background:#1a0010;color:#ff0040;border:1px solid #ff0040;}
+.sc3{background:#1a1000;color:#ffaa00;border:1px solid #ffaa00;}
+.sc4{background:#001a0a;color:#00ff88;border:1px solid #00ff88;}
+/* DFD */
+.dfd{background:#f8fafc;border:1px solid #e2e8f0;border-radius:5px;padding:22px;margin:14px 0;}
+.dfd-title{text-align:center;font-size:9pt;font-weight:700;color:#1e1b4b;letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;}
+/* steps */
+.steps{display:flex;flex-direction:column;gap:0;}
+.step-row{display:flex;gap:14px;align-items:flex-start;}
+.step-col{display:flex;flex-direction:column;align-items:center;}
+.step-dot{width:30px;height:30px;border-radius:50%;background:#312e81;color:#fff;font-size:10.5pt;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-line{width:2px;flex:1;background:#e2e8f0;min-height:18px;margin:3px 0;}
+.step-body{padding:3px 0 16px;flex:1;}
+/* doc footer */
+.dfooter{margin-top:44px;padding-top:14px;border-top:2px solid #e2e8f0;display:flex;justify-content:space-between;align-items:flex-end;font-size:9pt;color:#9ca3af;}
+.dfooter strong{color:#4338ca;}
+.made-with{text-align:center;margin-top:28px;font-size:8pt;color:#d1d5db;border-top:1px solid #f1f5f9;padding-top:10px;}
+</style>
+</head>
+<body>
+
+
+<div class="cover">
+  <div class="cover-stripe"></div>
+  <div class="cover-badge">IBM  ·  ICA  ·  SAP Authorization Intelligence</div>
+  <h1>UM_AUTHORITY-CHECK-<em>ANALYZER</em></h1>
+  <p class="cover-sub">Implementation Strategy &amp; User Guide  —  v1.0</p>
+  <div class="cover-grid">
+    <div class="cover-cell"><strong>Prepared By</strong>Utsav Mukherjee</div>
+    <div class="cover-cell"><strong>Document Version</strong>v1.0 — August 2026</div>
+    <div class="cover-cell"><strong>Classification</strong>Internal — IBM / ICA</div>
+    <div class="cover-cell"><strong>Platform</strong>GitHub Pages CDN (Always Online)</div>
+  </div>
+  <div class="cover-url">
+    <span class="cover-url-label">Permanent Public URL</span>
+    https://ica-bob.github.io/um-authority-check-analyzer/
+  </div>
+  <div class="cover-url">
+    <span class="cover-url-label">Source Repository</span>
+    https://github.com/ica-bob/um-authority-check-analyzer
+  </div>
+</div>
+
+<div class="page">
+
+
+<div class="toc">
+  <h3>Table of Contents</h3>
+  <div class="toc-row"><span>1. Executive Summary</span><span>2</span></div>
+  <div class="toc-row"><span>2. Tool Overview &amp; Purpose</span><span>2</span></div>
+  <div class="toc-row"><span>3. System Architecture</span><span>3</span></div>
+  <div class="toc-row"><span>4. Data Flow Diagram</span><span>4</span></div>
+  <div class="toc-row"><span>5. Feature Infographic</span><span>5</span></div>
+  <div class="toc-row"><span>6. Analysis Modules — Detail</span><span>6</span></div>
+  <div class="toc-row"><span>7. Implementation Strategy</span><span>7</span></div>
+  <div class="toc-row"><span>8. Step-by-Step User Guide</span><span>8</span></div>
+  <div class="toc-row"><span>9. Security &amp; Governance Controls</span><span>9</span></div>
+  <div class="toc-row"><span>10. Repository Structure</span><span>10</span></div>
+  <div class="toc-row"><span>11. Deployment Architecture</span><span>11</span></div>
+  <div class="toc-row"><span>12. Authorization Objects Reference</span><span>12</span></div>
+</div>
+
+
+<div class="sec">
+  <div class="sec-hd"><span class="sec-num">01</span>Executive Summary</div>
+  <div class="sec-bd">
+    <p>The <strong>UM_Authority-Check-Analyzer</strong> is a governed SAP Authorization Diagnostic Intelligence tool developed by Utsav Mukherjee under the IBM ICA (Intelligent Code Assistant) program. It provides SAP security teams with a fast, interactive, browser-based interface to detect, classify, and remediate authorization defects across ABAP programs, SU24 transaction proposals, and OData/Fiori service layers.</p>
+    <p>The tool operates entirely in the browser — no data is sent to any server, no SAP system connection is established, and no changes are made automatically. All findings are diagnostic only and require human approval from SAP Security before any correction is applied.</p>
+    <div class="callout cs">
+      <strong>CURRENTLY LIVE</strong>
+      Hosted permanently on GitHub Pages CDN. Available 24×7 globally. No login, no installation, no laptop dependency.<br />
+      URL: <strong>https://ica-bob.github.io/um-authority-check-analyzer/</strong>
+    </div>
+  </div>
+</div>
+
+
+<div class="sec">
+  <div class="sec-hd"><span class="sec-num">02</span>Tool Overview &amp; Purpose</div>
+  <div class="sec-bd">
+    <h3>What It Does</h3>
+    <p>The tool guides a SAP security analyst or developer through a structured, conversational diagnostic workflow. The analyst provides context (SAP system, release, transaction, business action, evidence), and the tool runs one or more of three specialized analyzers to produce structured findings with severity ratings, evidence, impact assessment, and code-level remediation guidance.</p>
+    <h3>Why It Was Built</h3>
+    <ul>
+      <li>SAP authorization defects are frequently missed during code reviews due to the complexity of AUTHORITY-CHECK patterns</li>
+      <li>SU24 proposal gaps cause role generation failures that are hard to diagnose without specialized knowledge</li>
+      <li>OData/Fiori services are often deployed without DPC_EXT authorization checks, creating critical exposure</li>
+      <li>IBM ICA and IBM Bob needed a governed, audit-trail-enabled interface aligned with MCP Gateway standards</li>
+    </ul>
+    <h3>Key Characteristics</h3>
+    <table>
+      <tr><th>Attribute</th><th>Detail</th></tr>
+      <tr><td><strong>Type</strong></td><td>Static single-page application — pure HTML/CSS/JavaScript</td></tr>
+      <tr><td><strong>Backend</strong></td><td>None — all logic runs client-side in the browser</td></tr>
+      <tr><td><strong>Data persistence</strong></td><td>None — session-only, no cookies, no localStorage</td></tr>
+      <tr><td><strong>Network calls during analysis</strong></td><td>Zero — no external API calls</td></tr>
+      <tr><td><strong>SAP connectivity</strong></td><td>None — descriptive input, no RFC/BAPI calls</td></tr>
+      <tr><td><strong>File size</strong></td><td>66.7 KB — single self-contained HTML file</td></tr>
+      <tr><td><strong>Hosting</strong></td><td>GitHub Pages CDN — globally available, 99.9% uptime</td></tr>
+    </table>
+  </div>
+</div>
+
+
+<div class="sec">
+  <div class="sec-hd"><span class="sec-num">03</span>System Architecture</div>
+  <div class="sec-bd">
+    <h3>Production Architecture (GitHub Pages — Active)</h3>
+    <div class="codebox"><span class="ccm">User Browser (any device, any network)
+    │
+    ├── HTTPS TLS 1.3 — CA-signed GitHub cert (zero browser warning)
+    │
+    ▼
+GitHub Pages Global CDN  (ica-bob.github.io)
+    │
+    └── Serves: index.html  (UM_Authority-Check-Analyzer.html, 66.7 KB)
+             │
+             ▼
+    Browser JavaScript Engine
+        ├── Analysis State Machine  (8-step conversation flow)
+        ├── ABAP Analyzer Engine
+        ├── SU24 Proposal Analyzer Engine
+        ├── OData Service Analyzer Engine
+        ├── Built-in Auth Objects Database
+        └── Finding Renderer + ABAP Code Generator</span></div>
+
+    <h3>Enterprise / Local Architecture (Docker)</h3>
+    <div class="codebox"><span class="ccm">User Browser
+    │
+    ├── HTTPS:8443  (TLS 1.2+, self-signed or CA cert)
+    │
+    ▼
+nginx Container  (registry.access.redhat.com/ubi9/nginx-124)
+    ├── Non-root UID 1001  |  Read-only filesystem
+    ├── All Linux capabilities dropped
+    ├── Ports bound to 127.0.0.1 only  (IBM security policy)
+    │
+    └── Serves: /usr/share/nginx/html/index.html
+    │
+[Optional] cloudflared Container (Cloudflare Tunnel)
+    └── Provides public HTTPS URL via Cloudflare edge network</span></div>
+
+    <div class="callout ci">
+      <strong>Architecture Decision</strong>
+      GitHub Pages is the recommended and active deployment. The Docker stack is maintained in the repository for enterprise / intranet deployments where internet access is restricted or a corporate reverse proxy is required.
+    </div>
+  </div>
+</div>
+
+
+<div class="sec">
+  <div class="sec-hd"><span class="sec-num">04</span>Data Flow Diagram</div>
+  <div class="sec-bd">
+    <div class="dfd">
+      <div class="dfd-title">UM_Authority-Check-Analyzer — Data Flow Diagram</div>
+      <svg width="700" height="530" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Arial,sans-serif">
+        <defs>
+          <marker id="a1"><polygon points="0 0,8 3,0 6" fill="#6366f1"></polygon></marker>
+          <marker id="a2"><polygon points="0 0,8 3,0 6" fill="#22c55e"></polygon></marker>
+          <marker id="a3"><polygon points="0 0,8 3,0 6" fill="#f59e0b"></polygon></marker>
+          <marker id="a4"><polygon points="0 0,8 3,0 6" fill="#94a3b8"></polygon></marker>
+        </defs>
+        
+        <rect x="540" y="8" width="152" height="96" rx="3" fill="#f8fafc" stroke="#e2e8f0"></rect>
+        <text x="552" y="24" font-size="8" font-weight="700" fill="#374151">LEGEND</text>
+        <line x1="552" y1="33" x2="564" y2="33" stroke="#6366f1" stroke-width="2" marker-end="url(#a1)"></line>
+        <text x="568" y="37" font-size="7.5" fill="#374151">User Input Flow</text>
+        <line x1="552" y1="49" x2="564" y2="49" stroke="#22c55e" stroke-width="2" marker-end="url(#a2)"></line>
+        <text x="568" y="53" font-size="7.5" fill="#374151">Analysis Output</text>
+        <line x1="552" y1="65" x2="564" y2="65" stroke="#f59e0b" stroke-width="2" marker-end="url(#a3)"></line>
+        <text x="568" y="69" font-size="7.5" fill="#374151">Approval Process</text>
+        <rect x="552" y="76" width="12" height="12" rx="2" fill="#dbeafe" stroke="#3b82f6"></rect>
+        <text x="568" y="86" font-size="7.5" fill="#374151">Data Store</text>
+        
+        <rect x="16" y="18" width="116" height="52" rx="4" fill="#1e1b4b" stroke="#6366f1" stroke-width="1.5"></rect>
+        <text x="74" y="38" text-anchor="middle" font-size="9" font-weight="700" fill="#a5b4fc">ANALYST</text>
+        <text x="74" y="52" text-anchor="middle" font-size="7.5" fill="#94a3b8">SAP Security /</text>
+        <text x="74" y="63" text-anchor="middle" font-size="7.5" fill="#94a3b8">Developer</text>
+        
+        <line x1="132" y1="44" x2="174" y2="44" stroke="#6366f1" stroke-width="1.5" marker-end="url(#a1)"></line>
+        <text x="153" y="38" text-anchor="middle" font-size="7" fill="#6366f1">HTTPS</text>
+        
+        <rect x="174" y="12" width="162" height="62" rx="4" fill="#312e81" stroke="#818cf8" stroke-width="1.5"></rect>
+        <text x="255" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">BROWSER</text>
+        <text x="255" y="46" text-anchor="middle" font-size="8" fill="#c7d2fe">UM_Authority-Check-Analyzer</text>
+        <text x="255" y="59" text-anchor="middle" font-size="7.5" fill="#c7d2fe">Single Page Application</text>
+        <text x="255" y="69" text-anchor="middle" font-size="7" fill="#818cf8">ica-bob.github.io</text>
+        
+        <line x1="255" y1="74" x2="255" y2="104" stroke="#6366f1" stroke-width="1.5" marker-end="url(#a1)"></line>
+        
+        <rect x="174" y="104" width="162" height="50" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"></rect>
+        <text x="255" y="122" text-anchor="middle" font-size="9" font-weight="700" fill="#1e40af">STATE MACHINE</text>
+        <text x="255" y="136" text-anchor="middle" font-size="7.5" fill="#1e40af">8-Step Conversation Flow</text>
+        <text x="255" y="148" text-anchor="middle" font-size="7" fill="#3b82f6">WELCOME &gt; TYPE &gt; SYS &gt; REL &gt; TX &gt; ACTION &gt; EVIDENCE &gt; CONFIRM</text>
+        
+        <rect x="16" y="104" width="146" height="110" rx="3" fill="#f0fdf4" stroke="#86efac" stroke-width="1"></rect>
+        <text x="89" y="119" text-anchor="middle" font-size="8.5" font-weight="700" fill="#14532d">INPUT COLLECTION</text>
+        <text x="26" y="134" font-size="7.5" fill="#166534">1  Analysis Type (ABAP/SU24/ODATA/ALL)</text>
+        <text x="26" y="147" font-size="7.5" fill="#166534">2  SAP System (S/4HANA / ERP 6.0)</text>
+        <text x="26" y="160" font-size="7.5" fill="#166534">3  SAP Release (2023 / 1909 …)</text>
+        <text x="26" y="173" font-size="7.5" fill="#166534">4  Transaction / Service Name</text>
+        <text x="26" y="186" font-size="7.5" fill="#166534">5  Business Action to Protect</text>
+        <text x="26" y="199" font-size="7.5" fill="#166534">6  Evidence / Concern Description</text>
+        <text x="26" y="212" font-size="7.5" fill="#166534">7  Change Ticket Reference</text>
+        
+        <line x1="162" y1="152" x2="174" y2="138" stroke="#6366f1" stroke-width="1.2" marker-end="url(#a1)"></line>
+        
+        <line x1="255" y1="154" x2="255" y2="184" stroke="#6366f1" stroke-width="1.5" marker-end="url(#a1)"></line>
+        
+        <rect x="166" y="184" width="178" height="40" rx="4" fill="#1e1b4b" stroke="#6366f1" stroke-width="2"></rect>
+        <text x="255" y="200" text-anchor="middle" font-size="9" font-weight="700" fill="#a5b4fc">MCP GATEWAY</text>
+        <text x="255" y="215" text-anchor="middle" font-size="7.5" fill="#818cf8">Route to Approved Analyzers [2]</text>
+        
+        <rect x="424" y="184" width="190" height="52" rx="3" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"></rect>
+        <text x="519" y="200" text-anchor="middle" font-size="8.5" font-weight="700" fill="#374151">AUTH OBJECTS DATABASE</text>
+        <text x="519" y="215" text-anchor="middle" font-size="7.5" fill="#6b7280">Built-in: ME21N ME22N ME23N</text>
+        <text x="519" y="228" text-anchor="middle" font-size="7.5" fill="#6b7280">FB01 FB03 F110 VA01 VA02</text>
+        <line x1="424" y1="210" x2="344" y2="210" stroke="#94a3b8" stroke-width="1" marker-end="url(#a4)"></line>
+        <text x="384" y="206" text-anchor="middle" font-size="7" fill="#94a3b8">Lookup</text>
+        
+        <rect x="16" y="256" width="192" height="72" rx="3" fill="#fff0f3" stroke="#ff0040" stroke-width="1.5"></rect>
+        <text x="112" y="272" text-anchor="middle" font-size="9" font-weight="700" fill="#ff0040">ABAP ANALYZER</text>
+        <text x="26" y="287" font-size="7.5" fill="#7f1d1d">• Missing AUTHORITY-CHECK</text>
+        <text x="26" y="299" font-size="7.5" fill="#7f1d1d">• Unreachable check (dead branch)</text>
+        <text x="26" y="311" font-size="7.5" fill="#7f1d1d">• sy-subrc never evaluated</text>
+        <text x="26" y="323" font-size="7.5" fill="#7f1d1d">• Correct implementation (PASS)</text>
+        <rect x="222" y="256" width="192" height="72" rx="3" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"></rect>
+        <text x="318" y="272" text-anchor="middle" font-size="9" font-weight="700" fill="#d97706">SU24 ANALYZER</text>
+        <text x="232" y="287" font-size="7.5" fill="#78350f">• Missing auth proposals</text>
+        <text x="232" y="299" font-size="7.5" fill="#78350f">• Org objects suppressed (No Check)</text>
+        <text x="232" y="311" font-size="7.5" fill="#78350f">• Known objects per transaction</text>
+        <text x="232" y="323" font-size="7.5" fill="#78350f">• Profile Generator impact</text>
+        <rect x="428" y="256" width="192" height="72" rx="3" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"></rect>
+        <text x="524" y="272" text-anchor="middle" font-size="9" font-weight="700" fill="#ef4444">ODATA ANALYZER</text>
+        <text x="438" y="287" font-size="7.5" fill="#7f1d1d">• Unprotected DPC_EXT methods</text>
+        <text x="438" y="299" font-size="7.5" fill="#7f1d1d">• UPDATE_ENTITY no auth check</text>
+        <text x="438" y="311" font-size="7.5" fill="#7f1d1d">• HTTP 403 handling gap</text>
+        <text x="438" y="323" font-size="7.5" fill="#7f1d1d">• Service activation exposure</text>
+        
+        <line x1="214" y1="224" x2="112" y2="256" stroke="#6366f1" stroke-width="1.5" marker-end="url(#a1)"></line>
+        <line x1="255" y1="224" x2="318" y2="256" stroke="#6366f1" stroke-width="1.5" marker-end="url(#a1)"></line>
+        <line x1="296" y1="224" x2="524" y2="256" stroke="#6366f1" stroke-width="1.5" marker-end="url(#a1)"></line>
+        
+        <rect x="174" y="356" width="162" height="48" rx="4" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.5"></rect>
+        <text x="255" y="374" text-anchor="middle" font-size="9" font-weight="700" fill="#7c3aed">FINDINGS COMPILER</text>
+        <text x="255" y="389" text-anchor="middle" font-size="7.5" fill="#6d28d9">ID · Severity · Evidence · Impact</text>
+        <text x="255" y="400" text-anchor="middle" font-size="7.5" fill="#6d28d9">ABAP Correction Code · Retest Plan</text>
+        
+        <line x1="112" y1="328" x2="218" y2="356" stroke="#22c55e" stroke-width="1.5" marker-end="url(#a2)"></line>
+        <line x1="318" y1="328" x2="290" y2="356" stroke="#22c55e" stroke-width="1.5" marker-end="url(#a2)"></line>
+        <line x1="524" y1="328" x2="294" y2="356" stroke="#22c55e" stroke-width="1.5" marker-end="url(#a2)"></line>
+        
+        <line x1="255" y1="404" x2="255" y2="428" stroke="#f59e0b" stroke-width="2" marker-end="url(#a3)"></line>
+        
+        <rect x="136" y="428" width="238" height="44" rx="4" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"></rect>
+        <text x="255" y="447" text-anchor="middle" font-size="9" font-weight="700" fill="#92400e">SAP SECURITY APPROVAL (Human)</text>
+        <text x="255" y="462" text-anchor="middle" font-size="7.5" fill="#78350f">Review &gt; Approve &gt; Dev Apply &gt; Transport &gt; Retest &gt; Close</text>
+        
+        <rect x="424" y="370" width="188" height="36" rx="3" fill="#f0fdf4" stroke="#86efac"></rect>
+        <text x="518" y="385" text-anchor="middle" font-size="8" font-weight="700" fill="#14532d">READ-ONLY TOOL</text>
+        <text x="518" y="399" text-anchor="middle" font-size="7.5" fill="#166534">No SAP connection · No auto-changes · Zero data sent</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+
+<div class="sec">
+  <div class="sec-hd"><span class="sec-num">05</span>Feature Infographic</div>
+  <div class="sec-bd">
+    <div class="infog">
+      <div class="infog-title">UM_AUTHORITY-CHECK-ANALYZER — AT A GLANCE</div>
+      <div class="ig-grid">
+        <div class="ig-card"><div class="ig-icon">🔍</div><div class="ig-num">3</div><div class="ig-lbl">Analysis Engines</div></div>
+        <div class="ig-card"><div class="ig-icon">📋</div><div class="ig-num">8</div><div class="ig-lbl">Conversation Steps</div></div>
+        <div class="ig-card"><div class="ig-icon">⚡</div><div class="ig-num">0</div><div class="ig-lbl">External API Calls</div></div>
+        <div class="ig-card"><div class="ig-icon">🌐</div><div class="ig-num">24/7</div><div class="ig-lbl">Always Online</div></div>
+      </div>
+      <div class="ig-mods">
+        <div class="ig-mod"><div class="ig-mod-name">ABAP ANALYZER</div><div class="ig-mod-desc">Detects missing, unreachable, or unevaluated AUTHORITY-CHECK statements. Generates corrective ABAP code and retest plans.</div></div>
+        <div class="ig-mod"><div class="ig-mod-name">SU24 ANALYZER</div><div class="ig-mod-desc">Identifies missing authorization proposals and over-broad suppressed org objects. Provides exact SU24 maintenance steps.</div></div>
+        <div class="ig-mod"><div class="ig-mod-name">ODATA ANALYZER</div><div class="ig-mod-desc">Detects unprotected OData service operations in DPC_EXT. Recommends HTTP 403 handling and AUTHORITY-CHECK placement.</div></div>
+        <div class="ig-mod"><div class="ig-mod-name">COMBINED REVIEW</div><div class="ig-mod-desc">Runs all three analyzers simultaneously. Produces consolidated findings for full authorization coverage review.</div></div>
+      </div>
+      <div class="ig-sev">
+        <div class="sc sc1">CRITICAL</div>
+        <div class="sc sc2">HIGH</div>
+        <div class="sc sc3">MEDIUM</div>
+        <div class="sc sc4">PASS</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="sec">
+  <div class="sec-hd"><span class="sec-num">06</span>Analysis Modules — Detail</div>
+  <div class="sec-bd">
+    <h3>6.1 ABAP Authority-Check Analyzer</h3>
+    <table>
+      <tr><th>Finding Type</th><th>Severity</th><th>Evidence Keywords</th><th>Description</th></tr>
+      <tr><td><span class="bdg br">MISSING</span></td><td><span class="bdg br">HIGH</span></td><td><em>default</em></td><td>No AUTHORITY-CHECK before sensitive operation. Generates full corrective ABAP code using known objects for the transaction.</td></tr>
+      <tr><td><span class="bdg br">UNREACHABLE</span></td><td><span class="bdg br">HIGH</span></td><td>unreachable, branch</td><td>AUTHORITY-CHECK exists but is in a dead code branch — does not protect the actual execution path.</td></tr>
+      <tr><td><span class="bdg br">NOT EVALUATED</span></td><td><span class="bdg br">HIGH</span></td><td>sy-subrc, not evaluated, ignored</td><td>Check executes but sy-subrc is never tested. Operation proceeds regardless of authorization result.</td></tr>
+      <tr><td><span class="bdg bg">PASS</span></td><td><span class="bdg bg">PASS</span></td><td>correct, pass, working</td><td>Check correctly placed, evaluated, and matched to declared business action.</td></tr>
+    </table>
+    <h3>6.2 SU24 Proposal Analyzer</h3>
+    <table>
+      <tr><th>Finding Type</th><th>Severity</th><th>Evidence Keywords</th><th>Description</th></tr>
+      <tr><td><span class="bdg br">MISSING PROPOSAL</span></td><td><span class="bdg br">HIGH</span></td><td><em>default</em></td><td>Expected authorization objects absent from SU24 transaction proposal. Provides exact objects and fields to add per transaction.</td></tr>
+      <tr><td><span class="bdg bo">TOO BROAD</span></td><td><span class="bdg bo">MEDIUM</span></td><td>broad, no check, suppress</td><td>Org restriction objects set to "No Check" — Profile Generator suppresses them, users get cross-org access.</td></tr>
+    </table>
+    <h3>6.3 OData Service Analyzer</h3>
+    <table>
+      <tr><th>Finding Type</th><th>Severity</th><th>Description</th></tr>
+      <tr><td><span class="bdg br">UNPROTECTED OPERATION</span></td><td><span class="bdg br">CRITICAL</span></td><td>UPDATE_ENTITY or change operations in DPC_EXT without AUTHORITY-CHECK. Any activated-service user can modify business data.</td></tr>
+    </table>
+    <h3>6.4 Finding Card Fields</h3>
+    <table>
+      <tr><th>Field</th><th>Description</th></tr>
+      <tr><td>Finding ID</td><td>Unique traceable ID — e.g. <code>AUTH-2026-45812</code>, <code>SU24-2026-31044</code>, <code>ODATA-2026-72301</code></td></tr>
+      <tr><td>Checker</td><td>Which analyzer produced the finding</td></tr>
+      <tr><td>Severity</td><td>CRITICAL / HIGH / MEDIUM / PASS</td></tr>
+      <tr><td>Transaction</td><td>SAP transaction or service name entered by analyst</td></tr>
+      <tr><td>Evidence</td><td>Technical detail of what was detected</td></tr>
+      <tr><td>Impact</td><td>Business and security impact of the defect</td></tr>
+      <tr><td>Confidence</td><td>HIGH / MEDIUM-HIGH</td></tr>
+      <tr><td>Recommended Correction</td><td>Exact ABAP code or SU24 steps to remediate</td></tr>
+      <tr><td>Retest Plan</td><td>Positive and negative test cases to verify fix</td></tr>
+    </table>
+  </div>
+</div>
+
+
+<div class="sec">
+  <div class="sec-hd"><span class="sec-num">07</span>Implementation Strategy</div>
+  <div class="sec-bd">
+    <h3>Phase 1 — Immediate Adoption (Complete)</h3>
+    <div class="callout cs"><strong>STATUS: LIVE</strong>Tool deployed at https://ica-bob.github.io/um-authority-check-analyzer/ and available to all IBM/ICA team members globally. No setup required for end users.</div>
+    <ul>
+      <li>GitHub Pages deployment under <code>ica-bob</code> organisation</li>
+      <li>Permanent URL — never changes, no laptop dependency</li>
+      <li>CA-signed TLS — no browser security warning</li>
+    </ul>
+    <h3>Phase 2 — Team Enablement</h3>
+    <ul>
+      <li>Distribute this document to SAP Security, SAP Development, and IBM ICA teams</li>
+      <li>Conduct a 30-minute walkthrough session using the Combined Review mode</li>
+      <li>Establish a process: all ABAP authorization reviews use the tool before transport approval</li>
+      <li>Define a naming convention linking tool Finding IDs to ServiceNow/JIRA tickets</li>
+    </ul>
+    <h3>Phase 3 — Process Integration</h3>
+    <ul>
+      <li>Add the tool URL to the SAP Security team's standard operating procedures</li>
+      <li>Include finding card output as mandatory attachment in SAP change requests for authorization objects</li>
+      <li>Integrate with the existing Change Advisory Board (CAB) review process</li>
+    </ul>
+    <h3>Phase 4 — Enhancement Roadmap</h3>
+    <table>
+      <tr><th>Enhancement</th><th>Priority</th><th>Description</th></tr>
+      <tr><td>Expand AUTH_OBJECTS database</td><td><span class="bdg br">HIGH</span></td><td>Add MM, SD, FI, HR transaction authorization object mappings</td></tr>
+      <tr><td>PDF export of findings</td><td><span class="bdg bo">MEDIUM</span></td><td>One-click finding card export for audit trail</td></tr>
+      <tr><td>Role impact checker</td><td><span class="bdg bo">MEDIUM</span></td><td>Cross-reference findings with common role patterns</td></tr>
+      <tr><td>Fiori launchpad integration</td><td><span class="bdg bb">LOW</span></td><td>Embed as Fiori tile within SAP landscape</td></tr>
+    </table>
+  </div>
+</div>
+
+
+<div class="sec">
+  <div class="sec-hd"><span class="sec-num">08</span>Step-by-Step User Guide</div>
+  <div class="sec-bd">
+    <div class="callout ci"><strong>OPEN IN ANY BROWSER</strong>https://ica-bob.github.io/um-authority-check-analyzer/<br />No login · No installation · No VPN required</div>
+    <h3>Quick Start Buttons</h3>
+    <table>
+      <tr><th>Button</th><th>Activates</th><th>Use When</th></tr>
+      <tr><td><span class="bdg br">ABAP CHECK</span></td><td>ABAP Analyzer</td><td>Reviewing ABAP program for missing/weak AUTHORITY-CHECK</td></tr>
+      <tr><td><span class="bdg bp">SU24 PROPOSAL</span></td><td>SU24 Analyzer</td><td>Checking transaction authorization proposals in SU24</td></tr>
+      <tr><td><span class="bdg bb">ODATA SERVICE</span></td><td>OData Analyzer</td><td>Reviewing Fiori/OData service DPC_EXT authorization</td></tr>
+      <tr><td><span class="bdg bo">COMBINED REVIEW</span></td><td>All three</td><td>Full authorization coverage review of a transaction</td></tr>
+    </table>
+    <h3>Full Workflow — 8 Steps</h3>
+    <div class="steps">
+      <div class="step-row"><div class="step-col"><div class="step-dot">1</div><div class="step-line"></div></div><div class="step-body"><h4>Select Analysis Type</h4><p>Type <code>check</code> or click a quick start button. Select ABAP, SU24, ODATA, or COMBINED.</p></div></div>
+      <div class="step-row"><div class="step-col"><div class="step-dot">2</div><div class="step-line"></div></div><div class="step-body"><h4>Enter SAP System</h4><p>Type the system: <code>S/4HANA</code>, <code>S/4HANA Private Edition</code>, or <code>ERP 6.0 EhP8</code>.</p></div></div>
+      <div class="step-row"><div class="step-col"><div class="step-dot">3</div><div class="step-line"></div></div><div class="step-body"><h4>Enter SAP Release</h4><p>Type the release: <code>2023</code>, <code>2022</code>, <code>1909</code>, <code>1809</code> etc.</p></div></div>
+      <div class="step-row"><div class="step-col"><div class="step-dot">4</div><div class="step-line"></div></div><div class="step-body"><h4>Enter Transaction / Service</h4><p>Type a SAP transaction code (<code>ME22N</code>, <code>FB01</code>, <code>VA01</code>) or OData service name (<code>ZVENDOR_SRV</code>). Known authorization objects are displayed automatically for recognised transactions.</p></div></div>
+      <div class="step-row"><div class="step-col"><div class="step-dot">5</div><div class="step-line"></div></div><div class="step-body"><h4>Describe the Business Action</h4><p>E.g. <code>Change purchase order with purchasing org restriction</code> or <code>Post FI document with company code control</code>.</p></div></div>
+      <div class="step-row"><div class="step-col"><div class="step-dot">6</div><div class="step-line"></div></div><div class="step-body"><h4>Describe Evidence / Concern</h4><p>Examples: <code>Program calls CHANGE_DOCUMENT without AUTHORITY-CHECK</code> · <code>M_BEST_EKO missing from proposal</code> · <code>sy-subrc is not evaluated after the check</code> · <code>UPDATE_ENTITY has no authorization check in DPC_EXT</code></p><div class="callout cw"><strong>PRIVACY PROTOCOL ACTIVE</strong>Passwords, tokens, secrets, and email addresses in evidence are automatically masked before processing.</div></div></div>
+      <div class="step-row"><div class="step-col"><div class="step-dot">7</div><div class="step-line"></div></div><div class="step-body"><h4>Enter Change Ticket</h4><p>Enter your ServiceNow / JIRA / SAP change ticket reference (e.g. <code>CHG-2026-00123</code>). Type <code>skip</code> if not available.</p></div></div>
+      <div class="step-row"><div class="step-col"><div class="step-dot">8</div><div class="step-line"></div></div><div class="step-body"><h4>Review &amp; Confirm</h4><p>A confirmation summary is shown with all entered details. Click <strong>PROCEED</strong> to run analysis, <strong>MODIFY</strong> to change any field, or <strong>CANCEL</strong> to discard.</p></div></div>
+    </div>
+    <h3>After Analysis — Next Steps</h3>
+    <ol>
+      <li>Route findings to SAP Security for review and approval</li>
+      <li>SAP Development applies approved corrections</li>
+      <li>Changes follow the normal SAP transport process</li>
+      <li>Retest using positive and negative scenarios from the finding card</li>
+      <li>Close the finding with the approved change ticket reference</li>
+    </ol>
+    <div class="callout cd"><strong>HUMAN APPROVAL MANDATORY</strong>ALL findings are diagnostic and read-only. The tool NEVER modifies any SAP system automatically. Every correction MUST be reviewed and approved by SAP Security before being applied.</div>
+    <h3>Commands Reference</h3>
+    <table>
+      <tr><th>Command</th><th>Action</th></tr>
+      <tr><td><code>check</code> / <code>analyze</code> / <code>inspect</code></td><td>Start a new analysis session</td></tr>
+      <tr><td><code>help</code></td><td>Show available commands and analyzer descriptions</td></tr>
+      <tr><td><code>reset</code></td><td>Clear all inputs and restart from welcome screen</td></tr>
+      <tr><td><code>skip</code></td><td>Skip the change ticket field</td></tr>
+      <tr><td><code>another</code> / <code>new</code></td><td>Start a new analysis after completion</td></tr>
+    </table>
+  </div>
+</div>
+
+
+<div class="sec">
+  <div class="sec-hd"><span class="sec-num">09</span>Security &amp; Governance Controls</div>
+  <div class="sec-bd">
+    <table>
+      <tr><th>Control</th><th>Implementation</th><th>Standard</th></tr>
+      <tr><td><strong>TLS</strong></td><td>GitHub Pages: TLS 1.3, CA-signed cert. Docker: TLS 1.2+ minimum, strong cipher suites (AES-256-GCM, ECDHE)</td><td>IBM Security §5</td></tr>
+      <tr><td><strong>No secrets in code</strong></td><td>Zero hardcoded credentials, tokens, or passwords anywhere in the codebase</td><td>IBM Security §4</td></tr>
+      <tr><td><strong>Container security</strong></td><td>Non-root UID 1001, all capabilities dropped, read-only filesystem, localhost binding only</td><td>IBM Security §2</td></tr>
+      <tr><td><strong>Base image</strong></td><td>registry.access.redhat.com/ubi9/nginx-124 — Red Hat public UBI mirror</td><td>IBM Security §2</td></tr>
+      <tr><td><strong>Input sanitisation</strong></td><td>All user input HTML-escaped before rendering; sensitive data auto-masked</td><td>IBM Security §9</td></tr>
+      <tr><td><strong>No data exfiltration</strong></td><td>Zero network calls during analysis; no analytics, no tracking, no telemetry</td><td>IBM Security §8</td></tr>
+      <tr><td><strong>CSP headers</strong></td><td>default-src 'self'; frame-ancestors 'none'; base-uri 'self' (Docker mode)</td><td>OWASP</td></tr>
+      <tr><td><strong>HSTS</strong></td><td>max-age=31536000; includeSubDomains (Docker mode)</td><td>IBM Security §3</td></tr>
+      <tr><td><strong>Human approval gate</strong></td><td>Every finding card includes mandatory approval warning. Tool is read-only by design.</td><td>ICA Governance [2]</td></tr>
+    </table>
+    <h3>Automatic Data Masking</h3>
+    <p>The tool masks the following patterns in user evidence input before any processing:</p>
+    <table>
+      <tr><th>Pattern</th><th>Masked As</th></tr>
+      <tr><td>Passwords (<code>password: xxx</code>)</td><td><code>password:[MASKED]</code></td></tr>
+      <tr><td>Tokens / Bearer tokens</td><td><code>token:[MASKED]</code> / <code>Bearer [MASKED]</code></td></tr>
+      <tr><td>Secrets (<code>secret: xxx</code>)</td><td><code>secret:[MASKED]</code></td></tr>
+      <tr><td>Email addresses</td><td><code>[EMAIL-MASKED]</code></td></tr>
+    </table>
+  </div>
+</div>
+
+
+<div class="sec">
+  <div class="sec-hd"><span class="sec-num">10</span>Repository Structure</div>
+  <div class="sec-bd">
+    <table>
+      <tr><th>Item</th><th>Value</th></tr>
+      <tr><td>GitHub Organisation</td><td><code>ica-bob</code> — https://github.com/ica-bob</td></tr>
+      <tr><td>Repository Name</td><td><code>um-authority-check-analyzer</code></td></tr>
+      <tr><td>Full Repo URL</td><td>https://github.com/ica-bob/um-authority-check-analyzer</td></tr>
+      <tr><td>Default Branch</td><td><code>main</code></td></tr>
+      <tr><td>Pages Source</td><td>main branch, root /</td></tr>
+      <tr><td>Live URL</td><td>https://ica-bob.github.io/um-authority-check-analyzer/</td></tr>
+      <tr><td>Visibility</td><td>Public</td></tr>
+    </table>
+    <h3>File Structure</h3>
+    <div class="codebox">um-authority-check-analyzer/
+│
+├── index.html                         ← Application (66.7 KB, self-contained)
+├── README.md                          ← Permanent URL + quick-start guide
+│
+├── Dockerfile                         ← Container build (Red Hat UBI nginx-124)
+├── docker-compose.yml                 ← Orchestration (app + cloudflared tunnel)
+│
+├── nginx/
+│   └── nginx.conf                     ← HTTPS server config (TLS 1.2+, security headers)
+│
+├── scripts/
+│   ├── generate-certs.sh              ← TLS cert generator (Linux / macOS)
+│   ├── generate-certs.ps1             ← TLS cert generator (Windows)
+│   ├── start-on-boot.ps1              ← Auto-start on login (Docker mode)
+│   ├── register-startup-task.ps1      ← Register Windows scheduled task
+│   └── get-url.ps1                    ← Show current Cloudflare tunnel URL
+│
+├── certs/                             ← Runtime TLS certs (git-ignored)
+│   ├── server.crt
+│   └── server.key
+│
+└── .vscode/
+    └── launch.json                    ← VS Code debug config (https://localhost:8443)</div>
+    <h3>Updating the Application</h3>
+    <div class="codebox"><span class="ccm"># Via GitHub web UI (recommended — no git needed)</span>
+1. Go to https://github.com/ica-bob/um-authority-check-analyzer
+2. Click index.html → Edit (pencil icon)
+3. Paste updated content → Commit
+4. GitHub Pages auto-redeploys in ~60 seconds
+
+<span class="ccm"># Via git CLI</span>
+<span class="ckw">git</span> clone https://github.com/ica-bob/um-authority-check-analyzer
+<span class="ckw">cp</span> UM_Authority-Check-Analyzer.html index.html
+<span class="ckw">git</span> add index.html
+<span class="ckw">git</span> commit -m <span class="cst">"Update app vX.X"</span>
+<span class="ckw">git</span> push</div>
+  </div>
+</div>
+
+
+<div class="sec">
+  <div class="sec-hd"><span class="sec-num">11</span>Deployment Architecture — All Modes</div>
+  <div class="sec-bd">
+    <table>
+      <tr><th>Mode</th><th>URL</th><th>Status</th><th>Requires</th><th>Best For</th></tr>
+      <tr><td><strong>GitHub Pages</strong></td><td>ica-bob.github.io/…</td><td><span class="bdg bg">ACTIVE</span></td><td>Nothing — always online</td><td>All users globally — recommended</td></tr>
+      <tr><td><strong>Docker Local</strong></td><td>https://localhost:8443</td><td><span class="bdg bb">Available</span></td><td>Docker Desktop + WSL 2</td><td>Local dev, offline use</td></tr>
+      <tr><td><strong>Docker + Cloudflare Tunnel</strong></td><td>*.trycloudflare.com</td><td><span class="bdg bo">Ephemeral</span></td><td>Docker + internet access</td><td>Temporary sharing</td></tr>
+      <tr><td><strong>Corporate Reverse Proxy</strong></td><td>Custom internal URL</td><td><span class="bdg bp">Configurable</span></td><td>Load balancer → Docker</td><td>Air-gapped enterprise</td></tr>
+    </table>
+    <h3>Docker Prerequisites</h3>
+    <table>
+      <tr><th>Prerequisite</th><th>Min Version</th><th>Notes</th></tr>
+      <tr><td>Windows 10/11</td><td>Build 19041+</td><td>WSL 2 support required</td></tr>
+      <tr><td>WSL 2</td><td>Any</td><td>Enable: <code>wsl --install --no-distribution</code> (needs reboot)</td></tr>
+      <tr><td>Docker Desktop</td><td>v24.x</td><td>WSL 2 backend; enable AutoStart in Docker Desktop settings</td></tr>
+      <tr><td>OpenSSL</td><td>Any recent</td><td>Included with Git for Windows</td></tr>
+    </table>
+    <h3>Docker Quick Start (Windows PowerShell)</h3>
+    <div class="codebox"><span class="ccm"># 1. Generate TLS certificates</span>
+.\scripts\generate-certs.ps1
+
+<span class="ccm"># 2. Build and start (app + cloudflared tunnel)</span>
+docker compose up -d --build
+
+<span class="ccm"># 3. Open locally</span>
+Start-Process <span class="cst">"https://localhost:8443"</span>
+
+<span class="ccm"># 4. Get current public tunnel URL</span>
+.\scripts\get-url.ps1
+
+<span class="ccm"># Useful commands</span>
+docker compose logs -f               <span class="ccm"># View live logs</span>
+docker compose down                  <span class="ccm"># Stop all containers</span>
+docker ps                            <span class="ccm"># Check health status</span></div>
+  </div>
+</div>
+
+
+<div class="sec">
+  <div class="sec-hd"><span class="sec-num">12</span>Authorization Objects Reference</div>
+  <div class="sec-bd">
+    <p>The following transactions have built-in authorization object mappings. The tool automatically displays these when the transaction is entered, and uses them to generate precise finding cards and corrective ABAP code.</p>
+    <table>
+      <tr><th>Transaction</th><th>Module</th><th>Authorization Objects</th><th>Activity</th></tr>
+      <tr><td><strong>ME21N</strong></td><td>MM — Purchasing</td><td>M_BEST_BSA, M_BEST_EKO, M_BEST_EKG, M_BEST_WRK</td><td>01 Create</td></tr>
+      <tr><td><strong>ME22N</strong></td><td>MM — Purchasing</td><td>M_BEST_BSA, M_BEST_EKO, M_BEST_EKG, M_BEST_WRK</td><td>02 Change</td></tr>
+      <tr><td><strong>ME23N</strong></td><td>MM — Purchasing</td><td>M_BEST_BSA, M_BEST_EKO</td><td>03 Display</td></tr>
+      <tr><td><strong>FB01</strong></td><td>FI — Accounting</td><td>F_BKPF_BUK, F_BKPF_KOA</td><td>01 Post</td></tr>
+      <tr><td><strong>FB03</strong></td><td>FI — Accounting</td><td>F_BKPF_BUK</td><td>03 Display</td></tr>
+      <tr><td><strong>F110</strong></td><td>FI — Payment Run</td><td>F_REGU_BUK, F_REGU_KOA</td><td>02 Change</td></tr>
+      <tr><td><strong>VA01</strong></td><td>SD — Sales</td><td>V_VBAK_AAT, V_VBAK_VKO</td><td>01 Create</td></tr>
+      <tr><td><strong>VA02</strong></td><td>SD — Sales</td><td>V_VBAK_AAT, V_VBAK_VKO</td><td>02 Change</td></tr>
+    </table>
+    <div class="callout ci">
+      <strong>EXTENDING THE DATABASE</strong>
+      Additional transactions can be added to the <code>AUTH_OBJECTS</code> constant in <code>index.html</code>. Edit the file via the GitHub web UI at github.com/ica-bob/um-authority-check-analyzer or submit a pull request.
+    </div>
+  </div>
+</div>
+
+
+<div class="dfooter">
+  <div>
+    <strong>UM_Authority-Check-Analyzer</strong> — Implementation Strategy &amp; User Guide v1.0<br />
+    <span>IBM  ·  ICA  ·  SAP Authorization Intelligence  ·  Internal Use Only</span>
+  </div>
+  <div style="text-align:right">
+    Prepared by <strong>Utsav Mukherjee</strong><br />
+    <span>August 2026</span>
+  </div>
+</div>
+
+<p class="made-with">Made with IBM Bob</p>
+</div>
+</body>
+</html>

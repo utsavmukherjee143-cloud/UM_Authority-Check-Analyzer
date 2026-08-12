@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UM_Authority-Check-Analyzer | IBM SAP Security Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════
+   UM_Authority-Check-Analyzer — IBM Enterprise Edition
+   Glassmorphism · Dark Obsidian · IBM Blue Palette
+   Futuristic Indian Technology Identity
+═══════════════════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+
+:root{
+  /* IBM Core Palette */
+  --ibm-blue-70:    #0043ce;
+  --ibm-blue-60:    #0f62fe;
+  --ibm-blue-50:    #4589ff;
+  --ibm-blue-40:    #78a9ff;
+  --ibm-blue-30:    #a6c8ff;
+  --ibm-blue-10:    #edf5ff;
+  /* Accents */
+  --saffron:        #ff6b00;
+  --saffron-dim:    #ff6b0080;
+  --india-green:    #138808;
+  --india-green-dim:#13880840;
+  --ashoka-blue:    #000080;
+  --ashoka-chakra:  #FF9933;
+  --white:          #ffffff;
+  /* Background */
+  --obsidian:       #060810;
+  --obsidian-2:     #0a0d1a;
+  --obsidian-3:     #0e1220;
+  --obsidian-4:     #121828;
+  --panel-bg:       rgba(14,18,32,0.85);
+  --panel-border:   rgba(70,137,255,0.18);
+  --glass-bg:       rgba(15,20,40,0.72);
+  --glass-border:   rgba(120,169,255,0.22);
+  --card-bg:        rgba(10,14,26,0.9);
+  /* Chrome/Metallic */
+  --chrome-1:       #e8eaf0;
+  --chrome-2:       #b0b8cc;
+  --chrome-3:       #6b7694;
+  --chrome-dim:     rgba(176,184,204,0.15);
+  /* Semantic */
+  --critical:       #da1e28;
+  --critical-dim:   #da1e2830;
+  --high:           #ff832b;
+  --high-dim:       #ff832b30;
+  --medium:         #f1c21b;
+  --medium-dim:     #f1c21b30;
+  --low:            #24a148;
+  --low-dim:        #24a14830;
+  --info:           #4589ff;
+  --info-dim:       #4589ff25;
+  --pass:           #24a148;
+  /* Typography */
+  --font-sans:      'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  --font-cond:      'IBM Plex Sans Condensed', 'IBM Plex Sans', sans-serif;
+  --font-mono:      'IBM Plex Mono', 'Consolas', monospace;
+  /* Spacing */
+  --radius-sm:      4px;
+  --radius-md:      8px;
+  --radius-lg:      12px;
+  /* Transitions */
+  --ease:           cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:#060810;}
+::-webkit-scrollbar-thumb{background:var(--ibm-blue-70);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:var(--ibm-blue-60);}
+
+/* ── BODY ── */
+html,body{height:100%;overflow:hidden;}
+body{
+  font-family:var(--font-sans);
+  background:var(--obsidian);
+  color:var(--chrome-1);
+  display:flex;flex-direction:column;
+  min-height:100vh;
+  position:relative;
+}
+
+/* ── STARFIELD BACKGROUND ── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 120% 80% at 20% 10%, rgba(0,67,206,0.18) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 60% at 80% 90%, rgba(19,136,8,0.08) 0%, transparent 45%),
+    radial-gradient(ellipse 60% 40% at 50% 50%, rgba(255,107,0,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 100% at 100% 0%, rgba(0,0,128,0.12) 0%, transparent 50%);
+  pointer-events:none;z-index:0;
+}
+
+/* ── GRID OVERLAY ── */
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(70,137,255,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(70,137,255,0.04) 1px,transparent 1px);
+  background-size:48px 48px;
+  pointer-events:none;z-index:0;
+  animation:gridDrift 30s linear infinite;
+}
+@keyframes gridDrift{0%{background-position:0 0;}100%{background-position:48px 48px;}}
+
+/* ── SCANLINES ── */
+.scanlines{
+  position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px);
+  pointer-events:none;z-index:1;opacity:0.5;
+}
+
+/* ══════════════════════════════════════════════════
+   SHELL LAYOUT
+══════════════════════════════════════════════════ */
+.app-shell{
+  position:relative;z-index:2;
+  display:grid;
+  grid-template-rows:auto 1fr;
+  grid-template-columns:240px 1fr;
+  grid-template-areas:"topbar topbar" "sidebar main";
+  height:100vh;
+  overflow:hidden;
+}
+
+/* ── TOP BAR ── */
+.topbar{
+  grid-area:topbar;
+  background:linear-gradient(180deg,rgba(6,8,16,0.98) 0%,rgba(10,13,26,0.96) 100%);
+  border-bottom:1px solid var(--panel-border);
+  padding:0 24px;
+  height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+  position:relative;z-index:100;
+  backdrop-filter:blur(20px);
+}
+.topbar::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--ibm-blue-60),var(--saffron),var(--india-green),var(--ibm-blue-60),transparent);
+  opacity:0.6;
+}
+
+.topbar-brand{display:flex;align-items:center;gap:14px;}
+
+/* Ashoka Chakra Logo Mark */
+.chakra-mark{
+  width:44px;height:44px;flex-shrink:0;
+  position:relative;display:flex;align-items:center;justify-content:center;
+}
+.chakra-ring{
+  width:40px;height:40px;border-radius:50%;
+  border:2px solid var(--ibm-blue-50);
+  position:relative;display:flex;align-items:center;justify-content:center;
+  animation:chakraSpin 20s linear infinite;
+}
+@keyframes chakraSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.chakra-ring::before{
+  content:'';position:absolute;inset:3px;border-radius:50%;
+  background:conic-gradient(
+    var(--saffron) 0deg 30deg, transparent 30deg 60deg,
+    var(--india-green) 60deg 90deg, transparent 90deg 120deg,
+    var(--ibm-blue-50) 120deg 150deg, transparent 150deg 180deg,
+    var(--saffron) 180deg 210deg, transparent 210deg 240deg,
+    var(--india-green) 240deg 270deg, transparent 270deg 300deg,
+    var(--ibm-blue-50) 300deg 330deg, transparent 330deg 360deg
+  );
+  opacity:0.4;
+}
+.chakra-ring::after{
+  content:'✦';color:var(--ibm-blue-40);font-size:14px;
+  position:absolute;animation:chakraSpin 20s linear infinite reverse;
+}
+
+.brand-name{
+  font-family:var(--font-cond);font-size:18px;font-weight:700;
+  color:var(--chrome-1);letter-spacing:0.5px;line-height:1.1;
+}
+.brand-name span.accent-saffron{color:var(--saffron);}
+.brand-name span.accent-blue{color:var(--ibm-blue-50);}
+.brand-tagline{
+  font-size:10px;font-weight:400;color:var(--ibm-blue-40);
+  letter-spacing:1.5px;text-transform:uppercase;margin-top:1px;
+}
+
+/* IBM Logo Area */
+.ibm-logo-area{
+  display:flex;align-items:center;gap:18px;
+}
+.ibm-wordmark{
+  font-family:var(--font-sans);font-size:20px;font-weight:700;
+  color:var(--ibm-blue-50);letter-spacing:4px;
+  text-shadow:0 0 20px rgba(70,137,255,0.4);
+}
+.topbar-status{display:flex;align-items:center;gap:8px;}
+.status-pill{
+  font-family:var(--font-mono);font-size:10px;font-weight:500;
+  padding:3px 10px;border-radius:20px;letter-spacing:0.5px;
+}
+.status-online{background:rgba(36,161,72,0.2);border:1px solid var(--low);color:var(--low);}
+.status-rdonly{background:rgba(70,137,255,0.15);border:1px solid var(--ibm-blue-50);color:var(--ibm-blue-40);}
+.status-ver{background:rgba(15,20,40,0.8);border:1px solid var(--panel-border);color:var(--chrome-3);}
+
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-user-btn{
+  display:flex;align-items:center;gap:8px;
+  background:var(--glass-bg);border:1px solid var(--glass-border);
+  border-radius:var(--radius-md);padding:6px 12px;cursor:pointer;
+  transition:all 0.2s var(--ease);color:var(--chrome-2);
+  font-family:var(--font-sans);font-size:13px;
+}
+.topbar-user-btn:hover{border-color:var(--ibm-blue-50);color:var(--chrome-1);}
+.user-avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,var(--ibm-blue-70),var(--ibm-blue-50));
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#fff;flex-shrink:0;
+}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  grid-area:sidebar;
+  background:linear-gradient(180deg,rgba(8,10,20,0.97) 0%,rgba(6,8,16,0.99) 100%);
+  border-right:1px solid var(--panel-border);
+  display:flex;flex-direction:column;
+  overflow-y:auto;overflow-x:hidden;
+  position:relative;z-index:50;
+}
+.sidebar::after{
+  content:'';position:absolute;top:0;right:0;bottom:0;width:1px;
+  background:linear-gradient(180deg,transparent,var(--ibm-blue-60),var(--saffron),var(--india-green),transparent);
+  opacity:0.3;
+}
+
+.nav-section-label{
+  font-family:var(--font-mono);font-size:9px;font-weight:500;
+  color:var(--chrome-3);letter-spacing:2px;text-transform:uppercase;
+  padding:16px 18px 6px;
+}
+
+.nav-item{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 18px;cursor:pointer;
+  transition:all 0.15s var(--ease);
+  position:relative;border-left:3px solid transparent;
+  font-size:13px;font-weight:400;color:var(--chrome-3);
+  text-decoration:none;user-select:none;
+}
+.nav-item:hover{
+  background:rgba(70,137,255,0.07);
+  color:var(--chrome-1);border-left-color:var(--ibm-blue-60);
+}
+.nav-item.active{
+  background:rgba(70,137,255,0.12);
+  color:var(--ibm-blue-40);border-left-color:var(--ibm-blue-60);
+  font-weight:500;
+}
+.nav-item.active .nav-icon{color:var(--ibm-blue-50);}
+.nav-icon{font-size:15px;width:18px;text-align:center;flex-shrink:0;color:var(--chrome-3);}
+.nav-badge{
+  margin-left:auto;font-family:var(--font-mono);font-size:9px;
+  padding:1px 6px;border-radius:10px;
+  background:rgba(218,30,40,0.2);border:1px solid rgba(218,30,40,0.4);
+  color:#ff8389;
+}
+.nav-badge-warn{background:rgba(241,194,27,0.15);border-color:rgba(241,194,27,0.35);color:#f1c21b;}
+.nav-badge-ok{background:rgba(36,161,72,0.15);border-color:rgba(36,161,72,0.35);color:#42be65;}
+
+.sidebar-footer{
+  margin-top:auto;padding:16px;
+  border-top:1px solid var(--panel-border);
+}
+.sidebar-footer-text{font-size:10px;color:var(--chrome-3);line-height:1.6;}
+.sidebar-footer-text strong{color:var(--ibm-blue-40);}
+
+/* ── MAIN CONTENT ── */
+.main-content{
+  grid-area:main;
+  overflow-y:auto;overflow-x:hidden;
+  background:transparent;
+  position:relative;
+}
+
+/* ══════════════════════════════════════════════════
+   VIEWS / PAGES
+══════════════════════════════════════════════════ */
+.view{display:none;padding:28px;animation:viewIn 0.25s var(--ease);}
+.view.active{display:block;}
+@keyframes viewIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── PAGE HEADER ── */
+.page-header{margin-bottom:28px;}
+.page-title{
+  font-family:var(--font-cond);font-size:26px;font-weight:700;
+  color:var(--chrome-1);letter-spacing:-0.3px;
+}
+.page-subtitle{
+  font-size:13px;color:var(--chrome-3);margin-top:4px;
+}
+.page-header-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+
+/* ── CARD ── */
+.card{
+  background:var(--card-bg);
+  border:1px solid var(--panel-border);
+  border-radius:var(--radius-lg);
+  backdrop-filter:blur(12px);
+  overflow:hidden;
+}
+.card-header{
+  padding:14px 18px;
+  border-bottom:1px solid var(--panel-border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(70,137,255,0.04);
+}
+.card-title{
+  font-family:var(--font-cond);font-size:13px;font-weight:600;
+  letter-spacing:0.8px;text-transform:uppercase;
+  color:var(--ibm-blue-40);
+}
+.card-body{padding:18px;}
+
+/* ── GRID HELPERS ── */
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+@media(max-width:1100px){.grid-4{grid-template-columns:repeat(2,1fr);}.grid-5{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:800px){.grid-2,.grid-3,.grid-4,.grid-5{grid-template-columns:1fr;}.app-shell{grid-template-columns:1fr;grid-template-areas:"topbar" "main";}.sidebar{display:none;}}
+
+/* ── KPI CARD ── */
+.kpi-card{
+  background:var(--card-bg);border:1px solid var(--panel-border);
+  border-radius:var(--radius-lg);padding:18px;
+  position:relative;overflow:hidden;
+  transition:border-color 0.2s var(--ease),transform 0.2s var(--ease);
+}
+.kpi-card:hover{border-color:var(--ibm-blue-50);transform:translateY(-2px);}
+.kpi-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+}
+.kpi-card.kpi-critical::before{background:linear-gradient(90deg,var(--critical),transparent);}
+.kpi-card.kpi-high::before{background:linear-gradient(90deg,var(--high),transparent);}
+.kpi-card.kpi-medium::before{background:linear-gradient(90deg,var(--medium),transparent);}
+.kpi-card.kpi-low::before{background:linear-gradient(90deg,var(--low),transparent);}
+.kpi-card.kpi-blue::before{background:linear-gradient(90deg,var(--ibm-blue-60),transparent);}
+.kpi-card.kpi-saffron::before{background:linear-gradient(90deg,var(--saffron),transparent);}
+
+.kpi-label{font-size:11px;font-weight:500;color:var(--chrome-3);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:6px;}
+.kpi-value{font-family:var(--font-cond);font-size:32px;font-weight:700;color:var(--chrome-1);line-height:1;}
+.kpi-value.kpi-v-critical{color:var(--critical);}
+.kpi-value.kpi-v-high{color:var(--high);}
+.kpi-value.kpi-v-medium{color:var(--medium);}
+.kpi-value.kpi-v-low{color:var(--low);}
+.kpi-value.kpi-v-blue{color:var(--ibm-blue-40);}
+.kpi-trend{font-size:11px;color:var(--chrome-3);margin-top:4px;}
+.kpi-trend .up{color:var(--critical);}
+.kpi-trend .dn{color:var(--low);}
+.kpi-sparkbar{
+  display:flex;align-items:flex-end;gap:2px;height:28px;margin-top:8px;
+}
+.kpi-sparkbar span{
+  flex:1;background:var(--ibm-blue-70);border-radius:1px;
+  transition:height 0.3s var(--ease);min-height:3px;
+  opacity:0.6;
+}
+.kpi-sparkbar span:last-child{opacity:1;background:var(--ibm-blue-50);}
+
+/* ── SEVERITY BADGE ── */
+.badge{
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:var(--font-mono);font-size:10px;font-weight:500;
+  padding:2px 8px;border-radius:3px;letter-spacing:0.5px;
+}
+.badge-critical{background:var(--critical-dim);border:1px solid rgba(218,30,40,0.5);color:#ff8389;}
+.badge-high{background:var(--high-dim);border:1px solid rgba(255,131,43,0.5);color:#ff832b;}
+.badge-medium{background:var(--medium-dim);border:1px solid rgba(241,194,27,0.5);color:#f1c21b;}
+.badge-low{background:var(--low-dim);border:1px solid rgba(36,161,72,0.5);color:#42be65;}
+.badge-info{background:var(--info-dim);border:1px solid rgba(70,137,255,0.4);color:var(--ibm-blue-40);}
+.badge-pass{background:rgba(36,161,72,0.12);border:1px solid rgba(36,161,72,0.4);color:#42be65;}
+
+/* ── BUTTON ── */
+.btn{
+  font-family:var(--font-sans);font-size:13px;font-weight:500;
+  padding:8px 18px;border-radius:var(--radius-sm);border:none;cursor:pointer;
+  transition:all 0.18s var(--ease);display:inline-flex;align-items:center;gap:6px;
+}
+.btn-primary{background:var(--ibm-blue-60);color:#fff;}
+.btn-primary:hover{background:var(--ibm-blue-50);}
+.btn-secondary{background:transparent;border:1px solid var(--ibm-blue-60);color:var(--ibm-blue-40);}
+.btn-secondary:hover{background:rgba(70,137,255,0.1);}
+.btn-ghost{background:transparent;border:1px solid var(--panel-border);color:var(--chrome-3);}
+.btn-ghost:hover{border-color:var(--chrome-2);color:var(--chrome-1);}
+.btn-danger{background:var(--critical);color:#fff;}
+.btn-danger:hover{background:#ba1b23;}
+.btn-sm{font-size:11px;padding:5px 12px;}
+.btn-lg{font-size:14px;padding:11px 24px;}
+.btn:disabled{opacity:0.4;cursor:not-allowed;}
+
+/* ── INPUT / FORM ── */
+.form-group{margin-bottom:16px;}
+.form-label{font-size:12px;font-weight:500;color:var(--chrome-2);margin-bottom:5px;display:block;letter-spacing:0.3px;}
+.form-control{
+  width:100%;background:rgba(10,14,26,0.8);
+  border:1px solid var(--panel-border);border-radius:var(--radius-sm);
+  color:var(--chrome-1);font-family:var(--font-sans);font-size:13px;
+  padding:9px 13px;outline:none;
+  transition:border-color 0.18s var(--ease),box-shadow 0.18s var(--ease);
+}
+.form-control:focus{
+  border-color:var(--ibm-blue-60);
+  box-shadow:0 0 0 2px rgba(15,98,254,0.25);
+}
+.form-control::placeholder{color:var(--chrome-3);opacity:0.7;}
+textarea.form-control{resize:vertical;min-height:120px;font-family:var(--font-mono);font-size:12px;}
+select.form-control{cursor:pointer;}
+
+/* ── TABLE ── */
+.data-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+.data-table th{
+  font-family:var(--font-mono);font-size:10px;font-weight:500;
+  letter-spacing:0.8px;text-transform:uppercase;
+  color:var(--chrome-3);padding:9px 13px;
+  border-bottom:1px solid var(--panel-border);
+  text-align:left;white-space:nowrap;
+}
+.data-table td{
+  padding:9px 13px;border-bottom:1px solid rgba(70,137,255,0.07);
+  color:var(--chrome-2);vertical-align:top;
+}
+.data-table tr:hover td{background:rgba(70,137,255,0.04);}
+.data-table tr:last-child td{border-bottom:none;}
+
+/* ── CODE BLOCK ── */
+.code-block{
+  background:rgba(4,6,14,0.95);border:1px solid rgba(70,137,255,0.15);
+  border-left:3px solid var(--ibm-blue-60);
+  border-radius:var(--radius-sm);
+  padding:14px 16px;font-family:var(--font-mono);font-size:12px;
+  line-height:1.6;overflow-x:auto;white-space:pre;
+  color:#a8b4d0;
+}
+.code-block .kw{color:var(--ibm-blue-40);}
+.code-block .str{color:#42be65;}
+.code-block .cmt{color:var(--chrome-3);font-style:italic;}
+.code-block .obj{color:var(--saffron);}
+.code-block .err{color:var(--critical);text-decoration:underline wavy;}
+.code-block .fix{background:rgba(36,161,72,0.12);border-radius:2px;padding:0 2px;}
+
+/* ── FINDING CARD ── */
+.finding-card{
+  background:var(--card-bg);
+  border:1px solid var(--panel-border);
+  border-radius:var(--radius-lg);
+  overflow:hidden;margin-bottom:16px;
+  transition:border-color 0.2s var(--ease);
+}
+.finding-card:hover{border-color:rgba(70,137,255,0.35);}
+.finding-card-header{
+  padding:12px 18px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  border-bottom:1px solid var(--panel-border);
+  cursor:pointer;user-select:none;
+}
+.fch-critical{background:rgba(218,30,40,0.08);border-left:3px solid var(--critical);}
+.fch-high{background:rgba(255,131,43,0.08);border-left:3px solid var(--high);}
+.fch-medium{background:rgba(241,194,27,0.08);border-left:3px solid var(--medium);}
+.fch-low{background:rgba(36,161,72,0.08);border-left:3px solid var(--low);}
+.fch-pass{background:rgba(36,161,72,0.05);border-left:3px solid var(--low);}
+.fch-info{background:rgba(70,137,255,0.05);border-left:3px solid var(--ibm-blue-60);}
+.finding-card-body{padding:18px;}
+.finding-meta-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:10px;margin-bottom:14px;
+}
+.finding-meta-item{background:rgba(70,137,255,0.04);border:1px solid rgba(70,137,255,0.1);border-radius:var(--radius-sm);padding:8px 12px;}
+.fmi-label{font-family:var(--font-mono);font-size:9px;color:var(--chrome-3);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+.fmi-value{font-size:12.5px;color:var(--chrome-1);word-break:break-word;}
+
+.diff-view { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px; }
+.diff-pane-label { font-family:var(--font-mono);font-size:10px;letter-spacing:0.8px;padding:6px 12px;border-radius:var(--radius-sm) var(--radius-sm) 0 0; }
+.diff-before { color:#ff8389;background:rgba(218,30,40,0.12);border:1px solid rgba(218,30,40,0.3); }
+.diff-after { color:#42be65;background:rgba(36,161,72,0.12);border:1px solid rgba(36,161,72,0.3); }
+.diff-before .code-block, .diff-after .code-block { border-radius:0 0 var(--radius-sm) var(--radius-sm);margin-top:0;border-top:none; }
+
+/* ── CHART PLACEHOLDER ── */
+.chart-container{position:relative;width:100%;height:180px;display:flex;align-items:center;justify-content:center;}
+.donut-svg{width:160px;height:160px;}
+
+/* ── PROGRESS BAR ── */
+.progress-bar{height:6px;background:rgba(70,137,255,0.1);border-radius:3px;overflow:hidden;margin-top:6px;}
+.progress-fill{height:100%;border-radius:3px;transition:width 0.6s var(--ease);}
+.pf-critical{background:linear-gradient(90deg,var(--critical-dim),var(--critical));}
+.pf-high{background:linear-gradient(90deg,var(--high-dim),var(--high));}
+.pf-medium{background:linear-gradient(90deg,var(--medium-dim),var(--medium));}
+.pf-low{background:linear-gradient(90deg,var(--low-dim),var(--low));}
+.pf-blue{background:linear-gradient(90deg,rgba(70,137,255,0.3),var(--ibm-blue-60));}
+
+/* ── TAB BAR ── */
+.tab-bar{display:flex;gap:0;border-bottom:1px solid var(--panel-border);margin-bottom:20px;}
+.tab-btn{
+  font-family:var(--font-sans);font-size:12px;font-weight:500;
+  padding:10px 18px;cursor:pointer;color:var(--chrome-3);
+  border:none;background:none;border-bottom:2px solid transparent;
+  transition:all 0.15s var(--ease);margin-bottom:-1px;
+}
+.tab-btn:hover{color:var(--chrome-1);}
+.tab-btn.active{color:var(--ibm-blue-40);border-bottom-color:var(--ibm-blue-60);}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+/* ── SPINNER ── */
+.spinner{
+  width:20px;height:20px;border-radius:50%;
+  border:2px solid rgba(70,137,255,0.2);
+  border-top-color:var(--ibm-blue-60);
+  animation:spin 0.7s linear infinite;display:inline-block;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── ALERT ── */
+.alert{padding:12px 16px;border-radius:var(--radius-sm);border:1px solid;font-size:12.5px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start;}
+.alert-critical{background:rgba(218,30,40,0.08);border-color:rgba(218,30,40,0.4);color:#ff8389;}
+.alert-warning{background:rgba(241,194,27,0.08);border-color:rgba(241,194,27,0.4);color:#f1c21b;}
+.alert-info{background:var(--info-dim);border-color:rgba(70,137,255,0.35);color:var(--ibm-blue-40);}
+.alert-success{background:rgba(36,161,72,0.08);border-color:rgba(36,161,72,0.4);color:#42be65;}
+
+/* ── TAGS ── */
+.tag{
+  display:inline-block;font-family:var(--font-mono);font-size:10px;
+  padding:2px 7px;border-radius:2px;background:rgba(70,137,255,0.12);
+  border:1px solid rgba(70,137,255,0.25);color:var(--ibm-blue-40);
+  margin:2px;
+}
+
+/* ── SEPARATOR ── */
+.sep{border:none;border-top:1px solid var(--panel-border);margin:20px 0;}
+
+/* ── LOGIN OVERLAY ── */
+#loginOverlay{
+  position:fixed;inset:0;z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,rgba(6,8,16,0.98) 0%,rgba(0,20,60,0.97) 100%);
+  backdrop-filter:blur(20px);
+}
+.login-panel{
+  width:420px;max-width:95vw;
+  background:linear-gradient(145deg,rgba(14,18,32,0.95),rgba(8,12,24,0.98));
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius-lg);
+  padding:36px;
+  box-shadow:0 24px 80px rgba(0,0,0,0.6),0 0 0 1px rgba(70,137,255,0.1),0 0 80px rgba(70,137,255,0.08);
+  position:relative;overflow:hidden;
+}
+.login-panel::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--saffron),var(--white),var(--india-green));
+  opacity:0.8;
+}
+.login-logo-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
+.login-chakra{
+  width:52px;height:52px;border-radius:50%;
+  border:2px solid var(--ibm-blue-50);
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle,rgba(70,137,255,0.1),transparent);
+}
+.login-chakra-inner{
+  width:36px;height:36px;border-radius:50%;
+  background:conic-gradient(var(--saffron) 0deg 120deg,var(--white) 120deg 240deg,var(--india-green) 240deg 360deg);
+  opacity:0.7;animation:chakraSpin 8s linear infinite;
+}
+.login-ibm{font-family:var(--font-sans);font-size:24px;font-weight:700;color:var(--ibm-blue-50);letter-spacing:5px;}
+.login-title{font-family:var(--font-cond);font-size:20px;font-weight:700;color:var(--chrome-1);margin-bottom:4px;}
+.login-subtitle{font-size:12px;color:var(--chrome-3);margin-bottom:24px;line-height:1.5;}
+.login-sso-btn{
+  width:100%;padding:12px;border-radius:var(--radius-sm);
+  background:var(--ibm-blue-60);border:none;color:#fff;
+  font-family:var(--font-sans);font-size:14px;font-weight:600;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:all 0.2s var(--ease);letter-spacing:0.3px;margin-bottom:16px;
+}
+.login-sso-btn:hover{background:var(--ibm-blue-50);box-shadow:0 4px 20px rgba(15,98,254,0.4);}
+.login-divider{text-align:center;font-size:11px;color:var(--chrome-3);margin:12px 0;position:relative;}
+.login-divider::before,.login-divider::after{
+  content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--panel-border);
+}
+.login-divider::before{left:0;}
+.login-divider::after{right:0;}
+.login-notice{
+  margin-top:16px;padding:10px 12px;
+  background:rgba(70,137,255,0.06);border:1px solid rgba(70,137,255,0.2);
+  border-radius:var(--radius-sm);font-size:11px;color:var(--chrome-3);line-height:1.5;
+}
+.login-notice strong{color:var(--ibm-blue-40);}
+
+/* ── SCANNER AREA ── */
+.scanner-layout{display:grid;grid-template-columns:1fr 380px;gap:20px;}
+@media(max-width:1000px){.scanner-layout{grid-template-columns:1fr;}}
+.scan-dropzone{
+  border:2px dashed var(--panel-border);border-radius:var(--radius-lg);
+  padding:32px;text-align:center;cursor:pointer;
+  transition:all 0.2s var(--ease);
+  background:rgba(70,137,255,0.02);
+}
+.scan-dropzone:hover,.scan-dropzone.drag-over{
+  border-color:var(--ibm-blue-60);
+  background:rgba(70,137,255,0.06);
+}
+.scan-dropzone-icon{font-size:36px;margin-bottom:12px;opacity:0.6;}
+.scan-dropzone-text{font-size:13px;color:var(--chrome-3);}
+.scan-dropzone-text strong{color:var(--ibm-blue-40);}
+
+/* ── DASHBOARD HERO ── */
+.hero-banner{
+  background:linear-gradient(135deg,rgba(0,67,206,0.15) 0%,rgba(255,107,0,0.08) 50%,rgba(19,136,8,0.08) 100%);
+  border:1px solid var(--panel-border);border-radius:var(--radius-lg);
+  padding:32px;margin-bottom:24px;position:relative;overflow:hidden;
+}
+.hero-banner::before{
+  content:'';position:absolute;top:-60px;right:-60px;
+  width:250px;height:250px;border-radius:50%;
+  background:radial-gradient(circle,rgba(70,137,255,0.12),transparent 70%);
+}
+.hero-taglines{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+.hero-tag{
+  font-family:var(--font-mono);font-size:11px;padding:4px 12px;border-radius:20px;
+}
+.ht-saffron{background:rgba(255,107,0,0.15);border:1px solid rgba(255,107,0,0.4);color:var(--saffron);}
+.ht-green{background:rgba(19,136,8,0.15);border:1px solid rgba(19,136,8,0.4);color:#42be65;}
+.ht-blue{background:rgba(70,137,255,0.15);border:1px solid rgba(70,137,255,0.4);color:var(--ibm-blue-40);}
+.ht-white{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:var(--chrome-2);}
+
+/* ── RISK DONUT ── */
+.risk-ring{width:120px;height:120px;position:relative;flex-shrink:0;}
+.risk-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+.risk-ring-val{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.risk-ring-num{font-family:var(--font-cond);font-size:26px;font-weight:700;color:var(--chrome-1);}
+.risk-ring-lbl{font-size:9px;color:var(--chrome-3);letter-spacing:1px;text-transform:uppercase;}
+
+/* ── GUIDE / BOOKLET STYLES ── */
+.guide-section{margin-bottom:32px;}
+.guide-h2{font-family:var(--font-cond);font-size:20px;font-weight:700;color:var(--chrome-1);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--panel-border);}
+.guide-h3{font-family:var(--font-cond);font-size:15px;font-weight:600;color:var(--ibm-blue-40);margin-bottom:8px;margin-top:16px;}
+.guide-p{font-size:13.5px;color:var(--chrome-2);line-height:1.75;margin-bottom:10px;}
+.guide-ul{padding-left:18px;margin-bottom:10px;}
+.guide-ul li{font-size:13px;color:var(--chrome-2);line-height:1.8;margin-bottom:2px;}
+.guide-note{
+  background:rgba(70,137,255,0.07);border-left:3px solid var(--ibm-blue-60);
+  border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  padding:12px 16px;margin:12px 0;font-size:12.5px;color:var(--ibm-blue-30);
+}
+.guide-warn{
+  background:rgba(241,194,27,0.07);border-left:3px solid var(--medium);
+  border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  padding:12px 16px;margin:12px 0;font-size:12.5px;color:var(--medium);
+}
+
+/* ── MATRIX TABLE ── */
+.matrix-table{width:100%;border-collapse:collapse;font-size:12px;}
+.matrix-table th{background:rgba(70,137,255,0.08);color:var(--ibm-blue-40);font-family:var(--font-mono);font-size:10px;letter-spacing:0.8px;padding:8px 12px;border:1px solid rgba(70,137,255,0.15);text-align:center;}
+.matrix-table td{padding:7px 12px;border:1px solid rgba(70,137,255,0.08);color:var(--chrome-2);text-align:center;}
+.matrix-table tr:hover td{background:rgba(70,137,255,0.04);}
+.mt-yes{color:var(--low);}
+.mt-no{color:var(--critical);}
+.mt-partial{color:var(--medium);}
+
+/* ── ADMIN CONFIG ── */
+.config-section{margin-bottom:24px;}
+.config-section-title{font-family:var(--font-cond);font-size:14px;font-weight:600;color:var(--chrome-1);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(70,137,255,0.07);}
+.toggle-label{font-size:13px;color:var(--chrome-2);}
+.toggle{width:40px;height:22px;background:rgba(70,137,255,0.2);border-radius:11px;position:relative;cursor:pointer;transition:background 0.2s;}
+.toggle.on{background:var(--ibm-blue-60);}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform 0.2s;}
+.toggle.on::after{transform:translateX(18px);}
+
+/* ── FOOTER STRIP ── */
+.main-footer{
+  position:fixed;bottom:0;left:240px;right:0;height:28px;
+  background:rgba(6,8,16,0.97);border-top:1px solid var(--panel-border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;z-index:80;font-family:var(--font-mono);font-size:10px;
+  color:var(--chrome-3);
+}
+@media(max-width:800px){.main-footer{left:0;}}
+.main-footer strong{color:var(--ibm-blue-40);}
+.footer-tricolor{display:flex;gap:3px;align-items:center;}
+.tc-saffron{width:10px;height:3px;background:var(--saffron);border-radius:1px;}
+.tc-white{width:10px;height:3px;background:var(--chrome-2);border-radius:1px;}
+.tc-green{width:10px;height:3px;background:var(--india-green);border-radius:1px;}
+
+/* ── PADDING FOR FOOTER ── */
+.main-content{padding-bottom:36px;}
+
+/* ── SCAN RESULTS TOOLBAR ── */
+.results-toolbar{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:12px 0;margin-bottom:16px;border-bottom:1px solid var(--panel-border);
+}
+.filter-chip{
+  font-family:var(--font-mono);font-size:11px;padding:4px 12px;
+  border-radius:20px;cursor:pointer;border:1px solid var(--panel-border);
+  color:var(--chrome-3);background:transparent;transition:all 0.15s;
+}
+.filter-chip:hover,.filter-chip.active{border-color:var(--ibm-blue-50);color:var(--ibm-blue-40);background:rgba(70,137,255,0.1);}
+.filter-chip.fc-critical.active{border-color:var(--critical);color:#ff8389;background:rgba(218,30,40,0.1);}
+.filter-chip.fc-high.active{border-color:var(--high);color:var(--high);background:rgba(255,131,43,0.1);}
+.filter-chip.fc-medium.active{border-color:var(--medium);color:var(--medium);background:rgba(241,194,27,0.1);}
+.filter-chip.fc-low.active{border-color:var(--low);color:var(--low);background:rgba(36,161,72,0.1);}
+</style>
+</head>
+<body>
+<div class="scanlines" aria-hidden="true"></div>
+
+<!-- ═══════════════════════════════════
+     LOGIN OVERLAY
+═══════════════════════════════════ -->
+<div id="loginOverlay" role="dialog" aria-modal="true" aria-label="IBM SSO Sign In">
+  <div class="login-panel">
+    <div class="login-logo-row">
+      <div class="login-chakra"><div class="login-chakra-inner"></div></div>
+      <div class="login-ibm">IBM</div>
+    </div>
+    <div class="login-title">UM_Authority-Check-Analyzer</div>
+    <div class="login-subtitle">Engineering Intelligence for SAP Security<br>Sign in with your IBM enterprise identity to continue.</div>
+
+    <button class="login-sso-btn" onclick="handleSSO()" id="ssoBtn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Sign in with IBM
+    </button>
+
+    <div class="login-divider">or continue with corporate email</div>
+
+    <div class="form-group" style="margin-top:12px;">
+      <label class="form-label" for="loginEmail">IBM Corporate Email</label>
+      <input class="form-control" type="email" id="loginEmail" placeholder="your.name@ibm.com" autocomplete="email" />
+    </div>
+
+    <button class="btn btn-secondary" style="width:100%;justify-content:center;margin-top:4px;" onclick="handleEmailLogin()">
+      Continue with MFA →
+    </button>
+
+    <div class="login-notice">
+      <strong>Security Notice:</strong> This tool uses IBM enterprise SSO with MFA. No passwords are stored or transmitted by this application. Sessions expire after 8 hours of inactivity. All access is audited.
+      <br><br>
+      <strong>Need help?</strong> Contact <a href="mailto:sap-security@ibm.com" style="color:var(--ibm-blue-40);">sap-security@ibm.com</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     APP SHELL
+═══════════════════════════════════ -->
+<div class="app-shell" id="appShell" style="display:none;">
+
+  <!-- TOP BAR -->
+  <header class="topbar" role="banner">
+    <div class="topbar-brand">
+      <div class="chakra-mark" aria-hidden="true">
+        <div class="chakra-ring"></div>
+      </div>
+      <div class="brand-text">
+        <div class="brand-name">UM_<span class="accent-blue">Authority</span>-<span class="accent-saffron">Check</span>-Analyzer</div>
+        <div class="brand-tagline">Engineering Intelligence for SAP Security</div>
+      </div>
+    </div>
+    <div class="topbar-status">
+      <span class="status-pill status-online" aria-label="System online">● Online</span>
+      <span class="status-pill status-rdonly">Read-Only</span>
+      <span class="status-pill status-ver">v2.0 · 2026</span>
+    </div>
+    <div class="topbar-right">
+      <div class="ibm-wordmark" aria-label="IBM">IBM</div>
+      <button class="topbar-user-btn" onclick="showUserMenu()" aria-label="User menu">
+        <div class="user-avatar" id="userAvatarInitials">U</div>
+        <span id="userDisplayName">User</span>
+        <span>▾</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar" role="navigation" aria-label="Main navigation">
+    <div class="nav-section-label">Main</div>
+    <a class="nav-item active" data-view="dashboard" onclick="showView('dashboard')" href="#" role="menuitem">
+      <span class="nav-icon">⊞</span> Dashboard
+    </a>
+
+    <div class="nav-section-label">Analyzers</div>
+    <a class="nav-item" data-view="abap-scanner" onclick="showView('abap-scanner')" href="#" role="menuitem">
+      <span class="nav-icon">⟨/⟩</span> ABAP Code Scanner
+      <span class="nav-badge" id="navBadgeAbap">0</span>
+    </a>
+    <a class="nav-item" data-view="tcode-analyzer" onclick="showView('tcode-analyzer')" href="#" role="menuitem">
+      <span class="nav-icon">⌘</span> T-Code Analyzer
+    </a>
+    <a class="nav-item" data-view="fiori-analyzer" onclick="showView('fiori-analyzer')" href="#" role="menuitem">
+      <span class="nav-icon">◈</span> Fiori App Analyzer
+    </a>
+    <a class="nav-item" data-view="webdynpro-analyzer" onclick="showView('webdynpro-analyzer')" href="#" role="menuitem">
+      <span class="nav-icon">◫</span> Web Dynpro Analyzer
+    </a>
+    <a class="nav-item" data-view="odata-analyzer" onclick="showView('odata-analyzer')" href="#" role="menuitem">
+      <span class="nav-icon">⧉</span> OData Service Analyzer
+    </a>
+    <a class="nav-item" data-view="su24-analysis" onclick="showView('su24-analysis')" href="#" role="menuitem">
+      <span class="nav-icon">⊕</span> SU24/SU25 Analysis
+    </a>
+
+    <div class="nav-section-label">Results</div>
+    <a class="nav-item" data-view="findings" onclick="showView('findings')" href="#" role="menuitem">
+      <span class="nav-icon">⚑</span> Findings &amp; Remediation
+      <span class="nav-badge" id="navBadgeFindings">0</span>
+    </a>
+    <a class="nav-item" data-view="audit" onclick="showView('audit')" href="#" role="menuitem">
+      <span class="nav-icon">☰</span> Audit Evidence
+    </a>
+
+    <div class="nav-section-label">Knowledge</div>
+    <a class="nav-item" data-view="guidebook" onclick="showView('guidebook')" href="#" role="menuitem">
+      <span class="nav-icon">📖</span> Operational Guidebook
+    </a>
+    <a class="nav-item" data-view="about" onclick="showView('about')" href="#" role="menuitem">
+      <span class="nav-icon">ℹ</span> About Tool
+    </a>
+
+    <div class="nav-section-label">System</div>
+    <a class="nav-item" data-view="admin" onclick="showView('admin')" href="#" role="menuitem">
+      <span class="nav-icon">⚙</span> Administration
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-text">
+        <strong>UM_Authority-Check-Analyzer</strong><br>
+        IBM SAP Security Intelligence<br>
+        © 2026 IBM Corporation<br>
+        All findings require human review.
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content" id="mainContent" role="main">
+
+    <!-- ══════════════ DASHBOARD VIEW ══════════════ -->
+    <div class="view active" id="view-dashboard">
+      <!-- Hero Banner -->
+      <div class="hero-banner">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+          <div>
+            <div style="font-family:var(--font-cond);font-size:28px;font-weight:700;color:var(--chrome-1);line-height:1.1;">UM_Authority-Check-Analyzer</div>
+            <div style="font-size:14px;color:var(--ibm-blue-40);margin-top:4px;font-style:italic;">Engineering Intelligence for SAP Security</div>
+            <div class="hero-taglines">
+              <span class="hero-tag ht-saffron">Scan ABAP</span>
+              <span class="hero-tag ht-white">Validate Objects</span>
+              <span class="hero-tag ht-green">Explain Risk</span>
+              <span class="hero-tag ht-blue">🛡 Secure by Design</span>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px;color:var(--chrome-3);margin-bottom:4px;">AUDIT-READINESS SCORE</div>
+            <div class="risk-ring" id="auditRing">
+              <svg viewBox="0 0 100 100" aria-hidden="true">
+                <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(70,137,255,0.1)" stroke-width="8"/>
+                <circle id="auditArc" cx="50" cy="50" r="44" fill="none" stroke="var(--ibm-blue-60)" stroke-width="8" stroke-linecap="round" stroke-dasharray="276.46" stroke-dashoffset="69"/>
+              </svg>
+              <div class="risk-ring-val"><div class="risk-ring-num">78</div><div class="risk-ring-lbl">Score</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI Row -->
+      <div class="grid-5" style="margin-bottom:20px;" role="region" aria-label="Key Performance Indicators">
+        <div class="kpi-card kpi-blue">
+          <div class="kpi-label">Scans This Week</div>
+          <div class="kpi-value kpi-v-blue" id="kpiScans">128</div>
+          <div class="kpi-trend"><span class="up">↑ +18%</span> vs last week</div>
+          <div class="kpi-sparkbar">
+            <span style="height:35%"></span><span style="height:50%"></span><span style="height:45%"></span>
+            <span style="height:70%"></span><span style="height:60%"></span><span style="height:80%"></span><span style="height:100%"></span>
+          </div>
+        </div>
+        <div class="kpi-card kpi-blue">
+          <div class="kpi-label">Authority Checks</div>
+          <div class="kpi-value kpi-v-blue" id="kpiChecks">2,842</div>
+          <div class="kpi-trend"><span class="up">↑ +22%</span> total scanned</div>
+          <div class="kpi-sparkbar">
+            <span style="height:40%"></span><span style="height:55%"></span><span style="height:60%"></span>
+            <span style="height:75%"></span><span style="height:70%"></span><span style="height:88%"></span><span style="height:100%"></span>
+          </div>
+        </div>
+        <div class="kpi-card kpi-low">
+          <div class="kpi-label">Compliant</div>
+          <div class="kpi-value kpi-v-low" id="kpiCompliant">2,237</div>
+          <div class="kpi-trend"><span class="dn">78%</span> pass rate</div>
+        </div>
+        <div class="kpi-card kpi-medium">
+          <div class="kpi-label">Warnings</div>
+          <div class="kpi-value kpi-v-medium" id="kpiWarnings">487</div>
+          <div class="kpi-trend"><span class="up">17%</span> need review</div>
+        </div>
+        <div class="kpi-card kpi-critical">
+          <div class="kpi-label">Exceptions</div>
+          <div class="kpi-value kpi-v-critical" id="kpiExceptions">118</div>
+          <div class="kpi-trend"><span class="up">5%</span> critical findings</div>
+        </div>
+      </div>
+
+      <!-- Main Dashboard Grid -->
+      <div class="grid-2" style="margin-bottom:20px;">
+        <!-- Recent Code Analysis -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Recent Code Analysis</span>
+            <button class="btn btn-sm btn-ghost" onclick="showView('abap-scanner')">Open Scanner →</button>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <div id="recentCodeList" style="font-family:var(--font-mono);font-size:11.5px;padding:14px 16px;color:#a8b4d0;line-height:1.7;max-height:220px;overflow-y:auto;"></div>
+          </div>
+        </div>
+
+        <!-- Authority-Check Matrix -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Authority-Check Matrix</span>
+            <button class="btn btn-sm btn-ghost" onclick="showView('findings')">View Full →</button>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <table class="data-table" id="dashMatrix">
+              <thead>
+                <tr>
+                  <th>Object</th><th>Field</th><th>Value</th><th>Result</th><th>Risk</th>
+                </tr>
+              </thead>
+              <tbody id="dashMatrixBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Row -->
+      <div class="grid-3">
+        <!-- Findings by Severity -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">Risk Overview</span></div>
+          <div class="card-body">
+            <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+              <svg width="110" height="110" viewBox="0 0 100 100" style="flex-shrink:0;transform:rotate(-90deg)" aria-label="Risk distribution donut chart">
+                <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(70,137,255,0.08)" stroke-width="18"/>
+                <circle cx="50" cy="50" r="40" fill="none" stroke="var(--low)" stroke-width="18" stroke-dasharray="251.3" stroke-dashoffset="0" opacity="0.8"/>
+                <circle cx="50" cy="50" r="40" fill="none" stroke="var(--medium)" stroke-width="18" stroke-dasharray="251.3" stroke-dashoffset="196" opacity="0.9"/>
+                <circle cx="50" cy="50" r="40" fill="none" stroke="var(--critical)" stroke-width="18" stroke-dasharray="251.3" stroke-dashoffset="238" opacity="0.95"/>
+              </svg>
+              <div style="flex:1;min-width:120px;">
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px;"><span><span style="color:var(--low);">●</span> Low Risk</span><span>78%</span></div>
+                <div class="progress-bar"><div class="progress-fill pf-low" style="width:78%"></div></div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin:8px 0 6px;"><span><span style="color:var(--medium);">●</span> Medium Risk</span><span>17%</span></div>
+                <div class="progress-bar"><div class="progress-fill pf-medium" style="width:17%"></div></div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin:8px 0 6px;"><span><span style="color:var(--critical);">●</span> High Risk</span><span>5%</span></div>
+                <div class="progress-bar"><div class="progress-fill pf-critical" style="width:5%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Affected Transactions -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">Top Affected T-Codes</span></div>
+          <div class="card-body" style="padding:0;">
+            <table class="data-table">
+              <thead><tr><th>T-Code</th><th>Findings</th><th>Severity</th></tr></thead>
+              <tbody>
+                <tr><td>ME22N</td><td>14</td><td><span class="badge badge-high">HIGH</span></td></tr>
+                <tr><td>FB01</td><td>11</td><td><span class="badge badge-critical">CRITICAL</span></td></tr>
+                <tr><td>VA01</td><td>9</td><td><span class="badge badge-high">HIGH</span></td></tr>
+                <tr><td>F110</td><td>7</td><td><span class="badge badge-medium">MEDIUM</span></td></tr>
+                <tr><td>MM01</td><td>5</td><td><span class="badge badge-medium">MEDIUM</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Clean Core Status -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">Clean Core Status</span></div>
+          <div class="card-body">
+            <div style="font-size:12px;color:var(--chrome-3);margin-bottom:12px;">SAP BTP / S/4HANA Clean Core alignment per scanned artifact</div>
+            <div style="margin-bottom:10px;">
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Released APIs Used</span><span style="color:var(--low);">84%</span></div>
+              <div class="progress-bar"><div class="progress-fill pf-low" style="width:84%"></div></div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Classic Modifications</span><span style="color:var(--medium);">12%</span></div>
+              <div class="progress-bar"><div class="progress-fill pf-medium" style="width:12%"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Non-Compliant Patterns</span><span style="color:var(--critical);">4%</span></div>
+              <div class="progress-bar"><div class="progress-fill pf-critical" style="width:4%"></div></div>
+            </div>
+            <button class="btn btn-sm btn-secondary" style="margin-top:14px;width:100%;justify-content:center;" onclick="showView('findings')">View Remediation Plan</button>
+          </div>
+        </div>
+      </div>
+    </div>

@@ -1,0 +1,113 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  UM_Authority-Check-Analyzer — Docker Compose (Production)
+#
+#  Usage:
+#    1. Generate TLS certs:   ./scripts/generate-certs.sh
+#    2. Start:                docker compose up -d
+#    3. Open:                 https://<your-host>:8443
+#
+#  For production with a real domain:
+#    - Replace ./certs/ with your CA-signed certificate files
+#    - Point your load balancer / reverse proxy at port 8443
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── Cloudflare Tunnel — provides a public HTTPS URL with no port-forwarding ──
+  #
+  # MODE A — Quick Tunnel (default, no account needed):
+  #   Public URL changes on every restart. Run to see current URL:
+  #     docker compose logs cloudflared | grep trycloudflare
+  #
+  # MODE B — Named Tunnel (stable permanent URL, recommended):
+  #   1. Sign up free at https://dash.cloudflare.com
+  #   2. Go to Zero Trust → Networks → Tunnels → Create tunnel → Cloudflared
+  #   3. Copy the tunnel token
+  #   4. Create a .env file in this folder:  TUNNEL_TOKEN=<your-token>
+  #   5. docker compose down && docker compose up -d
+  #   Your app will be live at the stable URL shown in the Cloudflare dashboard.
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared-tunnel
+    restart: unless-stopped
+    depends_on:
+      authority-check-analyzer:
+        condition: service_healthy
+    networks:
+      - default
+    # MODE A (default, no account): Quick Tunnel — ephemeral URL printed in logs
+    #   docker compose logs cloudflared | grep trycloudflare
+    # MODE B (stable URL): set TUNNEL_TOKEN in a .env file, then restart
+    #   echo "TUNNEL_TOKEN=<token>" > .env && docker compose up -d
+    command: >-
+      tunnel --no-autoupdate
+      --url https://authority-check-analyzer:8443
+      --no-tls-verify
+      --protocol http2
+    # Security hardening
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 64M
+
+  authority-check-analyzer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: um-authority-check-analyzer:1.0
+    container_name: authority-check-analyzer
+    restart: unless-stopped
+
+    # ── Port mapping ─────────────────────────────────────────────────────────
+    # Bound to localhost only — cloudflared tunnel handles external access.
+    # The corporate NIC binding was removed because the IP changes on each DHCP
+    # renewal; the tunnel is the reliable path for external access.
+    # Do NOT change to 0.0.0.0 (IBM security policy).
+    ports:
+      - "127.0.0.1:8080:8080"      # HTTP  → auto-redirects to HTTPS (local only)
+      - "127.0.0.1:8443:8443"      # HTTPS → application (local + tunnel backend)
+
+    # ── TLS certificates (mounted read-only at runtime) ──────────────────────
+    # Generate with:  ./scripts/generate-certs.sh
+    # Replace with CA-signed certs for public deployment.
+    volumes:
+      - ./certs/server.crt:/etc/nginx/certs/server.crt:ro
+      - ./certs/server.key:/etc/nginx/certs/server.key:ro
+
+    # ── Security hardening ───────────────────────────────────────────────────
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
+      - /var/log/nginx
+      - /var/lib/nginx/tmp
+    cap_drop:
+      - ALL
+
+    # ── Resource limits ──────────────────────────────────────────────────────
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 128M
+        reservations:
+          cpus: "0.10"
+          memory: 32M
+
+    # ── Health check ─────────────────────────────────────────────────────────
+    healthcheck:
+      test: ["CMD", "curl", "-fsk", "https://localhost:8443/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
