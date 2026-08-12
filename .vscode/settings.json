@@ -1,0 +1,10 @@
+{
+    "atm.codeSpell.customWords": [
+        "autocomplete"
+    ],
+    "claudeCodeLauncher.repoSync.autoCommit": true,
+    "claudeCodeLauncher.repoSync.enabled": true,
+    "c4c.scanServer.url": "http://127.0.0.1:3222/UM_Authority-Check-Analyzer.html",
+    "workbench.editor.enablePreviewFromCodeNavigation": true,
+    "workbench.editor.enablePreviewFromQuickOpen": true
+}
