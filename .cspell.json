@@ -1,0 +1,40 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "ABAP", "tbody", "thead", "tfoot", "colgroup",
+    "AUTHORITY", "STAUTHTRACE", "PFCG", "SICF", "BAPI",
+    "BUKRS", "WERKS", "EKORG", "ACTVT", "MATNR",
+    "subrc", "sy-subrc", "zcx", "DPC", "BAdI",
+    "S4HANA", "NetWeaver", "S/4HANA", "OData",
+    "zcx_no_authority", "iwbep", "iwfnd", "mgw",
+    "htags", "uppercase", "Readiness", "readiness",
+    "crit", "sev", "tcode", "artifact", "abapFiles",
+    "auditScore", "HANA", "onclick", "Analyzers",
+    "Abap", "fiori", "Fiori", "MIRO", "BSART",
+    "weakness", "Probable", "postCheck", "cleanCore",
+    "releaseNote", "fixExplanation", "missingValues",
+    "manualReview", "manualNote", "businessRisk",
+    "exploit", "authObj", "sysType", "STAUTHTRACE",
+    "execDrilldown", "exByAppType", "exByAuthObj",
+    "exRecurring", "exBySys", "exDrillBody",
+    "insertAdjacentHTML", "beforeend", "scrollIntoView",
+    "ruleMap", "objMap", "appTypes", "sysMap",
+    "downloadBlob", "setDonut", "circumference",
+    "JOBACTION", "S_BTCH_JOB", "S_SERVICE", "S_RFC",
+    "S_TCODE", "S_TABU_DIS", "S_TABU_NAM", "S_PROGRAM",
+    "M_BEST_EKO", "M_BEST_BSA", "M_BEST_WRK",
+    "F_BKPF_BUK", "F_BKPF_KOA", "V_VBAK_AAT",
+    "M_MATE_WRK", "DICBERCLS", "pyrfc",
+    "auth", "Auth", "Ashoka", "chakra", "tricolor",
+    "tc-s", "tc-w", "tc-g", "sb-foot", "ft-bar",
+    "nav-item", "nav-sec", "nav-ic", "topbar"
+  ],
+  "ignorePaths": [
+    "*.html",
+    "*.json",
+    "*.md",
+    "node_modules",
+    ".git"
+  ]
+}

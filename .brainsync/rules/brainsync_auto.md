@@ -1,7 +1,7 @@
 
 
 # Project Memory — UM_Authority-Check-Analyzer
-> 25 notes | Score threshold: >40
+> 28 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -18,15 +18,7 @@
 
 **Stack:** Unknown stack
 
-## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Active: `.`
-
-- **🟢 Edited UM_Authority-Check-Analyzer.html (18 changes, 2min) — confirmed 3x**
-- **convention in .gitignore**
-- **🟢 Edited UM_Authority-Check-Analyzer.html (13 changes, 4min)**
-- **🟢 Edited UM_Authority-Check-Analyzer.html (5 changes, 1min)**
-- **what-changed in UM_Authority-Check-Analyzer.html**
-
-## Project Standards
+## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Project Standards
 
 - 🟢 Edited UM_Authority-Check-Analyzer.html (18 changes, 2min) — confirmed 3x
 - convention in .gitignore

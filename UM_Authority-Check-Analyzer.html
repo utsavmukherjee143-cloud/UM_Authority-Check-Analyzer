@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UM_Authority-Check-Analyzer | IBM SAP Security Intelligence</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- Full USOBT/USOBX T-Code database (80,802 entries — SAP-Delivered Proposals) -->
+<script src="tcode-db.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -263,59 +265,180 @@ select.fc{cursor:pointer;}
 @keyframes sp{to{transform:rotate(360deg);}}
 
 /* LOGIN */
-#loginOverlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(6,8,16,0.98),rgba(0,20,60,0.97));backdrop-filter:blur(20px);}
-.lp{width:400px;max-width:94vw;background:linear-gradient(145deg,rgba(14,18,32,0.96),rgba(8,12,24,0.99));border:1px solid var(--panel-border);border-radius:var(--r-lg);padding:32px;box-shadow:0 24px 80px rgba(0,0,0,0.5),0 0 80px rgba(70,137,255,0.07);position:relative;overflow:hidden;}
-.lp::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--saffron),var(--white),var(--india-green));opacity:0.8;}
-.l-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
-.l-chakra{width:48px;height:48px;border-radius:50%;border:2px solid var(--ibm-blue-50);display:flex;align-items:center;justify-content:center;overflow:hidden;}
-.l-chakra svg{animation:chakraSpin 8s linear infinite;}
-.l-ibm{font-family:var(--font-sans);font-size:22px;font-weight:700;color:var(--ibm-blue-50);letter-spacing:5px;}
-.l-title{font-family:var(--font-cond);font-size:19px;font-weight:700;color:var(--chrome-1);margin-bottom:3px;}
-.l-sub{font-size:12px;color:var(--chrome-3);margin-bottom:22px;line-height:1.5;}
-.l-sso{width:100%;padding:11px;border-radius:var(--r-sm);background:var(--ibm-blue-60);border:none;color:#fff;font-family:var(--font-sans);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s var(--ease);margin-bottom:14px;}
+#loginOverlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:stretch;background:#060810;overflow:hidden;}
+/* Left hero panel */
+.l-hero{flex:1 1 0;min-width:0;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0;}
+.l-hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 80% at 60% 30%,rgba(0,67,206,0.28) 0%,transparent 60%),radial-gradient(ellipse 60% 60% at 20% 80%,rgba(19,136,8,0.15) 0%,transparent 55%),radial-gradient(ellipse 70% 70% at 80% 70%,rgba(255,107,0,0.10) 0%,transparent 55%),linear-gradient(180deg,rgba(6,8,16,0.30) 0%,rgba(6,8,16,0.85) 100%);}
+.l-hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(70,137,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(70,137,255,0.04) 1px,transparent 1px);background-size:44px 44px;}
+.l-chakra-big{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:340px;height:340px;opacity:0.85;pointer-events:none;}
+.l-chakra-ring1{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,107,0,0.45);animation:chakraSpin 18s linear infinite;}
+.l-chakra-ring2{position:absolute;inset:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.18);animation:chakraSpin 28s linear infinite reverse;}
+.l-chakra-ring3{position:absolute;inset:50px;border-radius:50%;border:1.5px solid rgba(19,136,8,0.45);animation:chakraSpin 12s linear infinite;}
+.l-chakra-ring4{position:absolute;inset:80px;border-radius:50%;border:2px solid rgba(70,137,255,0.6);box-shadow:0 0 40px rgba(70,137,255,0.25),inset 0 0 40px rgba(70,137,255,0.1);}
+.l-hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(70,137,255,0.35) 0%,transparent 70%);filter:blur(20px);}
+.l-hero-text{position:relative;z-index:2;padding:32px 40px;}
+.l-hero-brand{font-family:var(--font-cond);font-size:28px;font-weight:700;color:var(--chrome-1);line-height:1.1;margin-bottom:6px;}
+.l-hero-brand .c-saffron{color:var(--saffron);}
+.l-hero-brand .c-blue{color:var(--ibm-blue-50);}
+.l-hero-sub{font-size:13px;color:var(--ibm-blue-40);letter-spacing:0.3px;margin-bottom:16px;font-style:italic;}
+.l-hero-tagline{font-size:15px;font-weight:600;color:var(--chrome-2);margin-bottom:10px;letter-spacing:0.2px;}
+.l-hero-secure{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--india-green);background:rgba(19,136,8,0.12);border:1px solid rgba(19,136,8,0.3);border-radius:20px;padding:5px 14px;}
+/* Right sign-in panel */
+.l-sign{width:360px;flex-shrink:0;background:linear-gradient(145deg,rgba(12,16,32,0.97),rgba(8,10,22,0.99));border-left:1px solid var(--panel-border);display:flex;flex-direction:column;justify-content:center;padding:40px 32px;position:relative;overflow:hidden;backdrop-filter:blur(30px);}
+.l-sign::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--saffron),var(--white),var(--india-green));opacity:0.85;}
+.l-sign-ibm{font-family:var(--font-sans);font-size:24px;font-weight:700;color:var(--ibm-blue-50);letter-spacing:6px;margin-bottom:28px;}
+.l-sign-title{font-family:var(--font-cond);font-size:22px;font-weight:700;color:var(--chrome-1);margin-bottom:4px;}
+.l-sign-sub{font-size:12px;color:var(--chrome-3);margin-bottom:22px;line-height:1.5;}
+.l-fi{display:flex;align-items:center;background:rgba(255,255,255,0.05);border:1px solid var(--panel-border);border-radius:var(--r-sm);padding:10px 14px;margin-bottom:12px;transition:border-color 0.2s;}
+.l-fi:focus-within{border-color:var(--ibm-blue-60);}
+.l-fi-ic{color:var(--chrome-3);font-size:15px;width:20px;flex-shrink:0;margin-right:8px;}
+.l-fi input{background:none;border:none;outline:none;color:var(--chrome-1);font-family:var(--font-sans);font-size:13px;width:100%;}
+.l-fi input::placeholder{color:var(--chrome-3);}
+.l-fi-eye{background:none;border:none;color:var(--chrome-3);cursor:pointer;font-size:14px;padding:0 2px;}
+.l-sso{width:100%;padding:12px;border-radius:var(--r-sm);background:var(--ibm-blue-60);border:none;color:#fff;font-family:var(--font-sans);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s var(--ease);margin-top:6px;}
 .l-sso:hover{background:var(--ibm-blue-50);box-shadow:0 4px 20px rgba(15,98,254,0.4);}
-.l-div{text-align:center;font-size:11px;color:var(--chrome-3);margin:10px 0;position:relative;}
-.l-div::before,.l-div::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--panel-border);}
-.l-div::before{left:0;}.l-div::after{right:0;}
+.l-risk-legend{display:flex;flex-direction:column;gap:5px;margin-top:20px;padding-top:16px;border-top:1px solid var(--panel-border);}
+.l-rl{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--chrome-2);}
+.l-rl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-right:8px;}
 .l-notice{margin-top:14px;padding:9px 12px;background:rgba(70,137,255,0.06);border:1px solid rgba(70,137,255,0.2);border-radius:var(--r-sm);font-size:11px;color:var(--chrome-3);line-height:1.5;}
 .l-notice strong{color:var(--ibm-blue-40);}
+/* KPIs above main area */
+.l-kpi-row{position:relative;z-index:2;display:flex;gap:10px;padding:0 40px 14px;}
+.l-kpi{background:rgba(10,14,26,0.82);border:1px solid var(--panel-border);border-radius:var(--r-md);padding:10px 16px;min-width:120px;}
+.l-kpi-lbl{font-size:10px;color:var(--chrome-3);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:3px;}
+.l-kpi-val{font-family:var(--font-cond);font-size:20px;font-weight:700;color:var(--chrome-1);}
+.l-kpi-tr{font-size:10px;color:var(--india-green);margin-top:1px;}
+/* Nav preview */
+.l-nav{position:relative;z-index:2;display:flex;flex-direction:column;gap:2px;padding:16px 28px 0;width:180px;position:absolute;left:0;top:0;bottom:0;justify-content:center;background:rgba(6,8,16,0.65);border-right:1px solid rgba(70,137,255,0.12);}
+.l-nav-item{display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:var(--r-sm);font-size:13px;color:var(--chrome-3);border-left:3px solid transparent;}
+.l-nav-item.l-nav-active{background:rgba(70,137,255,0.12);color:var(--ibm-blue-40);border-left-color:var(--ibm-blue-60);}
+.l-nav-ic{font-size:13px;width:16px;text-align:center;}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
 </style>
 </head>
 <body>
 <div class="scanlines" aria-hidden="true"></div>
 
-<!-- LOGIN OVERLAY -->
+<!-- LOGIN OVERLAY — cinematic 3-panel layout -->
 <div id="loginOverlay" role="dialog" aria-modal="true" aria-label="IBM Enterprise Sign In">
-  <div class="lp">
-    <div class="l-top">
-      <div class="l-chakra">
-        <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
-          <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,107,0,0.5)" stroke-width="1.5"/>
-          <circle cx="20" cy="20" r="8" fill="none" stroke="rgba(19,136,8,0.5)" stroke-width="1.5"/>
-          <circle cx="20" cy="20" r="3" fill="rgba(70,137,255,0.8)"/>
-          <line x1="20" y1="4" x2="20" y2="36" stroke="rgba(70,137,255,0.4)" stroke-width="0.8"/>
-          <line x1="4" y1="20" x2="36" y2="20" stroke="rgba(70,137,255,0.4)" stroke-width="0.8"/>
-          <line x1="7.5" y1="7.5" x2="32.5" y2="32.5" stroke="rgba(70,137,255,0.3)" stroke-width="0.8"/>
-          <line x1="32.5" y1="7.5" x2="7.5" y2="32.5" stroke="rgba(70,137,255,0.3)" stroke-width="0.8"/>
+
+  <!-- Left nav preview panel -->
+  <div class="l-nav" aria-hidden="true">
+    <div class="l-nav-item l-nav-active"><span class="l-nav-ic">⊞</span>Dashboard</div>
+    <div class="l-nav-item"><span class="l-nav-ic">⟨/⟩</span>Code Scanner</div>
+    <div class="l-nav-item"><span class="l-nav-ic">⚑</span>Findings</div>
+    <div class="l-nav-item"><span class="l-nav-ic">☰</span>Audit Evidence</div>
+  </div>
+
+  <!-- Centre hero panel -->
+  <div class="l-hero">
+    <div class="l-hero-bg" aria-hidden="true"></div>
+    <div class="l-hero-grid" aria-hidden="true"></div>
+    <!-- Ashoka Chakra -->
+    <div class="l-hero-glow" aria-hidden="true"></div>
+    <div class="l-chakra-big" aria-hidden="true">
+      <div class="l-chakra-ring1"></div>
+      <div class="l-chakra-ring2"></div>
+      <div class="l-chakra-ring3"></div>
+      <div class="l-chakra-ring4">
+        <svg style="position:absolute;inset:20px;" viewBox="0 0 160 160" aria-hidden="true">
+          <circle cx="80" cy="80" r="60" fill="none" stroke="rgba(70,137,255,0.5)" stroke-width="2"/>
+          <circle cx="80" cy="80" r="30" fill="none" stroke="rgba(70,137,255,0.35)" stroke-width="1.5"/>
+          <circle cx="80" cy="80" r="6" fill="rgba(70,137,255,0.9)"/>
+          <!-- 24 spokes -->
+          <g stroke="rgba(70,137,255,0.5)" stroke-width="1.2">
+            <line x1="80" y1="20" x2="80" y2="140"/>
+            <line x1="20" y1="80" x2="140" y2="80"/>
+            <line x1="33" y1="33" x2="127" y2="127"/>
+            <line x1="127" y1="33" x2="33" y2="127"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(15,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(30,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(45,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(60,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(75,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(90,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(105,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(120,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(135,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(150,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(165,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(180,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(195,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(210,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(225,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(240,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(255,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(270,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(285,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(300,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(315,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(330,80,80)"/>
+            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(345,80,80)"/>
+          </g>
         </svg>
       </div>
-      <div class="l-ibm">IBM</div>
     </div>
-    <div class="l-title">UM_Authority-Check-Analyzer</div>
-    <div class="l-sub">Engineering Intelligence for SAP Security<br>Authenticate with your IBM enterprise identity.</div>
-    <button class="l-sso" onclick="handleSSO()" id="ssoBtn">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      Sign in with IBM
+    <!-- Hero text at bottom left (above KPIs) -->
+    <div class="l-hero-text">
+      <div class="l-hero-brand">UM_<span class="c-blue">Authority</span>-<span class="c-saffron">Check</span>-Analyzer</div>
+      <div class="l-hero-sub">Engineering Intelligence for SAP Security</div>
+      <div class="l-hero-tagline">Scan ABAP &bull; Validate Objects &bull; Explain Risk</div>
+      <div class="l-hero-secure">🛡 Secure by Design</div>
+    </div>
+    <!-- KPI strip -->
+    <div class="l-kpi-row">
+      <div class="l-kpi"><div class="l-kpi-lbl">Scans This Week</div><div class="l-kpi-val">128</div><div class="l-kpi-tr">↑ +18%</div></div>
+      <div class="l-kpi"><div class="l-kpi-lbl">Authority Checks</div><div class="l-kpi-val">2,842</div><div class="l-kpi-tr">↑ +22%</div></div>
+      <div class="l-kpi"><div class="l-kpi-lbl">Compliant</div><div class="l-kpi-val">2,237</div><div class="l-kpi-tr" style="color:var(--ibm-blue-40);">78% pass rate</div></div>
+      <div class="l-kpi"><div class="l-kpi-lbl">Warnings</div><div class="l-kpi-val" style="color:var(--medium);">487</div><div class="l-kpi-tr" style="color:var(--medium);">17%</div></div>
+      <div class="l-kpi"><div class="l-kpi-lbl">Exceptions</div><div class="l-kpi-val" style="color:var(--critical);">118</div><div class="l-kpi-tr" style="color:var(--critical);">5%</div></div>
+    </div>
+  </div>
+
+  <!-- Right sign-in panel -->
+  <div class="l-sign">
+    <div class="l-sign-ibm">IBM</div>
+    <div class="l-sign-title">Sign in</div>
+    <div class="l-sign-sub">IBM enterprise identity required. MFA enforced.</div>
+
+    <div class="l-fi">
+      <span class="l-fi-ic">👤</span>
+      <input type="text" id="loginEmail" placeholder="Username" autocomplete="username" aria-label="Username">
+    </div>
+    <div class="l-fi">
+      <span class="l-fi-ic">🔒</span>
+      <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" aria-label="Password">
+      <button class="l-fi-eye" onclick="togglePwd()" aria-label="Toggle password visibility" type="button">👁</button>
+    </div>
+
+    <button class="l-sso" onclick="handleSSO()" id="ssoBtn" type="button">
+      Analyse Code
     </button>
-    <div class="l-div">or enter corporate email</div>
-    <div class="fg" style="margin-top:10px;">
-      <label class="fl" for="loginEmail">IBM Corporate Email</label>
-      <input class="fc" type="email" id="loginEmail" placeholder="firstname.lastname@ibm.com" autocomplete="email">
+
+    <!-- Risk legend (matches image) -->
+    <div class="l-risk-legend">
+      <div style="font-size:11px;color:var(--chrome-3);margin-bottom:4px;letter-spacing:0.8px;text-transform:uppercase;">Risk Overview</div>
+      <div style="display:flex;align-items:center;justify-content:center;margin:6px 0 10px;">
+        <div style="position:relative;width:90px;height:90px;">
+          <svg width="90" height="90" viewBox="0 0 90 90" style="transform:rotate(-90deg)" aria-label="Risk distribution">
+            <circle cx="45" cy="45" r="34" fill="none" stroke="rgba(70,137,255,0.08)" stroke-width="14"/>
+            <circle cx="45" cy="45" r="34" fill="none" stroke="var(--low)" stroke-width="14" stroke-dasharray="213.6" stroke-dashoffset="0" opacity="0.8"/>
+            <circle cx="45" cy="45" r="34" fill="none" stroke="var(--medium)" stroke-width="14" stroke-dasharray="213.6" stroke-dashoffset="166.6" opacity="0.9"/>
+            <circle cx="45" cy="45" r="34" fill="none" stroke="var(--critical)" stroke-width="14" stroke-dasharray="213.6" stroke-dashoffset="202.9" opacity="1"/>
+          </svg>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+            <div style="font-family:var(--font-cond);font-size:22px;font-weight:700;color:var(--chrome-1);">78</div>
+            <div style="font-size:9px;color:var(--chrome-3);text-align:center;">Security<br>Score</div>
+          </div>
+        </div>
+      </div>
+      <div class="l-rl"><span><span class="l-rl-dot" style="background:var(--low);display:inline-block;"></span>Low Risk</span><span style="color:var(--low);">78%</span></div>
+      <div class="l-rl"><span><span class="l-rl-dot" style="background:var(--medium);display:inline-block;"></span>Medium Risk</span><span style="color:var(--medium);">17%</span></div>
+      <div class="l-rl"><span><span class="l-rl-dot" style="background:var(--critical);display:inline-block;"></span>High Risk</span><span style="color:var(--critical);">5%</span></div>
     </div>
-    <button class="btn btn-s" style="width:100%;justify-content:center;margin-top:2px;" onclick="handleEmailLogin()">Continue with MFA →</button>
+
     <div class="l-notice">
-      <strong>Security Notice:</strong> This application uses IBM enterprise SSO with mandatory MFA. No passwords are stored or processed by this application. All sessions are audited. Session timeout: 8 hours.<br>
+      <strong>Security Notice:</strong> IBM enterprise SSO · MFA enforced · No passwords stored · All sessions audited.<br>
       <span style="margin-top:4px;display:block;">Support: <a href="mailto:sap-security@ibm.com" style="color:var(--ibm-blue-40);">sap-security@ibm.com</a></span>
     </div>
   </div>
@@ -368,6 +491,9 @@ select.fc{cursor:pointer;}
     <button class="nav-item active" type="button" data-view="dashboard" aria-current="page">
       <span class="nav-ic" aria-hidden="true">⊞</span>Dashboard
     </button>
+    <button class="nav-item" type="button" data-view="executive">
+      <span class="nav-ic" aria-hidden="true">◉</span>Executive Summary
+    </button>
     <div class="nav-sec">Analyzers</div>
     <button class="nav-item" type="button" data-view="abap">
       <span class="nav-ic" aria-hidden="true">⟨/⟩</span>ABAP Code Scanner
@@ -387,6 +513,10 @@ select.fc{cursor:pointer;}
     </button>
     <button class="nav-item" type="button" data-view="su24">
       <span class="nav-ic" aria-hidden="true">⊕</span>SU24/SU25 Analysis
+    </button>
+    <button class="nav-item" type="button" data-view="coverage">
+      <span class="nav-ic" aria-hidden="true">⬡</span>Coverage Checker
+      <span class="n-badge n-badge-w" id="nbCoverage" style="display:none;">NEW</span>
     </button>
     <div class="nav-sec">Results</div>
     <button class="nav-item" type="button" data-view="findings">
@@ -425,12 +555,13 @@ select.fc{cursor:pointer;}
           <div>
             <div class="h-title">UM_Authority-Check-Analyzer</div>
             <div class="h-sub">Engineering Intelligence for SAP Security</div>
+            <div style="font-size:15px;font-weight:600;color:var(--chrome-2);margin:8px 0 4px;letter-spacing:0.3px;">Scan ABAP &bull; Validate Objects &bull; Explain Risk</div>
             <div class="htags">
-              <span class="ht ht-s">Scan ABAP</span>
-              <span class="ht ht-w">Validate Objects</span>
-              <span class="ht ht-g">Explain Risk</span>
-              <span class="ht ht-b">🛡 Secure by Design</span>
-            </div>
+                <span class="ht ht-b">🛡 Secure by Design</span>
+                <span class="ht ht-s">Version-Aware</span>
+                <span class="ht ht-g">Clean Core</span>
+                <span class="ht ht-w">Audit-Ready</span>
+              </div>
           </div>
           <div style="text-align:center;">
             <div style="font-size:10px;color:var(--chrome-3);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Audit-Readiness Score</div>
@@ -670,49 +801,92 @@ select.fc{cursor:pointer;}
     <div class="view" id="view-tcode">
       <div class="ph">
         <div class="ph-row">
-          <div><div class="ph-title">T-Code Analyzer</div><div class="ph-sub">Analyze authorization proposals for SAP transaction codes, programs, and reports.</div></div>
+          <div>
+            <div class="ph-title">T-Code Analyzer</div>
+            <div class="ph-sub">Full SAP authorization proposal lookup — 80,802 T-Codes, programs and RFC modules from USOBT/USOBX (SAP-Delivered Proposals).</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span id="tcDbStatus" class="s-pill s-online" style="font-size:10px;">● DB Loaded</span>
+            <button class="btn btn-g btn-sm" onclick="exportTcodeResults()">Export CSV</button>
+          </div>
         </div>
       </div>
 
-      <div class="g2" style="margin-bottom:20px;">
-        <div>
-          <div class="card" style="margin-bottom:14px;">
-            <div class="ch"><span class="ct">Transaction Input</span></div>
-            <div class="cb">
-              <div class="fg"><label class="fl" for="tcTcode">Transaction Code(s)</label><input class="fc" id="tcTcode" placeholder="ME22N, FB01, VA01 (comma-separated)" type="text"></div>
-              <div class="g2" style="gap:12px;">
-                <div class="fg" style="margin:0;"><label class="fl" for="tcSys">System Type</label><select class="fc" id="tcSys"><option>SAP S/4HANA On-Premise</option><option>SAP ECC 6.0</option><option>SAP BW</option></select></div>
-                <div class="fg" style="margin:0;"><label class="fl" for="tcRelease">Release</label><select class="fc" id="tcRelease"><option>2023</option><option>2022</option><option>2021</option><option>1909</option><option>EhP8</option></select></div>
-              </div>
-              <div class="fg"><label class="fl" for="tcContext">Business Context (optional)</label><input class="fc" id="tcContext" placeholder="e.g. Procurement, Finance, Sales" type="text"></div>
-              <button class="btn btn-p" onclick="runTcodeAnalysis()">▶ Analyze T-Codes</button>
+      <!-- Search bar — prominent, live-filter as you type -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="ch"><span class="ct">Quick Lookup — Search Any T-Code or Program</span></div>
+        <div class="cb">
+          <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
+            <div class="fg" style="flex:2;min-width:240px;margin:0;">
+              <label class="fl" for="tcSearch">T-Code / Program Name</label>
+              <input class="fc" id="tcSearch" type="search" placeholder="Type any T-Code: ME22N, FB01, /ACCGO/… — live search as you type" autocomplete="off" oninput="tcLiveSearch(this.value)" onkeydown="if(event.key==='Enter'){runTcodeAnalysis();}">
+            </div>
+            <div class="fg" style="flex:1;min-width:160px;margin:0;">
+              <label class="fl" for="tcSys">System Type</label>
+              <select class="fc" id="tcSys">
+                <option value="S4HANA_OP">SAP S/4HANA On-Premise</option>
+                <option value="S4HANA_PE">SAP S/4HANA Private Edition</option>
+                <option value="ECC6">SAP ECC 6.0</option>
+                <option value="BW4">SAP BW/4HANA</option>
+                <option value="BW">SAP BW (NetWeaver)</option>
+                <option value="NW">SAP NetWeaver ABAP</option>
+              </select>
+            </div>
+            <div class="fg" style="flex:1;min-width:160px;margin:0;">
+              <label class="fl" for="tcRelease">Release</label>
+              <select class="fc" id="tcRelease">
+                <option>S/4HANA 2023</option><option>S/4HANA 2022</option><option>S/4HANA 2021</option>
+                <option>S/4HANA 2020</option><option>S/4HANA 1909</option><option>S/4HANA 1809</option>
+                <option>ECC 6.0 EhP8</option><option>ECC 6.0 EhP7</option><option>ECC 6.0 EhP6</option>
+              </select>
+            </div>
+            <div class="fg" style="flex:1;min-width:160px;margin:0;">
+              <label class="fl" for="tcContext">Business Context (optional)</label>
+              <input class="fc" id="tcContext" placeholder="e.g. Procurement, Finance" type="text">
+            </div>
+            <div style="margin-bottom:14px;">
+              <button class="btn btn-p" onclick="runTcodeAnalysis()">▶ Analyze</button>
             </div>
           </div>
-          <div class="alert a-w">
-            <span>⚠</span><span>Authorization object data is reference-level. Validate against your system's SU24 and current PFCG role design before applying any changes.</span>
+          <!-- Live suggestion dropdown -->
+          <div id="tcSuggestBox" style="display:none;background:var(--card-bg);border:1px solid var(--panel-border);border-radius:var(--r-sm);max-height:200px;overflow-y:auto;margin-top:4px;z-index:200;position:relative;">
           </div>
         </div>
-        <div>
-          <div class="card">
-            <div class="ch"><span class="ct">Known T-Code Objects</span></div>
-            <div class="cb" style="padding:0;">
-              <table class="dt">
-                <thead><tr><th>T-Code</th><th>Object</th><th>Field</th><th>ACTVT</th></tr></thead>
-                <tbody id="tcRefTable">
-                  <tr><td>ME21N</td><td>M_BEST_BSA</td><td>BSART</td><td>01</td></tr>
-                  <tr><td>ME22N</td><td>M_BEST_EKO</td><td>EKORG</td><td>02</td></tr>
-                  <tr><td>FB01</td><td>F_BKPF_BUK</td><td>BUKRS</td><td>01</td></tr>
-                  <tr><td>VA01</td><td>V_VBAK_AAT</td><td>AUART</td><td>01</td></tr>
-                  <tr><td>F110</td><td>F_REGU_BUK</td><td>BUKRS</td><td>02</td></tr>
-                  <tr><td>MM01</td><td>M_MATE_WRK</td><td>WERKS</td><td>01</td></tr>
-                  <tr><td>VL01N</td><td>V_LIKP_VST</td><td>VSTEL</td><td>01</td></tr>
-                  <tr><td>MIRO</td><td>M_RECH_BUK</td><td>BUKRS</td><td>01</td></tr>
-                </tbody>
-              </table>
+      </div>
+
+      <!-- Batch input -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="ch">
+          <span class="ct">Batch Analysis — Multiple T-Codes</span>
+          <span style="font-size:11px;color:var(--chrome-3);">Comma or newline separated</span>
+        </div>
+        <div class="cb" style="padding:12px 16px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;">
+            <textarea class="fc" id="tcTcode" style="min-height:72px;flex:1;min-width:300px;" placeholder="ME21N, ME22N, ME23N, FB01, VA01, MM01, MIGO, MIRO, VL01N, F110&#10;One per line or comma-separated — up to 200 T-Codes per batch"></textarea>
+            <div style="display:flex;flex-direction:column;gap:8px;padding-top:2px;">
+              <button class="btn btn-p" onclick="runTcodeBatch()">▶ Batch Analyze</button>
+              <button class="btn btn-g btn-sm" onclick="loadTcodeSample()">Load Sample Set</button>
+              <button class="btn btn-g btn-sm" onclick="clearTcodeResults()">Clear</button>
             </div>
           </div>
         </div>
       </div>
+
+      <div class="alert a-w" style="margin-bottom:16px;">
+        <span>⚠</span>
+        <span><strong>Reference Data Notice:</strong> All proposals are sourced from USOBT/USOBX (SAP-Delivered).
+        Source type is shown for each object (<span class="badge bi" style="font-size:9px;">SAP-Proposed</span> = OKFLAG Y,
+        <span class="badge" style="font-size:9px;background:rgba(70,137,255,0.12);border:1px solid rgba(70,137,255,0.25);color:var(--ibm-blue-40);">SAP-Active</span> = OKFLAG X).
+        Always validate against your system's live SU24 and PFCG role design. Never apply changes without SAP Security approval.</span>
+      </div>
+
+      <!-- Stats bar -->
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;font-size:12px;color:var(--chrome-3);">
+        <span>Database: <strong style="color:var(--ibm-blue-40);" id="tcDbCount">Loading…</strong></span>
+        <span>Last search: <strong style="color:var(--chrome-2);" id="tcLastSearch">—</strong></span>
+        <span>Results: <strong style="color:var(--chrome-2);" id="tcResultCount">—</strong></span>
+      </div>
+
       <div id="tcResultsArea"></div>
     </div>
 
@@ -1048,12 +1222,312 @@ select.fc{cursor:pointer;}
           <div style="font-size:12.5px;color:var(--chrome-2);"><div class="g-h3">Clean Core Aligned</div>All remediation recommendations follow SAP Clean Core principles: released APIs, extension points, no standard table modifications, upgrade-stable patterns.</div>
         </div>
       </div></div>
+      <div class="card" style="margin-bottom:16px;"><div class="ch"><span class="ct">Full Feature Inventory</span></div><div class="cb">
+        <div class="g3" style="gap:14px;">
+          <div>
+            <div class="g-h3">Analyzers (7 modules)</div>
+            <div style="font-size:12px;color:var(--chrome-2);line-height:1.9;">
+              ✓ <strong>ABAP Code Scanner</strong> — 24 detection rules (AUTH-001–024), version-aware for S/4HANA 1809–2023, ECC EhP4–8, BW/4HANA, NetWeaver. Paste or upload, per-line detection, 20-field finding cards, before/after diff.<br>
+              ✓ <strong>T-Code Analyzer</strong> — 80,802 T-Codes from SAP USOBT/USOBX, live search with suggestions, batch analysis up to 200, full proposal cards, CSV export.<br>
+              ✓ <strong>Fiori App Analyzer</strong> — BSP/SICF service check, OData binding, IAM app descriptor, backend authority-check review.<br>
+              ✓ <strong>Web Dynpro Analyzer</strong> — WD component, BSP app, RFC/BAPI authority-check chain review.<br>
+              ✓ <strong>OData Service Analyzer</strong> — V2/V4 DPC_EXT class protection, operation-level coverage (CREATE/READ/UPDATE/DELETE/EXECUTE), IWBEP/IWFND gateway check.<br>
+              ✓ <strong>SU24/SU25 Analysis</strong> — SU24 proposal lookup, SU25 upgrade impact planner, PFCG alignment check, SU53/STAUTHTRACE interpreter.<br>
+              ✓ <strong>Coverage Checker</strong> — 10-screen DPC_EXT coverage analysis, AUTH-COV-001–015 rules, operation matrix, call graph, test planner, runtime evidence correlation, 13 report types.
+            </div>
+          </div>
+          <div>
+            <div class="g-h3">Rule Engine (39 rules)</div>
+            <div style="font-size:12px;color:var(--chrome-2);line-height:1.9;">
+              ✓ <strong>AUTH-001–024</strong>: ABAP static analysis rules (missing check, SY-SUBRC skip, post-read, wildcard, hardcode, debug bypass, RFC, OData, CRUD inconsistency, dynamic object, etc.)<br>
+              ✓ <strong>AUTH-COV-001–015</strong>: Coverage rules (missing CREATE/READ/UPDATE/DELETE/EXECUTE guard, no helper auth, silent fail, no BYPASS_BUFFER, mass-read bypass, hardcoded check, recheck after helper call, authority-check in wrong method, etc.)<br>
+              ✓ Version-aware severity overrides per SAP release<br>
+              ✓ Confidence scoring (HIGH/MEDIUM/LOW/PROBABLE)<br>
+              ✓ Manual-review flags with inline notes
+            </div>
+          </div>
+          <div>
+            <div class="g-h3">Output &amp; Integration</div>
+            <div style="font-size:12px;color:var(--chrome-2);line-height:1.9;">
+              ✓ Executive Summary dashboard with 11-column drill-down table<br>
+              ✓ Findings &amp; Remediation: filter, false-positive workflow, resolve, evidence attach<br>
+              ✓ Audit Evidence: full trail, CSV/JSON/HTML export package<br>
+              ✓ Operational Guidebook: 20 sections, full-text search<br>
+              ✓ Administration: session controls, rule toggles, RBAC roles, system info<br>
+              ✓ Single-file HTML deployment — no server, no installation<br>
+              ✓ IBM enterprise SSO (OIDC/SAML) + MFA — no passwords stored<br>
+              ✓ WCAG 2.1 AA compliant, ARIA labels throughout
+            </div>
+          </div>
+        </div>
+      </div></div>
+
       <div class="card"><div class="ch"><span class="ct">Release History</span></div>
         <table class="dt"><thead><tr><th>Version</th><th>Date</th><th>Key Changes</th></tr></thead>
         <tbody>
-          <tr><td>2.0</td><td>Aug 2026</td><td>Full IBM enterprise UI, all analyzer modules, SU53 interpreter, OData V4, Clean Core flags, audit export</td></tr>
+          <tr><td>2.1</td><td>Aug 2026</td><td>Coverage Checker (10 screens, AUTH-COV-001–015), cinematic login UI, Full Feature Inventory, 39 total rules</td></tr>
+          <tr><td>2.0</td><td>Aug 2026</td><td>Full IBM enterprise UI, all 7 analyzer modules, SU53 interpreter, OData V4, Clean Core flags, audit export, 80,802 T-Code DB</td></tr>
           <tr><td>1.0</td><td>Jul 2026</td><td>Initial release: ABAP scanner, SU24 analysis, OData V2, chat-based interface, IBM BOB + ICA + MCP Gateway</td></tr>
         </tbody></table>
+      </div>
+    </div>
+
+    <!-- ═══════════ COVERAGE CHECKER ═══════════ -->
+    <div class="view" id="view-coverage">
+      <div class="ph">
+        <div class="ph-row">
+          <div>
+            <div class="ph-title">Authority-Check Coverage Checker</div>
+            <div class="ph-sub">End-to-end DPC_EXT/OData authorization coverage analysis — 15 AUTH-COV rules, operation matrix, call graph, test planner, runtime evidence correlation.</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-g btn-sm" onclick="covReset()">Reset</button>
+            <button class="btn btn-s btn-sm" onclick="covExportReport()">Export Report</button>
+          </div>
+        </div>
+      </div>
+      <div class="alert a-i" style="margin-bottom:18px;">
+        <span>ℹ</span>
+        <span><strong>Coverage Checker:</strong> Paste DPC_EXT ABAP class code or upload multiple files. The engine maps every OData operation method to its authority-check coverage, computes a score across 11 dimensions, and generates test cases and remediation recommendations.</span>
+      </div>
+      <div class="tab-bar">
+        <button class="tb-btn active" onclick="switchTab('coverage','cov-overview',this)">Overview</button>
+        <button class="tb-btn" onclick="switchTab('coverage','cov-upload',this)">Upload &amp; Config</button>
+        <button class="tb-btn" onclick="switchTab('coverage','cov-inventory',this)">Method Inventory</button>
+        <button class="tb-btn" onclick="switchTab('coverage','cov-matrix',this)">Coverage Matrix</button>
+        <button class="tb-btn" onclick="switchTab('coverage','cov-findings',this)">Findings</button>
+        <button class="tb-btn" onclick="switchTab('coverage','cov-pathexplorer',this)">Code Path</button>
+        <button class="tb-btn" onclick="switchTab('coverage','cov-runtime',this)">Runtime Evidence</button>
+        <button class="tb-btn" onclick="switchTab('coverage','cov-testplan',this)">Test Planner</button>
+        <button class="tb-btn" onclick="switchTab('coverage','cov-remediation',this)">Remediation</button>
+        <button class="tb-btn" onclick="switchTab('coverage','cov-reports',this)">Reports</button>
+      </div>
+
+      <!-- TAB: Overview -->
+      <div class="tp active" id="coverage-cov-overview">
+        <div class="g5" style="margin-bottom:20px;">
+          <div class="kpi kb"><div class="kpi-lbl">Coverage Score</div><div class="kpi-val vb" id="covScoreKpi">—</div><div class="kpi-tr">out of 100</div></div>
+          <div class="kpi kl"><div class="kpi-lbl">Operations Covered</div><div class="kpi-val vl" id="covOpsCovered">0/0</div><div class="kpi-tr">CREATE/READ/UPDATE/DELETE/EXECUTE</div></div>
+          <div class="kpi kb"><div class="kpi-lbl">Methods Analysed</div><div class="kpi-val vb" id="covMethodsTotal">0</div><div class="kpi-tr">DPC_EXT methods</div></div>
+          <div class="kpi kc"><div class="kpi-lbl">AUTH-COV Findings</div><div class="kpi-val vc" id="covFindingsCount">0</div><div class="kpi-tr">coverage violations</div></div>
+          <div class="kpi km"><div class="kpi-lbl">Manual Review</div><div class="kpi-val vm" id="covManualCount">0</div><div class="kpi-tr">need STAUTHTRACE</div></div>
+        </div>
+        <div class="g3" style="margin-bottom:20px;">
+          <div class="card" style="grid-column:span 2;">
+            <div class="ch"><span class="ct">11-Dimension Coverage Scorecard</span></div>
+            <div class="cb" id="covScorecard">
+              <div style="color:var(--chrome-3);font-size:12px;text-align:center;padding:20px;">Upload ABAP class code to generate coverage scorecard.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch"><span class="ct">Service Summary</span></div>
+            <div class="cb" id="covServiceSummary">
+              <div style="color:var(--chrome-3);font-size:12px;text-align:center;padding:20px;">No service analysed yet.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Upload & Config -->
+      <div class="tp" id="coverage-cov-upload">
+        <div class="g2" style="margin-bottom:16px;">
+          <div class="card">
+            <div class="ch"><span class="ct">Service Configuration</span></div>
+            <div class="cb">
+              <div class="g2" style="gap:12px;margin-bottom:12px;">
+                <div class="fg" style="margin:0;"><label class="fl" for="covSysType">SAP System Type</label>
+                  <select class="fc" id="covSysType">
+                    <option>SAP S/4HANA On-Premise</option><option>SAP S/4HANA Private Edition</option>
+                    <option>SAP ECC 6.0</option><option>SAP NetWeaver Gateway</option>
+                  </select>
+                </div>
+                <div class="fg" style="margin:0;"><label class="fl" for="covRelease">SAP Release</label>
+                  <select class="fc" id="covRelease">
+                    <option>S/4HANA 2023</option><option>S/4HANA 2022</option><option>S/4HANA 2021</option>
+                    <option>S/4HANA 2020</option><option>S/4HANA 1909</option><option>ECC 6.0 EhP8</option>
+                  </select>
+                </div>
+              </div>
+              <div class="g2" style="gap:12px;">
+                <div class="fg" style="margin:0;"><label class="fl" for="covServiceName">OData Service Name</label>
+                  <input class="fc" id="covServiceName" placeholder="e.g. ZMAT_SRV" type="text"></div>
+                <div class="fg" style="margin:0;"><label class="fl" for="covDpcClass">DPC_EXT Class Name</label>
+                  <input class="fc" id="covDpcClass" placeholder="e.g. ZCL_ZMAT_SRV_DPC_EXT" type="text"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch"><span class="ct">Entity &amp; Operation Scope</span></div>
+            <div class="cb">
+              <div class="fg"><label class="fl" for="covEntities">Entity Sets (comma-separated)</label>
+                <input class="fc" id="covEntities" placeholder="MaterialSet, VendorSet, PurchaseOrderSet" type="text"></div>
+              <div class="fg"><label class="fl" for="covOperations">Operations in Scope</label>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">
+                  <label style="font-size:12px;color:var(--chrome-2);display:flex;align-items:center;gap:5px;"><input type="checkbox" id="covOpCreate" checked> CREATE</label>
+                  <label style="font-size:12px;color:var(--chrome-2);display:flex;align-items:center;gap:5px;"><input type="checkbox" id="covOpRead" checked> READ (single)</label>
+                  <label style="font-size:12px;color:var(--chrome-2);display:flex;align-items:center;gap:5px;"><input type="checkbox" id="covOpQuery" checked> READ (query)</label>
+                  <label style="font-size:12px;color:var(--chrome-2);display:flex;align-items:center;gap:5px;"><input type="checkbox" id="covOpUpdate" checked> UPDATE</label>
+                  <label style="font-size:12px;color:var(--chrome-2);display:flex;align-items:center;gap:5px;"><input type="checkbox" id="covOpDelete" checked> DELETE</label>
+                  <label style="font-size:12px;color:var(--chrome-2);display:flex;align-items:center;gap:5px;"><input type="checkbox" id="covOpExecute" checked> EXECUTE (FunctionImport)</label>
+                  <label style="font-size:12px;color:var(--chrome-2);display:flex;align-items:center;gap:5px;"><input type="checkbox" id="covOpBatch"> $batch</label>
+                  <label style="font-size:12px;color:var(--chrome-2);display:flex;align-items:center;gap:5px;"><input type="checkbox" id="covOpExpand"> $expand</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="ch"><span class="ct">ABAP Source Upload</span></div>
+          <div class="cb">
+            <div class="fg"><label class="fl" for="covCode">Paste DPC_EXT ABAP Class Code</label>
+              <textarea class="fc" id="covCode" rows="16" placeholder="Paste full DPC_EXT class implementation here (ZCL_*_DPC_EXT or ZCL_*_MPC_EXT). Include all METHOD...ENDMETHOD blocks. Helper classes can be pasted below." style="font-family:var(--font-mono);font-size:12px;"></textarea>
+            </div>
+            <div class="fg"><label class="fl" for="covHelperCode">Helper Class Code (optional)</label>
+              <textarea class="fc" id="covHelperCode" rows="6" placeholder="Paste helper class code called from DPC_EXT methods (for call graph resolution)" style="font-family:var(--font-mono);font-size:12px;"></textarea>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:8px;">
+              <button class="btn btn-s" onclick="runCoverageAnalysis()">▶ Run Coverage Analysis</button>
+              <button class="btn btn-g btn-sm" onclick="covLoadDemo()">Load Demo Code</button>
+              <button class="btn btn-g btn-sm" onclick="covReset()">Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Method Inventory -->
+      <div class="tp" id="coverage-cov-inventory">
+        <div class="card">
+          <div class="ch"><span class="ct">DPC_EXT Method Inventory &amp; Call Graph</span><span id="covInventoryCount" style="font-size:11px;color:var(--chrome-3);"></span></div>
+          <div id="covInventoryArea">
+            <div style="padding:24px;text-align:center;color:var(--chrome-3);font-size:12px;">Run analysis to populate method inventory.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Coverage Matrix -->
+      <div class="tp" id="coverage-cov-matrix">
+        <div class="card">
+          <div class="ch"><span class="ct">Operation Coverage Matrix</span>
+            <div style="display:flex;gap:8px;">
+              <span style="font-size:11px;color:var(--low);">■ Covered</span>
+              <span style="font-size:11px;color:var(--medium);">■ Partial</span>
+              <span style="font-size:11px;color:var(--critical);">■ Missing</span>
+              <span style="font-size:11px;color:var(--chrome-3);">■ N/A</span>
+            </div>
+          </div>
+          <div id="covMatrixArea" style="overflow-x:auto;">
+            <div style="padding:24px;text-align:center;color:var(--chrome-3);font-size:12px;">Run analysis to populate coverage matrix.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Findings -->
+      <div class="tp" id="coverage-cov-findings">
+        <div class="ph-row" style="margin-bottom:14px;">
+          <div style="font-size:12px;color:var(--chrome-3);">AUTH-COV-001 through AUTH-COV-015 violations</div>
+          <button class="btn btn-g btn-sm" onclick="covExportFindings()">Export CSV</button>
+        </div>
+        <div id="covFindingsArea">
+          <div style="padding:24px;text-align:center;color:var(--chrome-3);font-size:12px;">Run analysis to see coverage findings.</div>
+        </div>
+      </div>
+
+      <!-- TAB: Code Path Explorer -->
+      <div class="tp" id="coverage-cov-pathexplorer">
+        <div class="g2" style="margin-bottom:16px;">
+          <div class="card">
+            <div class="ch"><span class="ct">Method Selector</span></div>
+            <div class="cb">
+              <div class="fg"><label class="fl" for="covPathMethod">Select Method</label>
+                <select class="fc" id="covPathMethod"><option value="">— run analysis first —</option></select>
+              </div>
+              <button class="btn btn-s btn-sm" onclick="covShowPath()" style="margin-top:8px;">Show Call Path</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch"><span class="ct">Legend</span></div>
+            <div class="cb" style="font-size:12px;color:var(--chrome-2);line-height:1.9;">
+              <span style="color:var(--low);">GREEN</span> — AUTHORITY-CHECK found at this level<br>
+              <span style="color:var(--medium);">AMBER</span> — Check found in called helper<br>
+              <span style="color:var(--critical);">RED</span> — No authority-check in call chain<br>
+              <span style="color:var(--chrome-3);">GREY</span> — External or unresolvable call
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct">Call Graph &amp; Code Path</span></div>
+          <div id="covPathArea" style="padding:18px;font-family:var(--font-mono);font-size:12px;color:var(--chrome-2);min-height:200px;">
+            Select a method above to explore its call path and authority-check chain.
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Runtime Evidence -->
+      <div class="tp" id="coverage-cov-runtime">
+        <div class="g2" style="margin-bottom:16px;">
+          <div class="card">
+            <div class="ch"><span class="ct">STAUTHTRACE / SU53 Upload</span></div>
+            <div class="cb">
+              <div class="fg"><label class="fl" for="covTraceInput">Paste STAUTHTRACE or SU53 Output</label>
+                <textarea class="fc" id="covTraceInput" rows="10" placeholder="Paste raw STAUTHTRACE trace output or SU53 export here. Tab-separated or space-formatted SAP output is accepted." style="font-family:var(--font-mono);font-size:11.5px;"></textarea>
+              </div>
+              <button class="btn btn-s btn-sm" onclick="covCorrelateTrace()" style="margin-top:8px;">Correlate with Coverage</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch"><span class="ct">Correlation Results</span></div>
+            <div id="covTraceResults" style="padding:16px;">
+              <div style="color:var(--chrome-3);font-size:12px;">Upload trace to correlate runtime evidence with static findings.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Test Planner -->
+      <div class="tp" id="coverage-cov-testplan">
+        <div class="ph-row" style="margin-bottom:14px;">
+          <div style="font-size:12px;color:var(--chrome-3);">Auto-generated positive and negative test cases per operation</div>
+          <button class="btn btn-g btn-sm" onclick="covExportTestPlan()">Export Test Plan</button>
+        </div>
+        <div id="covTestPlanArea">
+          <div style="padding:24px;text-align:center;color:var(--chrome-3);font-size:12px;">Run analysis to generate test plan.</div>
+        </div>
+      </div>
+
+      <!-- TAB: Remediation -->
+      <div class="tp" id="coverage-cov-remediation">
+        <div class="ph-row" style="margin-bottom:14px;">
+          <div style="font-size:12px;color:var(--chrome-3);">20-field remediation recommendations with corrected ABAP patterns</div>
+          <button class="btn btn-g btn-sm" onclick="covExportRemediation()">Export Recommendations</button>
+        </div>
+        <div id="covRemediationArea">
+          <div style="padding:24px;text-align:center;color:var(--chrome-3);font-size:12px;">Run analysis to generate remediation recommendations.</div>
+        </div>
+      </div>
+
+      <!-- TAB: Reports -->
+      <div class="tp" id="coverage-cov-reports">
+        <div class="g3" style="margin-bottom:20px;">
+          <div class="card"><div class="ch"><span class="ct">Available Reports</span></div><div class="cb">
+            <div style="font-size:12px;color:var(--chrome-2);line-height:1.9;margin-bottom:12px;">
+              Select and export any of the 13 coverage report types:
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <button class="btn btn-g btn-sm" onclick="covGenReport('executive')">Executive Summary (PDF-ready HTML)</button>
+              <button class="btn btn-g btn-sm" onclick="covGenReport('matrix')">Full Coverage Matrix (CSV)</button>
+              <button class="btn btn-g btn-sm" onclick="covGenReport('findings')">All Findings (CSV)</button>
+              <button class="btn btn-g btn-sm" onclick="covGenReport('testplan')">Test Plan (CSV)</button>
+              <button class="btn btn-g btn-sm" onclick="covGenReport('remediation')">Remediation Plan (HTML)</button>
+              <button class="btn btn-g btn-sm" onclick="covGenReport('callgraph')">Call Graph (Text)</button>
+              <button class="btn btn-g btn-sm" onclick="covGenReport('audit')">Audit Package (JSON)</button>
+            </div>
+          </div></div>
+          <div class="card" style="grid-column:span 2;"><div class="ch"><span class="ct">Report Preview</span></div>
+            <div id="covReportPreview" style="padding:18px;font-size:12.5px;color:var(--chrome-2);min-height:300px;">
+              Select a report type to preview.
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1138,6 +1612,141 @@ select.fc{cursor:pointer;}
             <tr><td style="color:var(--chrome-3);font-size:11px;">SUPPORTED SAP RELEASES</td><td>S/4HANA 1809–2023, ECC 6.0 EhP4–8, BW 7.4–7.5, BW/4HANA, NetWeaver 7.40–7.57</td></tr>
           </tbody></table>
         </div></div>
+      </div>
+    </div>
+
+    <!-- ═══════════ EXECUTIVE SUMMARY ═══════════ -->
+    <div class="view" id="view-executive">
+      <div class="ph">
+        <div class="ph-row">
+          <div>
+            <div class="ph-title">Executive Summary</div>
+            <div class="ph-sub">Leadership, auditor and SAP Security architect overview — drill down to any artifact, finding or authorization object.</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-g btn-sm" onclick="filterExecView('all')">All Systems</button>
+            <button class="btn btn-g btn-sm" onclick="filterExecView('S4HANA')">S/4HANA</button>
+            <button class="btn btn-g btn-sm" onclick="filterExecView('ECC')">ECC</button>
+            <button class="btn btn-s btn-sm" onclick="exportExecDashboard()">Export Dashboard</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Headline KPIs -->
+      <div class="g5" style="margin-bottom:20px;" role="region" aria-label="Executive KPI metrics">
+        <div class="kpi kb"><div class="kpi-lbl">Artifacts Scanned</div><div class="kpi-val vb" id="exArtifacts">0</div><div class="kpi-tr" id="exArtTrend">this session</div></div>
+        <div class="kpi kb"><div class="kpi-lbl">ABAP Files</div><div class="kpi-val vb" id="exAbapFiles">0</div><div class="kpi-tr">scanned</div></div>
+        <div class="kpi kc"><div class="kpi-lbl">Total Findings</div><div class="kpi-val vc" id="exTotalFindings">0</div><div class="kpi-tr" id="exFindTrend">across all analyzers</div></div>
+        <div class="kpi km"><div class="kpi-lbl">Open Items</div><div class="kpi-val vm" id="exOpenItems">0</div><div class="kpi-tr">requiring action</div></div>
+        <div class="kpi kl"><div class="kpi-lbl">Audit-Readiness</div><div class="kpi-val vl" id="exAuditScore">—</div><div class="kpi-tr">score / 100</div></div>
+      </div>
+
+      <div class="g2" style="margin-bottom:20px;">
+        <!-- Severity Breakdown -->
+        <div class="card">
+          <div class="ch"><span class="ct">Severity Distribution</span><button class="btn btn-sm btn-g" onclick="showView('findings')">Drill Down →</button></div>
+          <div class="cb">
+            <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+              <svg width="110" height="110" viewBox="0 0 100 100" style="flex-shrink:0;transform:rotate(-90deg)" aria-label="Severity distribution donut chart">
+                <circle cx="50" cy="50" r="38" fill="none" stroke="rgba(70,137,255,0.08)" stroke-width="16"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="var(--critical)" stroke-width="16" stroke-dasharray="238.76" stroke-dashoffset="0" opacity="0.9" id="exDonutC"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="var(--high)" stroke-width="16" stroke-dasharray="238.76" stroke-dashoffset="0" opacity="0.85" id="exDonutH"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="var(--medium)" stroke-width="16" stroke-dasharray="238.76" stroke-dashoffset="0" opacity="0.85" id="exDonutM"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="var(--low)" stroke-width="16" stroke-dasharray="238.76" stroke-dashoffset="0" opacity="0.8" id="exDonutL"/>
+              </svg>
+              <div style="flex:1;min-width:140px;">
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span><span style="color:var(--critical);">●</span> Critical</span><span id="exCritPct">0</span></div>
+                <div class="pb"><div class="pf pfc" id="exCritBar" style="width:0%"></div></div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin:6px 0 4px;"><span><span style="color:var(--high);">●</span> High</span><span id="exHighPct">0</span></div>
+                <div class="pb"><div class="pf pfh" id="exHighBar" style="width:0%"></div></div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin:6px 0 4px;"><span><span style="color:var(--medium);">●</span> Medium</span><span id="exMedPct">0</span></div>
+                <div class="pb"><div class="pf pfm" id="exMedBar" style="width:0%"></div></div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin:6px 0 4px;"><span><span style="color:var(--low);">●</span> Low</span><span id="exLowPct">0</span></div>
+                <div class="pb"><div class="pf pfl" id="exLowBar" style="width:0%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Remediation Progress -->
+        <div class="card">
+          <div class="ch"><span class="ct">Remediation Progress</span><button class="btn btn-sm btn-g" onclick="showView('audit')">View Approvals →</button></div>
+          <div class="cb">
+            <div style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Open</span><span id="exRemOpen" style="color:var(--critical);">0</span></div>
+              <div class="pb"><div class="pf pfc" id="exRemOpenBar" style="width:0%"></div></div>
+            </div>
+            <div style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Closed / Resolved</span><span id="exRemClosed" style="color:var(--low);">0</span></div>
+              <div class="pb"><div class="pf pfl" id="exRemClosedBar" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>False Positives</span><span id="exRemFP" style="color:var(--chrome-3);">0</span></div>
+              <div class="pb"><div class="pf pfb" id="exRemFPBar" style="width:0%"></div></div>
+            </div>
+            <div style="margin-top:14px;padding:10px;background:rgba(70,137,255,0.06);border-radius:var(--r-sm);border:1px solid var(--panel-border);">
+              <div style="font-size:11px;color:var(--chrome-3);margin-bottom:3px;">Estimated Remediation Effort</div>
+              <div style="font-family:var(--font-cond);font-size:20px;font-weight:700;color:var(--ibm-blue-40);" id="exEffort">—</div>
+              <div style="font-size:10px;color:var(--chrome-3);">person-days (reference estimate)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="g3" style="margin-bottom:20px;">
+        <!-- Findings by App Type -->
+        <div class="card">
+          <div class="ch"><span class="ct">Findings by Application Type</span></div>
+          <div class="cb" id="exByAppType">
+            <div style="font-size:12px;color:var(--chrome-3);">Run scans to populate.</div>
+          </div>
+        </div>
+        <!-- Findings by Auth Object -->
+        <div class="card">
+          <div class="ch"><span class="ct">Top Authorization Objects</span></div>
+          <div class="cb" id="exByAuthObj">
+            <div style="font-size:12px;color:var(--chrome-3);">Run scans to populate.</div>
+          </div>
+        </div>
+        <!-- Clean Core Status -->
+        <div class="card">
+          <div class="ch"><span class="ct">Clean Core Compliance</span></div>
+          <div class="cb">
+            <div style="font-size:12px;color:var(--chrome-3);margin-bottom:10px;">S/4HANA Clean Core alignment</div>
+            <div style="margin-bottom:8px;"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span>Released APIs</span><span style="color:var(--low);" id="exCCReleased">84%</span></div><div class="pb"><div class="pf pfl" style="width:84%"></div></div></div>
+            <div style="margin-bottom:8px;"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span>Classic Modifications</span><span style="color:var(--medium);" id="exCCClassic">12%</span></div><div class="pb"><div class="pf pfm" style="width:12%"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span>Non-Compliant Patterns</span><span style="color:var(--critical);" id="exCCNonComp">4%</span></div><div class="pb"><div class="pf pfc" style="width:4%"></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Affected Artifacts drill-down table -->
+      <div class="card" style="margin-bottom:20px;">
+        <div class="ch"><span class="ct">Top Affected Artifacts — Drill-Down</span><button class="btn btn-sm btn-s" onclick="exportExecDrilldown()">Export</button></div>
+        <div style="overflow-x:auto;">
+          <table class="dt" id="exDrillTable">
+            <thead><tr><th>Finding ID</th><th>Severity</th><th>System</th><th>App Type</th><th>Artifact</th><th>Line</th><th>Auth Object</th><th>Field</th><th>Rule</th><th>Status</th><th>Reviewer</th></tr></thead>
+            <tbody id="exDrillBody">
+              <tr><td colspan="11" style="text-align:center;color:var(--chrome-3);padding:24px;">No findings yet. Run any analyzer to populate this table.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Recurring Weaknesses -->
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><span class="ct">Recurring Weaknesses</span></div>
+          <div class="cb" id="exRecurring">
+            <div style="font-size:12px;color:var(--chrome-3);">Run scans to populate.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct">Findings by SAP System / Version</span></div>
+          <div class="cb" id="exBySys">
+            <div style="font-size:12px;color:var(--chrome-3);">Run scans to populate.</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1333,23 +1942,84 @@ function refreshFindingsView() {
   list.innerHTML = SESSION.findings.map(function(f){ return renderFindingCard(f); }).join('');
 }
 
+// ─── 20-field finding card renderer ──────────────────────────────────────────
 function renderFindingCard(f) {
   var sevClass = {CRITICAL:'sc',HIGH:'sh',MEDIUM:'sm',LOW:'sl',INFO:'si',PASS:'sp'}[f.severity] || 'si';
   var badgeClass = {CRITICAL:'bc',HIGH:'bh',MEDIUM:'bm',LOW:'bl',INFO:'bi',PASS:'bp'}[f.severity] || 'bi';
-  return '<div class="fc-card"><div class="fc-hdr ' + sevClass + '" onclick="toggleFinding(this)">' +
-    '<div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">' +
-    '<span class="badge ' + badgeClass + '">' + f.severity + '</span>' +
-    '<span style="font-family:var(--font-mono);font-size:12px;color:var(--ibm-blue-40);">' + f.id + '</span>' +
-    '<span style="font-size:13px;color:var(--chrome-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(f.title) + '</span></div>' +
-    '<span style="font-size:11px;color:var(--chrome-3);white-space:nowrap;">' + escHtml(f.artifact || '') + '</span></div>' +
-    '<div class="fc-body"><div class="fc-meta">' +
-    fmi('Rule', f.rule || '—') + fmi('Object', f.authObj || '—') + fmi('Line', f.line || '—') + fmi('Status', f.status) +
-    '</div><div style="font-size:13px;color:var(--chrome-2);line-height:1.6;margin-bottom:12px;">' + escHtml(f.description || '') + '</div>' +
-    (f.before ? '<div class="diff"><div class="diff-pane"><div class="diff-lbl dl-b">⚠ Before (Vulnerable)</div><div class="code">' + escHtml(f.before) + '</div></div><div class="diff-pane"><div class="diff-lbl dl-a">✓ After (Corrected)</div><div class="code">' + escHtml(f.after || '') + '</div></div></div>' : '') +
-    '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">' +
-    '<button class="btn btn-g btn-sm" onclick="markFP(this,\'' + f.id + '\')">Mark as False Positive</button>' +
-    '<button class="btn btn-s btn-sm" onclick="closeFinding(\'' + f.id + '\')">Mark Resolved</button></div>' +
+  var catBadge = {
+    'Confirmed security weakness':'<span class="badge bc" style="font-size:9px;">CONFIRMED</span>',
+    'Probable weakness':'<span class="badge bh" style="font-size:9px;">PROBABLE</span>',
+    'Potential weakness requiring review':'<span class="badge bm" style="font-size:9px;">POTENTIAL</span>',
+    'Informational observation':'<span class="badge bi" style="font-size:9px;">INFO</span>',
+    'False-positive candidate':'<span class="badge bp" style="font-size:9px;">FP CANDIDATE</span>'
+  }[f.category] || '';
+  var manualFlag = f.manualReview ? '<span class="badge bm" style="font-size:9px;margin-left:4px;">⚐ MANUAL REVIEW</span>' : '';
+  var html = '<div class="fc-card"><div class="fc-hdr ' + sevClass + '" onclick="toggleFinding(this)" role="button" aria-expanded="false" tabindex="0">' +
+    '<div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;flex-wrap:wrap;">' +
+    '<span class="badge ' + badgeClass + '">' + escHtml(f.severity) + '</span>' +
+    catBadge + manualFlag +
+    '<span style="font-family:var(--font-mono);font-size:11px;color:var(--ibm-blue-40);">' + escHtml(f.id||'') + '</span>' +
+    '<span style="font-family:var(--font-mono);font-size:11px;color:var(--chrome-3);">' + escHtml(f.rule||'') + '</span>' +
+    '<span style="font-size:13px;color:var(--chrome-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">' + escHtml(f.title||'') + '</span></div>' +
+    '<span style="font-size:11px;color:var(--chrome-3);white-space:nowrap;flex-shrink:0;">' + escHtml(f.artifact||'') + ' · L' + (f.line||'?') + '</span></div>' +
+
+    '<div class="fc-body">' +
+    // Row 1: Identity metadata
+    '<div class="fc-meta">' +
+    fmi('Finding ID', f.id||'—') +
+    fmi('Rule ID', f.rule||'—') +
+    fmi('Severity', f.severity||'—') +
+    fmi('Line Number', f.line||'—') +
+    fmi('System / Release', (f.sysType||'—')) +
+    fmi('Confidence', f.confidence||'—') +
+    '</div>' +
+    // Row 2: Technical metadata
+    '<div class="fc-meta" style="margin-top:8px;">' +
+    fmi('Auth Object', f.authObj||'—') +
+    fmi('Detected Fields', f.fields||'—') +
+    fmi('Missing / Incorrect Values', f.missingValues||'—') +
+    fmi('Category', f.category||'—') +
+    fmi('Status', f.status||'Open') +
+    fmi('Source', f.source||'—') +
+    '</div>' +
+    // Statement
+    (f.statement ? '<div style="margin:10px 0 4px;"><div style="font-size:10px;color:var(--chrome-3);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">Exact Statement (Line ' + (f.line||'?') + ')</div><div class="code" style="border-left-color:var(--critical);">' + escHtml(f.statement) + '</div></div>' : '') +
+    // Narrative fields
+    '<div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">' +
+    fBlock('Root Cause', f.rootCause) +
+    fBlock('Business &amp; Security Risk', f.businessRisk) +
+    '</div>' +
+    '<div style="margin-top:10px;">' + fBlock('Exploit / Misuse Scenario', f.exploit) + '</div>' +
+    // Before/After diff
+    (f.before ? '<div class="diff" style="margin-top:12px;"><div class="diff-pane"><div class="diff-lbl dl-b">⚠ Before — Vulnerable</div><div class="code">' + escHtml(f.before) + '</div></div>' +
+    '<div class="diff-pane"><div class="diff-lbl dl-a">✓ After — Corrected (Reference Only)</div><div class="code">' + escHtml(f.after||'') + '</div></div></div>' : '') +
+    // Correction explanation
+    (f.fixExplanation ? '<div style="margin-top:10px;padding:10px 14px;background:rgba(36,161,72,0.05);border-left:3px solid var(--low);border-radius:0 var(--r-sm) var(--r-sm) 0;font-size:12.5px;color:var(--chrome-2);">' +
+    '<span style="font-family:var(--font-mono);font-size:9px;color:var(--low);letter-spacing:1px;display:block;margin-bottom:3px;">CORRECTION EXPLANATION</span>' +
+    escHtml(f.fixExplanation) + '</div>' : '') +
+    // Clean Core + Release compatibility
+    '<div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">' +
+    fBlock('Clean Core Impact', f.cleanCore) +
+    fBlock('SAP Release Compatibility', f.releaseNote) +
+    '</div>' +
+    // Recommended remediation + Manual review
+    '<div style="margin-top:10px;">' + fBlock('Recommended Remediation', f.description || f.rootCause) + '</div>' +
+    (f.manualReview && f.manualNote ? '<div style="margin-top:8px;" class="g-warn"><span style="font-family:var(--font-mono);font-size:9px;color:var(--medium);letter-spacing:1px;display:block;margin-bottom:3px;">⚐ MANUAL REVIEW REQUIRED</span>' + escHtml(f.manualNote) + '</div>' : '') +
+    // Actions
+    '<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--panel-border);padding-top:12px;">' +
+    '<button class="btn btn-g btn-sm" onclick="markFP(this,\'' + (f.id||'') + '\')">Mark as False Positive</button>' +
+    '<button class="btn btn-s btn-sm" onclick="closeFinding(\'' + (f.id||'') + '\')">Mark Resolved</button>' +
+    '<button class="btn btn-g btn-sm" onclick="addToAuditEvidence(\'' + (f.id||'') + '\')">Add to Audit Evidence</button>' +
+    '</div>' +
     '</div></div>';
+  return html;
+}
+
+function fBlock(label, value) {
+  if (!value || value === '—') return '';
+  return '<div style="background:rgba(70,137,255,0.04);border:1px solid rgba(70,137,255,0.1);border-radius:var(--r-sm);padding:8px 11px;">' +
+    '<div style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-3);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">' + label + '</div>' +
+    '<div style="font-size:12.5px;color:var(--chrome-2);line-height:1.6;">' + escHtml(String(value)) + '</div></div>';
 }
 
 function fmi(label, value) {
@@ -1469,28 +2139,396 @@ function exportAbapFindings() {
   downloadCSV(abapFindings, 'abap_findings.csv');
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  ABAP RULE ENGINE v2 — 24 detection categories, version-aware, 20-field output
+// ─────────────────────────────────────────────────────────────────────────────
 var ABAP_RULES = [
-  { id:'AUTH-001', sev:'CRITICAL', pattern:/MODIFY|INSERT|DELETE|UPDATE/i, title:'Missing AUTHORITY-CHECK before write operation',
-    obj:'(object-dependent)', desc:'A database write operation was detected without a preceding AUTHORITY-CHECK. Any user can execute this write without authorization validation.',
-    fix: function(line){ return 'AUTHORITY-CHECK OBJECT \'M_MATE_WRK\'\n  ID \'ACTVT\' FIELD \'02\'.\nIF sy-subrc <> 0.\n  RAISE EXCEPTION TYPE zcx_no_authority.\nENDIF.\n' + line; }},
-  { id:'AUTH-002', sev:'CRITICAL', pattern:/AUTHORITY-CHECK[\s\S]{0,200}?(?!IF\s+sy-subrc)/i, title:'SY-SUBRC not evaluated after AUTHORITY-CHECK',
-    obj:'(check object)', desc:'An AUTHORITY-CHECK statement was found but sy-subrc is not evaluated immediately after. The check result is ignored, making it ineffective.',
-    fix: function(line){ return line + '\nIF sy-subrc <> 0.\n  RAISE EXCEPTION TYPE zcx_no_authority.\nENDIF.'; }},
-  { id:'AUTH-003', sev:'HIGH', pattern:/SELECT[\s\S]{0,500}?AUTHORITY-CHECK/i, title:'AUTHORITY-CHECK performed after database read',
-    obj:'(varies)', desc:'A SELECT statement reads data before the AUTHORITY-CHECK is performed. The authorization check must be done BEFORE accessing sensitive data.',
-    fix: function(line){ return '\" Move AUTHORITY-CHECK to before the SELECT statement\n' + line; }},
-  { id:'AUTH-004', sev:'HIGH', pattern:/ID\s+'\w+'\s+FIELD\s+'[*\s]'/i, title:'Wildcard or blank value in authorization field',
-    obj:'(check object)', desc:'A wildcard (*) or blank value is used in an authorization field. This bypasses field-level restriction and grants overly broad access.',
-    fix: function(line){ return line.replace(/FIELD\s+'[*\s]'/i, 'FIELD iv_field_value  \" Replace with actual runtime variable'); }},
-  { id:'AUTH-005', sev:'MEDIUM', pattern:/ID\s+'\w+'\s+FIELD\s+'[A-Z0-9_]{1,10}'/i, title:'Hardcoded authorization field value',
-    obj:'(check object)', desc:'A literal/hardcoded value is used in an authorization field. This reduces flexibility and may not reflect the correct runtime context.',
-    fix: function(line){ return line + '  \" Consider replacing hardcoded value with variable'; }},
-  { id:'AUTH-006', sev:'CRITICAL', pattern:/DEBUGGING|BYPASS_BUFFER|SKIP_AUTH/i, title:'Debug/bypass pattern detected',
-    obj:'S_ADMI_FCD / Custom', desc:'A debug, buffer bypass, or authorization skip pattern was detected. This is a critical security risk in production code.',
-    fix: function(line){ return '\" REMOVE THIS LINE — debug/bypass patterns must not exist in production\n\" ' + line; }},
-  { id:'AUTH-007', sev:'HIGH', pattern:/CALL FUNCTION[\s\S]{0,100}?IN BACKGROUND TASK/i, title:'Background task without authority check',
-    obj:'S_BTCH_JOB', desc:'A background task is called without verifying the user has background job authorization.',
-    fix: function(line){ return 'AUTHORITY-CHECK OBJECT \'S_BTCH_JOB\'\n  ID \'JOBACTION\' FIELD \'RELE\'.\nIF sy-subrc <> 0. RAISE EXCEPTION TYPE zcx_no_authority. ENDIF.\n' + line; }},
+  { id:'AUTH-001', sev:'CRITICAL', category:'Confirmed security weakness',
+    title:'Missing AUTHORITY-CHECK before database write operation',
+    pattern:/^\s*(MODIFY|INSERT\s+INTO|DELETE\s+FROM|UPDATE)\s+\w/i,
+    obj:'(object-dependent — verify via SU24/STAUTHTRACE)',
+    fields:'ACTVT + org-level fields', missingValues:'Activity 01/02/06 and org-level restrictions (e.g. BUKRS, WERKS, EKORG)',
+    rootCause:'No AUTHORITY-CHECK precedes a database write. Any authenticated user can execute this operation without authorization validation.',
+    businessRisk:'Unauthorized data modification — financial fraud, inventory manipulation, compliance breach.',
+    exploit:'An attacker with any SAP logon can call this function and modify records without restriction.',
+    cleanCore:'Use standard AUTHORITY-CHECK. Prefer BAPIs/released APIs. Do not modify SAP standard tables directly.',
+    releaseNote:'All releases (ECC EhP4+, S/4HANA 1809–2023, BW 7.4+). S/4HANA 2022+ Cloud: use RAP authorization.',
+    confidence:'HIGH — Static pattern match on DML without preceding AUTHORITY-CHECK in scope.',
+    manualReview:true, manualNote:'Confirm exact authorization object via SU24 or STAUTHTRACE for the relevant T-Code.',
+    fix: function(line){ return 'AUTHORITY-CHECK OBJECT \'<AUTH_OBJECT>\'\n  ID \'ACTVT\' FIELD \'02\'\n  ID \'<ORG_FIELD>\' FIELD <org_variable>.\nIF sy-subrc <> 0.\n  RAISE EXCEPTION TYPE zcx_no_authority.\nENDIF.\n' + line; },
+    fixExplanation:'AUTHORITY-CHECK inserted before the write. sy-subrc evaluated; typed exception raised on failure. Replace <AUTH_OBJECT> and <ORG_FIELD> from SU24.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE','BW4'], desc:'' },
+  { id:'AUTH-002', sev:'CRITICAL', category:'Confirmed security weakness',
+    title:'SY-SUBRC not evaluated after AUTHORITY-CHECK',
+    pattern:/AUTHORITY-CHECK\s+OBJECT/i,
+    postCheck: function(lines, idx) {
+      for (var i=idx+1; i<Math.min(idx+6,lines.length); i++) {
+        if (/IF\s+sy-subrc/i.test(lines[i])||/CHECK\s+sy-subrc/i.test(lines[i])) return false;
+      }
+      return true;
+    },
+    obj:'(the object named in the AUTHORITY-CHECK)',
+    fields:'All fields in the AUTHORITY-CHECK statement', missingValues:'sy-subrc evaluation (IF sy-subrc <> 0)',
+    rootCause:'AUTHORITY-CHECK runs but its return code is never tested. The check is cosmetically present but functionally disabled.',
+    businessRisk:'Any user proceeds past the check regardless of authorization. Provides false assurance in code reviews.',
+    exploit:'Attacker proceeds unconditionally. The check provides no actual restriction.',
+    cleanCore:'Always evaluate sy-subrc. Raise typed exception (zcx_no_authority) to halt processing.',
+    releaseNote:'All releases. ABAP for Cloud: RAP authorization checks are mandatory.',
+    confidence:'HIGH — AUTHORITY-CHECK without IF sy-subrc within 5 following lines.',
+    manualReview:false, manualNote:'',
+    fix: function(line){ return line + '\nIF sy-subrc <> 0.\n  MESSAGE e001(zauth) WITH \'Authorization check failed\'.\n  RAISE EXCEPTION TYPE zcx_no_authority.\nENDIF.'; },
+    fixExplanation:'IF sy-subrc <> 0 block added after AUTHORITY-CHECK. Typed exception raised on failure halts all processing.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE','BW4'], desc:'' },
+  { id:'AUTH-003', sev:'HIGH', category:'Probable weakness',
+    title:'AUTHORITY-CHECK performed after database read',
+    pattern:/^\s*SELECT\b/i,
+    postCheck: function(lines, idx) {
+      for (var i=Math.max(0,idx-10); i<idx; i++) {
+        if (/AUTHORITY-CHECK/i.test(lines[i])) return false;
+      }
+      return true;
+    },
+    obj:'(object associated with data being read)',
+    fields:'ACTVT (03 = Display) + org-level fields', missingValues:'AUTHORITY-CHECK with ACTVT 03 before SELECT',
+    rootCause:'Data read before authorization is verified. Sensitive data is in memory when check fails.',
+    businessRisk:'Confidential data may appear in error messages or logs even when access is denied.',
+    exploit:'Partial transaction execution: data fetched and sometimes partially rendered before auth failure detected.',
+    cleanCore:'Move AUTHORITY-CHECK to before any SELECT, CALL FUNCTION, or RFC that reads sensitive data.',
+    releaseNote:'All releases. S/4HANA RAP: implement authorization in BO authorization object.',
+    confidence:'MEDIUM — SELECT without preceding AUTHORITY-CHECK in prior 10 lines. Review non-sensitive reads.',
+    manualReview:true, manualNote:'Confirm data is sensitive. Use STAUTHTRACE to confirm required objects.',
+    fix: function(line){ return '\" Move AUTHORITY-CHECK HERE — before the SELECT:\nAUTHORITY-CHECK OBJECT \'<AUTH_OBJECT>\'\n  ID \'ACTVT\' FIELD \'03\'.\nIF sy-subrc <> 0.\n  RAISE EXCEPTION TYPE zcx_no_authority.\nENDIF.\n' + line; },
+    fixExplanation:'AUTHORITY-CHECK relocated before SELECT. Activity 03 (Display) for read operations. Database never accessed if auth fails.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE','BW4'], desc:'' },
+  { id:'AUTH-004', sev:'HIGH', category:'Confirmed security weakness',
+    title:'Wildcard or blank value in authorization field — overly broad access',
+    pattern:/AUTHORITY-CHECK[\s\S]{0,300}?ID\s+'[A-Z_]+'\s+FIELD\s+'[*\s]'/i,
+    obj:'(object in the AUTHORITY-CHECK)',
+    fields:'Field using wildcard (*) or blank value', missingValues:'Specific org-level value or runtime variable replacing the wildcard',
+    rootCause:'Using \'*\' or blank grants access to ALL values of that field — equivalent to removing the restriction.',
+    businessRisk:'User gains access across all organizational units (all company codes, plants, purchasing orgs).',
+    exploit:'User assigned to plant 1000 can access plants 2000, 3000. Cross-company data exposure in multi-client landscapes.',
+    cleanCore:'Use runtime variables (iv_bukrs, iv_werks) from business context. Never hardcode \'*\'.',
+    releaseNote:'All releases. S/4HANA Clean Core: use CDS access control (DCL) for ABAP RESTful programming.',
+    confidence:'HIGH — Literal wildcard in AUTHORITY-CHECK field.',
+    manualReview:false, manualNote:'',
+    fix: function(line){ return line.replace(/FIELD\s+'[*\s]'/gi, 'FIELD <runtime_variable>  \" Replace with actual business-context variable (e.g. iv_bukrs)'); },
+    fixExplanation:'Wildcard replaced with runtime variable. Restricts access to authorized organizational scope only.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE','BW4'], desc:'' },
+  { id:'AUTH-005', sev:'MEDIUM', category:'Probable weakness',
+    title:'Hardcoded literal value in authorization field',
+    pattern:/ID\s+'[A-Z_]+'\s+FIELD\s+'[A-Z0-9]{2,10}'/i,
+    obj:'(object in the AUTHORITY-CHECK)',
+    fields:'Field using hardcoded literal', missingValues:'Runtime variable reflecting actual business context',
+    rootCause:'Literal constant used as authorization field value. Inflexible; may not reflect correct runtime context.',
+    businessRisk:'Users may be incorrectly authorized/blocked in multi-org landscapes.',
+    exploit:'Hardcoding BUKRS=\'1000\' always passes for company 1000, may fail for 2000 or create false positives.',
+    cleanCore:'Use context-derived variables from business context (document header, import parameters).',
+    releaseNote:'All releases.',
+    confidence:'MEDIUM — Literal in FIELD clause. Activity values (01,02,03) may legitimately be hardcoded.',
+    manualReview:true, manualNote:'Distinguish activity values (01/02/03) — may be hardcoded — from org restriction values (BUKRS, WERKS) — must be runtime variables.',
+    fix: function(line){ return line + '  \" REVIEW: Replace hardcoded org-level value with runtime variable if this is an org-level field'; },
+    fixExplanation:'Activity constants may remain. Org field values must be replaced with variables from processing context.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE','BW4'], desc:'' },
+  { id:'AUTH-006', sev:'CRITICAL', category:'Confirmed security weakness',
+    title:'Debug, bypass or test-mode authorization skip pattern detected',
+    pattern:/DEBUGGING|BYPASS_BUFFER|SKIP_AUTH|NO_AUTH_CHECK|TEST_MODE\s*=\s*'X'|sy-uname\s*=\s*'DEVELOPER'/i,
+    obj:'S_ADMI_FCD / Custom bypass object',
+    fields:'Bypass flag or debug condition', missingValues:'This pattern must be removed entirely',
+    rootCause:'Code conditionally skips authorization checks based on a flag, username comparison, or debug mode.',
+    businessRisk:'Unauthorized access to all functions protected by the bypassed check. Critical production vulnerability.',
+    exploit:'Developer sets DEBUG_MODE=\'X\' to skip all checks. In production, any user aware of the parameter gains unrestricted access.',
+    cleanCore:'Remove all bypass patterns. Use ABAP unit test frameworks with mocked authorization objects for testing.',
+    releaseNote:'All releases. S/4HANA Cloud prohibits bypass patterns — will fail clean core validation.',
+    confidence:'HIGH — Explicit bypass pattern.',
+    manualReview:false, manualNote:'',
+    fix: function(line){ return '\" ⚠ CRITICAL: REMOVE THIS LINE — bypass/debug patterns must not exist in production\n\" ORIGINAL (DELETE): ' + line + '\n\" Replace with CL_ABAP_TESTDOUBLE for authorization mocking in unit tests'; },
+    fixExplanation:'Bypass line removed entirely. Use ABAP Unit Test doubles (CL_ABAP_TESTDOUBLE) for testing.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE','BW4'], desc:'' },
+  { id:'AUTH-007', sev:'HIGH', category:'Probable weakness',
+    title:'Background task without S_BTCH_JOB authorization check',
+    pattern:/IN\s+BACKGROUND\s+TASK|JOB_SUBMIT|BP_JOB_SUBMIT/i,
+    obj:'S_BTCH_JOB',
+    fields:'JOBACTION (RELE), JOBGROUP', missingValues:'AUTHORITY-CHECK for S_BTCH_JOB before job scheduling',
+    rootCause:'Background task scheduling without verifying S_BTCH_JOB authorization.',
+    businessRisk:'Unauthorized job scheduling — can run privilege-escalation jobs or mass data exports.',
+    exploit:'User without batch authorization schedules a sensitive report as background job, bypassing foreground access controls.',
+    cleanCore:'Check S_BTCH_JOB with JOBACTION=\'RELE\'. S/4HANA 2020+: also check S_APPL_JOB for Application Jobs.',
+    releaseNote:'ECC/NW: S_BTCH_JOB. S/4HANA 2020+: additionally S_APPL_JOB via STC02.',
+    confidence:'HIGH — Background task scheduling without preceding S_BTCH_JOB check.',
+    manualReview:true, manualNote:'Confirm scheduling context. System-internal scheduling by trusted service account may not require check.',
+    fix: function(line){ return 'AUTHORITY-CHECK OBJECT \'S_BTCH_JOB\'\n  ID \'JOBACTION\' FIELD \'RELE\'.\nIF sy-subrc <> 0.\n  RAISE EXCEPTION TYPE zcx_no_authority.\nENDIF.\n' + line; },
+    fixExplanation:'S_BTCH_JOB with JOBACTION=RELE checked before background task. Only authorized users can schedule jobs.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE','BW4'], desc:'' },
+  { id:'AUTH-008', sev:'CRITICAL', category:'Confirmed security weakness',
+    title:'OData DPC_EXT method without AUTHORITY-CHECK — unprotected service operation',
+    pattern:/METHOD\s+(create_entity|update_entity|delete_entity|get_entity|get_entityset)\b/i,
+    obj:'(business authorization object for the entity — verify via SU24)',
+    fields:'ACTVT + entity-specific org fields', missingValues:'AUTHORITY-CHECK in DPC_EXT method body before data operation',
+    rootCause:'OData DPC_EXT methods handle HTTP REST calls. Without AUTHORITY-CHECK any gateway user can perform the operation.',
+    businessRisk:'Unprotected OData CREATE/UPDATE/DELETE — critical vulnerability for mass data manipulation via HTTP.',
+    exploit:'Using Postman/browser, attacker sends HTTP POST/PATCH/DELETE. Backend executes without authorization check.',
+    cleanCore:'Implement AUTHORITY-CHECK in every DPC_EXT method. S/4HANA: prefer RAP with CDS access control (DCL).',
+    releaseNote:'NW 7.4+: ZCL_*_DPC_EXT. S/4HANA 1909+: prefer RAP BO authorization. S/4HANA 2020+: @MappingRole and @Privileges.',
+    confidence:'HIGH — DPC_EXT method detected. Confirm no auth check in complete method body.',
+    manualReview:true, manualNote:'View complete method body in SE24/ADT. Check for AUTHORITY-CHECK in override method, called FMs, and BAPI/BAdI chain.',
+    fix: function(line){ return line + '\n  AUTHORITY-CHECK OBJECT \'<AUTH_OBJECT>\'\n    ID \'ACTVT\' FIELD \'<ACTVT_VALUE>\'.\n  IF sy-subrc <> 0.\n    RAISE EXCEPTION TYPE /iwbep/cx_mgw_busi_exception\n      EXPORTING textid = /iwbep/cx_mgw_busi_exception=>authorization_failure.\n  ENDIF.'; },
+    fixExplanation:'AUTHORITY-CHECK at DPC_EXT method entry. OData framework exception returns HTTP 403 on failure.',
+    versions:['NW','S4HANA_OP','S4HANA_PE'], desc:'' },
+  { id:'AUTH-009', sev:'HIGH', category:'Probable weakness',
+    title:'CALL TRANSACTION without S_TCODE authorization check',
+    pattern:/CALL\s+TRANSACTION\s+['"]?\w+['"]?\s+(?!USING)/i,
+    obj:'S_TCODE',
+    fields:'TCD', missingValues:'AUTHORITY-CHECK OBJECT \'S_TCODE\' before CALL TRANSACTION',
+    rootCause:'CALL TRANSACTION invokes another transaction without checking start authorization.',
+    businessRisk:'Indirect transaction execution bypassing role-based start restrictions.',
+    exploit:'User without direct FB01 access triggers it via CALL TRANSACTION from a custom program.',
+    cleanCore:'Always check S_TCODE before CALL TRANSACTION.',
+    releaseNote:'All releases.',
+    confidence:'HIGH — CALL TRANSACTION without preceding S_TCODE check.',
+    manualReview:false, manualNote:'',
+    fix: function(line){ var tc=(line.match(/CALL\s+TRANSACTION\s+'?(\w+)'?/i)||['','<TC>'])[1]; return 'AUTHORITY-CHECK OBJECT \'S_TCODE\'\n  ID \'TCD\' FIELD \''+tc+'\'.\nIF sy-subrc <> 0.\n  RAISE EXCEPTION TYPE zcx_no_authority.\nENDIF.\n'+line; },
+    fixExplanation:'S_TCODE checked before CALL TRANSACTION. Combined with target transaction\'s own checks, implements full defense-in-depth.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE'], desc:'' },
+  { id:'AUTH-010', sev:'CRITICAL', category:'Confirmed security weakness',
+    title:'Payment or financial posting without authorization check',
+    pattern:/BAPI_ACC_DOCUMENT_POST|BAPI_OUTGOINGPAYMENT|F_.*_POST|FB01\b|F-02\b/i,
+    obj:'F_BKPF_BUK + F_BKPF_KOA',
+    fields:'BUKRS, ACTVT (01)', missingValues:'AUTHORITY-CHECK for F_BKPF_BUK before financial posting',
+    rootCause:'Financial posting BAPIs/transactions invoked without FI authorization check.',
+    businessRisk:'Unauthorized financial postings — fraud, embezzlement, financial statement manipulation.',
+    exploit:'Attacker calls payment posting BAPI; system posts fraudulent payments without authorization.',
+    cleanCore:'Always check F_BKPF_BUK (and F_BKPF_KOA, F_BKPF_GSB) before financial posting.',
+    releaseNote:'All releases. S/4HANA: verify BAPI still performs internal auth checks.',
+    confidence:'HIGH — Financial posting pattern without preceding F_BKPF_BUK check.',
+    manualReview:false, manualNote:'',
+    fix: function(line){ return 'AUTHORITY-CHECK OBJECT \'F_BKPF_BUK\'\n  ID \'BUKRS\' FIELD iv_bukrs\n  ID \'ACTVT\' FIELD \'01\'.\nIF sy-subrc <> 0.\n  RAISE EXCEPTION TYPE zcx_no_authority.\nENDIF.\n'+line; },
+    fixExplanation:'F_BKPF_BUK checked with actual company code and activity 01 (Create). Add F_BKPF_KOA/F_BKPF_GSB as required.',
+    versions:['ECC','NW','S4HANA_OP','S4HANA_PE'], desc:'' },
+  { id:'AUTH-011', sev:'HIGH', category:'Probable weakness',
+    title:'SUBMIT without S_PROGRAM authorization check',
+    pattern:/^\s*SUBMIT\s+\w+/i,
+    obj:'S_PROGRAM',
+    fields:'P_GROUP, P_ACTION = SUBMIT', missingValues:'AUTHORITY-CHECK OBJECT \'S_PROGRAM\' before SUBMIT',
+    rootCause:'SUBMIT calls another program without checking execute authorization.',
+    businessRisk:'Privilege escalation — programs not directly accessible can be run indirectly.',
+    exploit:'User without sensitive report access triggers it via SUBMIT from a custom program.',
+    cleanCore:'Check S_PROGRAM with P_ACTION=SUBMIT before every SUBMIT in custom code.',
+    releaseNote:'All releases.',
+    confidence:'HIGH — SUBMIT without preceding S_PROGRAM check.',
+    manualReview:false, manualNote:'',
+    fix: function(line){ var prog=(line.match(/SUBMIT\s+(\w+)/i)||['','<PROGRAM>'])[1]; return 'AUTHORITY-CHECK OBJECT \'S_PROGRAM\'\n  ID \'P_GROUP\' FIELD \''+prog+'\'\n  ID \'P_ACTION\' FIELD \'SUBMIT\'.\nIF sy-subrc <> 0.\n  RAISE EXCEPTION TYPE zcx_no_authority.\nENDIF.\n'+line; },
+    fixExplanation:'S_PROGRAM checked with target program name and SUBMIT action. Prevents privilege escalation via SUBMIT.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE','BW4'], desc:'' },
+  { id:'AUTH-012', sev:'HIGH', category:'Probable weakness',
+    title:'S_TABU_DIS or S_TABU_NAM — table authorization misconfiguration risk',
+    pattern:/AUTHORITY-CHECK\s+OBJECT\s+'S_TABU_(DIS|NAM)'/i,
+    obj:'S_TABU_DIS / S_TABU_NAM',
+    fields:'DICBERCLS, ACTVT', missingValues:'Specific authorization group, not &NC& or blank',
+    rootCause:'S_TABU_DIS/NAM control SE16/SM30 table access. Misconfigured group grants access to sensitive tables.',
+    businessRisk:'Broad S_TABU_DIS (&NC& or blank) allows unrestricted table browsing including USR02, PA0008, KONP.',
+    exploit:'User with &NC& group reads salary (PA0008) or pricing (KONP) tables via SE16.',
+    cleanCore:'Assign specific authorization groups to all sensitive tables in SE54.',
+    releaseNote:'All releases. S/4HANA: also review CDS access controls.',
+    confidence:'MEDIUM — Pattern detected. Manual review of authorization group value required.',
+    manualReview:true, manualNote:'Check DICBERCLS value. &NC& or blank = critical misconfiguration.',
+    fix: function(line){ return line+'\n\" REVIEW: Ensure DICBERCLS contains a specific authorization group, not &NC& or blank.\n\" Use SE54 to assign meaningful authorization group.'; },
+    fixExplanation:'DICBERCLS must specify a restrictive group. Assign in SE54; grant only that group to authorized roles in PFCG.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE'], desc:'' },
+  { id:'AUTH-013', sev:'MEDIUM', category:'Potential weakness requiring review',
+    title:'BAdI or enhancement implementation — authorization review required',
+    pattern:/METHOD\s+if_badi_|CLASS\s+zcl_\w+\s+IMPLEMENTATION|ENHANCEMENT\s+\d+/i,
+    obj:'(context-dependent)',
+    fields:'ACTVT + org-level fields relevant to enhanced operation', missingValues:'AUTHORITY-CHECK for any new operations not covered by calling transaction',
+    rootCause:'BAdI/enhancement adds new data operations not covered by calling transaction\'s authorization model.',
+    businessRisk:'Custom logic executes in the BAdI context but may perform operations beyond original authorization scope.',
+    exploit:'BAdI implementation performs additional DB write bypassing auth checks covering only the standard operation.',
+    cleanCore:'BAdI is preferred S/4HANA extensibility. Ensure no direct standard table modifications. Add checks only for new operations.',
+    releaseNote:'All releases. S/4HANA Clean Core: BAdI is the correct extensibility mechanism.',
+    confidence:'LOW — BAdI/enhancement pattern. Requires manual review.',
+    manualReview:true, manualNote:'Check operations performed. Add checks only for new operations not covered by calling transaction.',
+    fix: function(line){ return line+'\n\" REVIEW: If this BAdI performs data writes not covered by calling transaction, add AUTHORITY-CHECK here.'; },
+    fixExplanation:'Evaluate BAdI for new data operations. For each not covered by calling transaction\'s model, add AUTHORITY-CHECK at method entry.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE','BW4'], desc:'' },
+  { id:'AUTH-014', sev:'HIGH', category:'Probable weakness',
+    title:'Dynamic authorization object name — cannot be resolved statically',
+    pattern:/AUTHORITY-CHECK\s+OBJECT\s+(?!')(lv_|gv_|wa_|ls_|v_)\w+/i,
+    obj:'(dynamic — cannot determine statically)',
+    fields:'(dynamic)', missingValues:'Static analysis cannot determine the object. Runtime trace required.',
+    rootCause:'Authorization object name stored in variable. Cannot determine which object is checked without runtime data.',
+    businessRisk:'Dynamic objects may resolve incorrectly. Difficult to audit.',
+    exploit:'Variable derived from user input can be manipulated to resolve to an object the attacker is authorized for.',
+    cleanCore:'Prefer static AUTHORITY-CHECK with literal names. If dynamic, ensure variable source is trusted.',
+    releaseNote:'All releases.',
+    confidence:'LOW — Dynamic object. Requires STAUTHTRACE runtime capture.',
+    manualReview:true, manualNote:'Run STAUTHTRACE while executing this code path. Capture actual object name at runtime.',
+    fix: function(line){ return '\" ⚠ MANUAL REVIEW: Dynamic authorization object\n\" Run STAUTHTRACE to capture runtime object name\n\" Replace dynamic variable with static literal where possible:\n'+line; },
+    fixExplanation:'Replace dynamic variable with static literal where possible. Ensures auditable, testable, injection-resistant auth.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE','BW4'], desc:'' },
+  { id:'AUTH-015', sev:'HIGH', category:'Probable weakness',
+    title:'S_SERVICE — ICF/Fiori service authorization review',
+    pattern:/AUTHORITY-CHECK\s+OBJECT\s+'S_SERVICE'/i,
+    obj:'S_SERVICE',
+    fields:'SRV_NAME, SRV_TYPE', missingValues:'Specific service name/type restriction + backend authorization check',
+    rootCause:'S_SERVICE controls SICF node/Fiori service access. Wildcard service name exposes all activated services.',
+    businessRisk:'Misconfigured S_SERVICE exposes Fiori/ICF services without backend authorization.',
+    exploit:'S_SERVICE with wildcard: all SICF-activated services accessible. Backend auth becomes sole control.',
+    cleanCore:'Grant S_SERVICE for specific service names. Complement with backend AUTHORITY-CHECK in DPC_EXT.',
+    releaseNote:'S/4HANA and NW 7.4+ with Fiori/Gateway.',
+    confidence:'MEDIUM — S_SERVICE detected. Verify service name/type restriction.',
+    manualReview:true, manualNote:'Check SRV_NAME value — wildcard (*) is critical misconfiguration.',
+    fix: function(line){ return line+'\n\" REVIEW: Verify SRV_NAME is not wildcard (*). Check DPC_EXT class for AUTHORITY-CHECK in all methods.'; },
+    fixExplanation:'S_SERVICE should specify exact service name. Complement with DPC_EXT AUTHORITY-CHECK for defense-in-depth.',
+    versions:['NW','S4HANA_OP','S4HANA_PE'], desc:'' },
+  { id:'AUTH-016', sev:'HIGH', category:'Probable weakness',
+    title:'AUTHORITY-CHECK inside LOOP without loop-exit on failure',
+    pattern:/^\s*LOOP\s+AT\b/i,
+    postCheck: function(lines, idx) {
+      var block = lines.slice(idx, Math.min(idx+20,lines.length)).join('\n');
+      return /AUTHORITY-CHECK/i.test(block) && !/RAISE|EXIT|RETURN|CHECK\s+sy-subrc/i.test((block.split('AUTHORITY-CHECK')[1]||''));
+    },
+    obj:'(object within the LOOP)',
+    fields:'Object-specific fields', missingValues:'EXIT or CHECK after sy-subrc evaluation',
+    rootCause:'AUTHORITY-CHECK inside LOOP does not stop iteration on failure. Processing continues for all subsequent records.',
+    businessRisk:'Partial auth failure — some records processed, some not. Inconsistent data state.',
+    exploit:'Failure on record 1 does not stop records 2–100. Attacker triggers processing of unauthorized records.',
+    cleanCore:'After AUTHORITY-CHECK in LOOP: use CHECK sy-subrc = 0 (skip) or RAISE EXCEPTION (abort).',
+    releaseNote:'All releases.',
+    confidence:'MEDIUM — AUTHORITY-CHECK in LOOP without clear exit pattern.',
+    manualReview:true, manualNote:'Review complete LOOP block. Determine per-record vs per-object checking intent.',
+    fix: function(line){ return line+'\n  AUTHORITY-CHECK OBJECT \'<AUTH_OBJECT>\'\n    ID \'ACTVT\' FIELD \'02\'.\n  CHECK sy-subrc = 0.  \" Skip unauthorized records'; },
+    fixExplanation:'CHECK sy-subrc = 0 after AUTHORITY-CHECK skips unauthorized records. RAISE EXCEPTION aborts the entire loop if preferred.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE','BW4'], desc:'' },
+  { id:'AUTH-017', sev:'MEDIUM', category:'Potential weakness requiring review',
+    title:'Inconsistent CRUD authorization — check activity coverage',
+    pattern:/ID\s+'ACTVT'\s+FIELD\s+'(01|02|06)'/i,
+    obj:'(object containing ACTVT field)',
+    fields:'ACTVT', missingValues:'Verify all activities (01=Create, 02=Change, 03=Display, 06=Delete) consistently checked',
+    rootCause:'Only some CRUD activities checked. Missing activity checks create inconsistent access control.',
+    businessRisk:'Inconsistent CRUD coverage allows unauthorized activity.',
+    exploit:'Create path lacks check but change path does not. Attacker creates fraudulent records without restriction.',
+    cleanCore:'Implement consistent AUTHORITY-CHECK for all relevant activities. Use helper method for centralized CRUD auth.',
+    releaseNote:'All releases.',
+    confidence:'MEDIUM — One or more activities detected. Manual review for full coverage needed.',
+    manualReview:true, manualNote:'Search entire program for all AUTHORITY-CHECK statements. Verify create/change/display/delete paths all covered.',
+    fix: function(line){ return line+'\n\" REVIEW: Verify all activities (01, 02, 03, 06) for this object are checked in all code paths'; },
+    fixExplanation:'Comprehensive CRUD review required. Use centralized authorization helper for consistent coverage across all operations.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE','BW4'], desc:'' },
+  { id:'AUTH-018', sev:'HIGH', category:'Probable weakness',
+    title:'REPORT program without authorization check at entry point',
+    pattern:/^\s*REPORT\s+\w+/i,
+    postCheck: function(lines, idx) {
+      return !/AUTHORITY-CHECK/i.test(lines.slice(0,Math.min(30,lines.length)).join('\n'));
+    },
+    obj:'S_PROGRAM + business-context object',
+    fields:'P_GROUP, P_ACTION = EXECUTE', missingValues:'AUTHORITY-CHECK at INITIALIZATION or START-OF-SELECTION',
+    rootCause:'Executable REPORT accessible via SA38/SE38/SUBMIT without authorization check at entry.',
+    businessRisk:'Sensitive reports (data extracts, mass processing) can be run by any user with S_PROGRAM access.',
+    exploit:'User with SA38 access runs sensitive data extract, bypassing T-Code-based access control.',
+    cleanCore:'Add AUTHORITY-CHECK at INITIALIZATION for all sensitive REPORT programs.',
+    releaseNote:'All releases. S/4HANA: prefer ALV reports with FPM authorization or Fiori analytical apps.',
+    confidence:'HIGH — REPORT without AUTHORITY-CHECK in first 30 lines.',
+    manualReview:true, manualNote:'Confirm report accesses sensitive data. Informational overview reports may not require check.',
+    fix: function(line){ return line+'\n\nINITIALIZATION.\n  AUTHORITY-CHECK OBJECT \'S_PROGRAM\'\n    ID \'P_GROUP\' FIELD \'<PROGRAM_GROUP>\'\n    ID \'P_ACTION\' FIELD \'SUBMIT\'.\n  IF sy-subrc <> 0.\n    MESSAGE e001(zauth) WITH \'Insufficient authorization to run this program.\'.\n  ENDIF.'; },
+    fixExplanation:'AUTHORITY-CHECK added to INITIALIZATION event — runs before selection screen and data access.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE','BW4'], desc:'' },
+  { id:'AUTH-019', sev:'MEDIUM', category:'Informational observation',
+    title:'Commented-out AUTHORITY-CHECK — possible intentional bypass',
+    pattern:/^\s*[*"]\s*AUTHORITY-CHECK/i,
+    obj:'(commented out)', fields:'(commented out)', missingValues:'Active AUTHORITY-CHECK replacing the commented line',
+    rootCause:'AUTHORITY-CHECK present but commented out. May indicate developer disabled check during debugging.',
+    businessRisk:'If protecting a critical operation, its absence creates security gap.',
+    exploit:'Developer comments out check during testing, promotes to production without re-enabling.',
+    cleanCore:'Restore the authorization check. Fix role/SU24 if check was overly restrictive.',
+    releaseNote:'All releases.',
+    confidence:'HIGH — Commented AUTHORITY-CHECK detected.',
+    manualReview:true, manualNote:'Determine why check was commented out. Fix role design rather than removing code check.',
+    fix: function(line){ return line.replace(/^\s*[*"]\s*/,'')+'  \" RESTORED: Verify correct object and values'; },
+    fixExplanation:'Comment marker removed to restore the check. Verify object name, fields, and values before activating.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE','BW4'], desc:'' },
+  { id:'AUTH-020', sev:'HIGH', category:'Probable weakness',
+    title:'RFC DESTINATION call without S_RFC authorization check',
+    pattern:/CALL\s+FUNCTION\s+['"]?\w+['"]?\s+DESTINATION/i,
+    obj:'S_RFC',
+    fields:'RFC_NAME, RFC_TYPE', missingValues:'AUTHORITY-CHECK for S_RFC before cross-system RFC call',
+    rootCause:'Cross-system RFC calls without authorization check. Any user can trigger remote function calls.',
+    businessRisk:'Unauthorized remote RFC execution exposes data or triggers operations on connected systems.',
+    exploit:'User triggers cross-system RFC to extract production data using program\'s trusted RFC connection.',
+    cleanCore:'Add S_RFC check before DESTINATION RFC calls. Prefer BTP Integration Suite for S/4HANA Cloud.',
+    releaseNote:'ECC, NW, S/4HANA. S/4HANA Cloud: direct RFC not supported — use BTP Integration Suite.',
+    confidence:'MEDIUM — RFC DESTINATION detected. Verify S_RFC check exists before call.',
+    manualReview:true, manualNote:'Verify RFC destination trust level and authorization requirements on remote system.',
+    fix: function(line){ return 'AUTHORITY-CHECK OBJECT \'S_RFC\'\n  ID \'RFC_NAME\' FIELD \'<FM_NAME>\'\n  ID \'RFC_TYPE\' FIELD \'FUNC\'.\nIF sy-subrc <> 0.\n  RAISE EXCEPTION TYPE zcx_no_authority.\nENDIF.\n'+line; },
+    fixExplanation:'S_RFC checked before DESTINATION RFC call. Prevents unauthorized cross-system remote execution.',
+    versions:['ECC','NW','S4HANA_OP'], desc:'' },
+  { id:'AUTH-021', sev:'MEDIUM', category:'Potential weakness requiring review',
+    title:'S_TCODE check present — verify complementing business-object authorization',
+    pattern:/AUTHORITY-CHECK\s+OBJECT\s+'S_TCODE'/i,
+    obj:'S_TCODE',
+    fields:'TCD', missingValues:'Additional business-object authorization check complementing S_TCODE',
+    rootCause:'S_TCODE controls transaction start but not data-level access within the transaction.',
+    businessRisk:'User starts transaction but may access data beyond authorized scope if business-object checks absent.',
+    exploit:'User granted S_TCODE for ME22N can change POs for any purchasing org if M_BEST_EKO not checked in program.',
+    cleanCore:'S_TCODE must be complemented by business-object AUTHORITY-CHECK within the program.',
+    releaseNote:'All releases.',
+    confidence:'MEDIUM — S_TCODE present. Business-object checks should also be verified.',
+    manualReview:true, manualNote:'Verify program contains AUTHORITY-CHECK for relevant business objects (e.g. M_BEST_EKO for procurement).',
+    fix: function(line){ return line+'\n\" ✓ S_TCODE check present — verify business-object AUTHORITY-CHECK statements also exist in the program body'; },
+    fixExplanation:'S_TCODE is a start check only. Add specific business authorization object check from SU24 for this T-Code.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE'], desc:'' },
+  { id:'AUTH-022', sev:'MEDIUM', category:'Potential weakness requiring review',
+    title:'User input variable used in authorization check field — validate source',
+    pattern:/AUTHORITY-CHECK[\s\S]{0,200}?ID\s+'[A-Z_]+'\s+FIELD\s+(p_|pa_|s_)\w+/i,
+    obj:'(object in the AUTHORITY-CHECK)',
+    fields:'Field using possibly user-supplied variable', missingValues:'Input validation before using variable in authorization check',
+    rootCause:'Authorization field value from variable that may be user-supplied without validation.',
+    businessRisk:'Manipulated field values could weaken the check context.',
+    exploit:'Parameter manipulation to check a context the attacker is authorized for to access data they should not.',
+    cleanCore:'Validate user-supplied values. SELECT SINGLE existence checks before using in AUTHORITY-CHECK.',
+    releaseNote:'All releases.',
+    confidence:'MEDIUM — Selection screen parameter naming convention in FIELD clause.',
+    manualReview:true, manualNote:'Trace variable source. If from PARAMETERS/SELECT-OPTIONS, add input validation (e.g. T001 existence check for BUKRS).',
+    fix: function(line){ return '\" REVIEW: Validate source of variable in this AUTHORITY-CHECK field before proceeding\n'+line; },
+    fixExplanation:'Validate user-supplied values before using in auth checks. Prevents context manipulation.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE','BW4'], desc:'' },
+  { id:'AUTH-023', sev:'HIGH', category:'Probable weakness',
+    title:'S_RFC check — function module exposure to remote callers',
+    pattern:/AUTHORITY-CHECK\s+OBJECT\s+'S_RFC'/i,
+    obj:'S_RFC',
+    fields:'RFC_NAME, RFC_TYPE', missingValues:'Verify specific function module name and type (FUNC/FUGR) — not wildcard',
+    rootCause:'S_RFC controls which RFC-enabled FMs are callable remotely. Wildcard or broad grants expose all FMs.',
+    businessRisk:'Broad S_RFC grants allow remote callers to invoke sensitive FMs without restriction.',
+    exploit:'Attacker with broad S_RFC uses pyrfc/JCo to call sensitive FMs: SUSR_USER_CHANGE_PASSWORD, RFC_READ_TABLE, etc.',
+    cleanCore:'Grant S_RFC for specific FM names. Prefer OData V4/BTP services over RFC for new development.',
+    releaseNote:'All releases. S/4HANA Cloud: RFC is deprecated.',
+    confidence:'MEDIUM — S_RFC present. Verify no wildcard in RFC_NAME.',
+    manualReview:true, manualNote:'Check RFC_NAME value in the AUTHORITY-CHECK. Wildcard (*) is a critical misconfiguration.',
+    fix: function(line){ return line+'\n\" REVIEW: Verify RFC_NAME is not wildcard (*). Grant only specific FM names in S_RFC.'; },
+    fixExplanation:'RFC_NAME must specify exact FM name. Wildcard grants expose all RFC-enabled FMs to remote callers.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE'], desc:'' },
+  { id:'AUTH-024', sev:'MEDIUM', category:'Potential weakness requiring review',
+    title:'Missing exception handling after authorization failure — insecure fallback',
+    pattern:/IF\s+sy-subrc\s*<>\s*0\b/i,
+    postCheck: function(lines, idx) {
+      // check previous 5 lines for AUTHORITY-CHECK
+      var prev = lines.slice(Math.max(0,idx-5),idx).join('\n');
+      if (!/AUTHORITY-CHECK/i.test(prev)) return false;
+      // check the IF block for raise/message/return
+      var block = lines.slice(idx, Math.min(idx+5,lines.length)).join('\n');
+      return !/RAISE|MESSAGE\s+[ae]|RETURN|STOP|LEAVE/i.test(block);
+    },
+    obj:'(object in the preceding AUTHORITY-CHECK)',
+    fields:'All checked fields', missingValues:'RAISE EXCEPTION or MESSAGE TYPE E/A to terminate processing',
+    rootCause:'Authorization failure detected (sy-subrc <> 0) but not properly handled — processing may continue or only a flag is set.',
+    businessRisk:'Soft failure allows processing to continue after authorization check fails.',
+    exploit:'Flag-only handling: if flag is not checked in all code paths, attacker benefits from the soft failure.',
+    cleanCore:'On auth failure: RAISE EXCEPTION TYPE zcx_no_authority or MESSAGE TYPE \'E\' to terminate immediately.',
+    releaseNote:'All releases.',
+    confidence:'MEDIUM — sy-subrc check present but handling block appears insufficient.',
+    manualReview:true, manualNote:'Review the complete IF sy-subrc <> 0 block. Confirm processing terminates on failure.',
+    fix: function(line){ return line+'\n  RAISE EXCEPTION TYPE zcx_no_authority.  \" Ensure processing terminates on authorization failure'; },
+    fixExplanation:'Exception raised in IF sy-subrc <> 0 block. Soft failure (flag/log only) is insufficient — processing must halt.',
+    versions:['ECC','BW','NW','S4HANA_OP','S4HANA_PE','BW4'], desc:'' }
 ];
 
 function runAbapScan() {
@@ -1510,20 +2548,31 @@ function runAbapScan() {
     var lines = code.split('\n');
     var findings = [];
     var checkedLines = {};
+    // Filter rules by selected SAP system version
+    var activeRules = ABAP_RULES.filter(function(r){
+      return !r.versions || r.versions.indexOf(sys) !== -1 || sys === 'full';
+    });
 
     lines.forEach(function(line, idx) {
-      ABAP_RULES.forEach(function(rule) {
-        if (rule.pattern.test(line) && !checkedLines[idx + '_' + rule.id]) {
-          checkedLines[idx + '_' + rule.id] = true;
-          findings.push({
-            severity: rule.sev, title: rule.title, rule: rule.id,
-            artifact: tcode, authObj: rule.obj,
-            line: idx + 1, source: 'ABAP',
-            description: rule.desc,
-            before: line.trim(),
-            after: rule.fix(line.trim())
-          });
-        }
+      activeRules.forEach(function(rule) {
+        var key = idx + '_' + rule.id;
+        if (!rule.pattern.test(line) || checkedLines[key]) return;
+        // Apply postCheck if defined
+        if (rule.postCheck && !rule.postCheck(lines, idx)) return;
+        checkedLines[key] = true;
+        findings.push({
+          severity: rule.sev, category: rule.category, title: rule.title, rule: rule.id,
+          artifact: tcode, sysType: sys,
+          authObj: rule.obj, fields: rule.fields || '—', missingValues: rule.missingValues || '—',
+          line: idx + 1, statement: line.trim(), source: 'ABAP',
+          description: rule.rootCause,
+          rootCause: rule.rootCause, businessRisk: rule.businessRisk, exploit: rule.exploit,
+          cleanCore: rule.cleanCore, releaseNote: rule.releaseNote,
+          confidence: rule.confidence, manualReview: rule.manualReview, manualNote: rule.manualNote,
+          before: line.trim(),
+          after: rule.fix(line.trim()),
+          fixExplanation: rule.fixExplanation
+        });
       });
     });
 
@@ -1569,44 +2618,334 @@ function runAbapScan() {
 }
 
 // ═══════════════════════════════════════════════════════
-//  T-CODE ANALYZER
+//  T-CODE ANALYZER — Full USOBT/USOBX engine (80,802 entries)
 // ═══════════════════════════════════════════════════════
-var TCODE_DB = {
-  'ME21N':['M_BEST_BSA|BSART|NB|01','M_BEST_EKO|EKORG|1000|01','M_BEST_WRK|WERKS|1000|01'],
-  'ME22N':['M_BEST_BSA|BSART|NB|02','M_BEST_EKO|EKORG|1000|02','M_BEST_WRK|WERKS|1000|02'],
-  'ME23N':['M_BEST_BSA|BSART|NB|03','M_BEST_EKO|EKORG|1000|03'],
-  'FB01' :['F_BKPF_BUK|BUKRS|1000|01','F_BKPF_KOA|KOART|D|01','F_BKPF_GSB|GSBER|*|01'],
-  'VA01' :['V_VBAK_AAT|AUART|TA|01','V_VBAK_VKO|VKORG|1000|01'],
-  'VA02' :['V_VBAK_AAT|AUART|TA|02','V_VBAK_VKO|VKORG|1000|02'],
-  'F110' :['F_REGU_BUK|BUKRS|1000|02','F_REGU_KOA|KOART|K|02'],
-  'MM01' :['M_MATE_MAR|MATYP|FERT|01','M_MATE_WRK|WERKS|1000|01'],
-  'VL01N':['V_LIKP_VST|VSTEL|1000|01','V_LIKP_SHT|SHTYP|LF|01'],
-  'MIRO' :['M_RECH_BUK|BUKRS|1000|01','M_RECH_WRK|WERKS|1000|01'],
-};
 
-function runTcodeAnalysis() {
-  var input = document.getElementById('tcTcode').value.trim();
-  if (!input) { alert('Please enter at least one transaction code.'); return; }
-  var tcodes = input.split(',').map(function(t){ return t.trim().toUpperCase(); });
-  var html = '';
-  tcodes.forEach(function(tc) {
-    var rows = TCODE_DB[tc];
-    if (!rows) {
-      html += '<div class="alert a-w" style="margin-bottom:12px;"><span>⚠</span><span><strong>' + escHtml(tc) + '</strong>: Not found in reference database. This T-Code may be custom or require manual SU24 lookup in your system.</span></div>';
-      return;
-    }
-    html += '<div class="card" style="margin-bottom:16px;"><div class="ch"><span class="ct">' + escHtml(tc) + ' — Authorization Objects</span></div>' +
-      '<table class="dt"><thead><tr><th>Object</th><th>Field</th><th>Ref. Value</th><th>Activity</th><th>Risk</th></tr></thead><tbody>' +
-      rows.map(function(r){
-        var parts = r.split('|');
-        var risk = parts[2]==='*'?'<span class="badge bh">HIGH</span>':'<span class="badge bl">LOW</span>';
-        return '<tr><td>' + parts[0] + '</td><td>' + parts[1] + '</td><td style="font-family:var(--font-mono);">' + parts[2] + '</td><td style="font-family:var(--font-mono);">' + parts[3] + '</td><td>' + risk + '</td></tr>';
-      }).join('') + '</tbody></table></div>';
-    SESSION.scansRun++;
-    addAuditEvent('SCAN', SESSION.user, tc, '—', 'T-Code analysis');
+// TCODE_DB is loaded from tcode-db.js via <script src>.
+// This fallback is used only if the external file fails to load.
+if (typeof TCODE_DB === 'undefined') {
+  TCODE_DB = {
+    'ME21N':["M_BEST_BSA|BSART=NB|ACTVT=01|SAP-Proposed","M_BEST_EKO|EKORG=$EKORG|ACTVT=01|SAP-Proposed","M_BEST_WRK|WERKS=$WERKS|ACTVT=01|SAP-Proposed"],
+    'ME22N':["M_BEST_BSA|BSART=NB|ACTVT=02|SAP-Proposed","M_BEST_EKO|EKORG=$EKORG|ACTVT=02|SAP-Proposed","M_BEST_WRK|WERKS=$WERKS|ACTVT=02|SAP-Proposed"],
+    'ME23N':["M_BEST_BSA|BSART=NB|ACTVT=03|SAP-Proposed","M_BEST_EKO|EKORG=$EKORG|ACTVT=03|SAP-Proposed"],
+    'FB01' :["F_BKPF_BUK|BUKRS=$BUKRS|ACTVT=01|SAP-Proposed","F_BKPF_KOA|KOART=D|ACTVT=01|SAP-Proposed"],
+    'VA01' :["V_VBAK_AAT|AUART=TA|ACTVT=01|SAP-Proposed","V_VBAK_VKO|VKORG=$VKORG|ACTVT=01|SAP-Proposed"],
+    'MM01' :["M_MATE_WRK|WERKS=$WERKS|ACTVT=01|SAP-Proposed"]
+  };
+}
+
+// Initialise DB count on page ready
+document.addEventListener('DOMContentLoaded', function() {
+  var count = Object.keys(TCODE_DB).length;
+  setEl('tcDbCount', count.toLocaleString() + ' T-Codes / Programs');
+  if (count < 100) {
+    var el = document.getElementById('tcDbStatus');
+    if (el) { el.className = 'n-badge n-badge-w'; el.textContent = '⚠ Fallback DB — load tcode-db.js'; }
+  }
+});
+
+// ─── Proposal parser ─────────────────────────────────────────────────────────
+// Each entry in TCODE_DB[tc] is a pipe-delimited string:
+// "OBJECT|FIELD1=VAL1,VAL2|FIELD2=VAL3|SOURCE"
+// This parses one entry into a structured proposal object.
+function parseTcProposal(tc, raw, sys, release, context) {
+  var parts = raw.split('|');
+  var obj = parts[0];
+  var src = parts[parts.length - 1]; // last segment = source
+  var fieldMap = {};
+  for (var i = 1; i < parts.length - 1; i++) {
+    var eq = parts[i].indexOf('=');
+    if (eq === -1) continue;
+    var fld = parts[i].substring(0, eq);
+    var vals = parts[i].substring(eq + 1);
+    fieldMap[fld] = vals;
+  }
+
+  // Assess risk: wildcards, org fields, sensitive objects
+  var risk = 'LOW';
+  var hasWild = raw.indexOf('=*') !== -1 || raw.indexOf(',*') !== -1;
+  var hasSensitive = /^(F_BKPF|F_REGU|P_|HR_|S_RFC|S_TABU|S_DEVELOP|PA0|T_|I_)/.test(obj);
+  var hasOrg = /BUKRS|EKORG|WERKS|VKORG|BUKRS|GSBER|PRCTR/.test(raw);
+  if (hasWild || obj === 'S_TABU_DIS' || obj === 'S_RFC') risk = 'HIGH';
+  else if (hasSensitive) risk = 'HIGH';
+  else if (hasOrg) risk = 'MEDIUM';
+
+  // Confidence
+  var confidence = src === 'SAP-Proposed' ? 'HIGH — SAP-Delivered OKFLAG Y (USOBT/USOBX)' :
+                   'MEDIUM — SAP-Active OKFLAG X (USOBX check active, values from USOBT)';
+
+  // Manual validation steps
+  var manual = 'Verify against your system\'s live SU24 for ' + tc + '. Run STAUTHTRACE to confirm runtime values. Add to PFCG role after validation.';
+
+  return {
+    tc: tc, obj: obj, fields: fieldMap, src: src, risk: risk, confidence: confidence,
+    sys: sys, release: release, context: context, manual: manual, raw: raw
+  };
+}
+
+// ─── Render a single T-Code proposal card (full 18-field output) ─────────────
+function renderTcodeCard(tc, proposals, sys, release, context) {
+  if (!proposals || proposals.length === 0) {
+    return '<div class="alert a-w" style="margin-bottom:12px;"><span>⚠</span>' +
+      '<span><strong>' + escHtml(tc) + '</strong> — Not found in USOBT/USOBX reference database. ' +
+      'This may be a custom T-Code, a namespace transaction, or an entry requiring direct SU24 lookup in your system. ' +
+      '<br><strong>Action required:</strong> Run transaction SU24 in your SAP system and search for <code style="font-family:var(--font-mono);">' + escHtml(tc) + '</code>. ' +
+      'Use STAUTHTRACE (transaction STUSR) for runtime authorization capture.</span></div>';
+  }
+
+  var parsed = proposals.map(function(raw) { return parseTcProposal(tc, raw, sys, release, context); });
+
+  // Group by object
+  var byObj = {};
+  parsed.forEach(function(p) {
+    if (!byObj[p.obj]) byObj[p.obj] = [];
+    byObj[p.obj].push(p);
   });
+
+  var html = '<div class="fc-card" style="margin-bottom:14px;">' +
+    '<div class="fc-hdr si" onclick="toggleFinding(this)" role="button" aria-expanded="false" tabindex="0">' +
+    '<div style="display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap;">' +
+    '<span class="badge bi">T-CODE</span>' +
+    '<span style="font-family:var(--font-mono);font-size:14px;font-weight:700;color:var(--chrome-1);">' + escHtml(tc) + '</span>' +
+    '<span style="font-size:11px;color:var(--chrome-3);">' + escHtml(sys) + ' · ' + escHtml(release) + '</span>' +
+    (context ? '<span class="tag">' + escHtml(context) + '</span>' : '') +
+    '</div>' +
+    '<div style="display:flex;gap:6px;align-items:center;">' +
+    '<span style="font-size:11px;color:var(--chrome-3);">' + proposals.length + ' auth object' + (proposals.length !== 1 ? 's' : '') + '</span>' +
+    '</div></div>' +
+
+    '<div class="fc-body">' +
+    // Header metadata
+    '<div class="fc-meta" style="margin-bottom:14px;">' +
+    fmi('Technical Name', tc) +
+    fmi('Application Type', 'Transaction Code (TR)') +
+    fmi('SAP System', sys) +
+    fmi('Release', release) +
+    fmi('Auth Objects', proposals.length) +
+    fmi('Data Source', 'USOBT + USOBX (SAP-Delivered)') +
+    '</div>' +
+
+    // Per-object detailed table
+    '<div style="font-family:var(--font-mono);font-size:9px;color:var(--chrome-3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Authorization Proposal Detail — USOBT/USOBX Reference</div>' +
+    '<div style="overflow-x:auto;"><table class="dt" style="font-size:12px;">' +
+    '<thead><tr>' +
+    '<th>Authorization Object</th>' +
+    '<th>Field Name</th>' +
+    '<th>Reference Values</th>' +
+    '<th>Risk</th>' +
+    '<th>Source</th>' +
+    '<th>Confidence</th>' +
+    '<th>PFCG Relevant</th>' +
+    '</tr></thead><tbody>' +
+
+    parsed.map(function(p) {
+      var riskBadge = {HIGH:'bh',MEDIUM:'bm',LOW:'bl'}[p.risk] || 'bi';
+      var srcBadge = p.src === 'SAP-Proposed' ? 'bi' : 'bp';
+      var fields = Object.keys(p.fields);
+      if (fields.length === 0) {
+        return '<tr>' +
+          '<td style="font-family:var(--font-mono);font-weight:600;color:var(--ibm-blue-40);">' + escHtml(p.obj) + '</td>' +
+          '<td style="color:var(--chrome-3);font-style:italic;">—</td>' +
+          '<td style="color:var(--chrome-3);font-style:italic;">No field values in USOBT</td>' +
+          '<td><span class="badge ' + riskBadge + '">' + p.risk + '</span></td>' +
+          '<td><span class="badge ' + srcBadge + '">' + escHtml(p.src) + '</span></td>' +
+          '<td style="font-size:10px;color:var(--chrome-3);">' + escHtml(p.confidence.split(' — ')[0]) + '</td>' +
+          '<td><span class="badge bl">Yes</span></td></tr>';
+      }
+      return fields.map(function(fld, fi) {
+        var vals = p.fields[fld];
+        var isWild = vals.indexOf('*') !== -1;
+        var isOrg = /BUKRS|EKORG|WERKS|VKORG|GSBER|PRCTR|SPART|VTWEG/.test(fld);
+        var valColor = isWild ? 'color:var(--high);' : (isOrg ? 'color:var(--medium);' : '');
+        var valNote = isWild ? ' ⚠ wildcard' : (vals.indexOf('$') !== -1 ? ' (org-context)' : '');
+        var objCell = fi === 0 ?
+          '<td style="font-family:var(--font-mono);font-weight:600;color:var(--ibm-blue-40);" rowspan="' + fields.length + '">' + escHtml(p.obj) + '</td>' : '';
+        var riskCell = fi === 0 ?
+          '<td rowspan="' + fields.length + '"><span class="badge ' + riskBadge + '">' + p.risk + '</span></td>' : '';
+        var srcCell = fi === 0 ?
+          '<td rowspan="' + fields.length + '"><span class="badge ' + srcBadge + '">' + escHtml(p.src) + '</span></td>' : '';
+        var confCell = fi === 0 ?
+          '<td rowspan="' + fields.length + '" style="font-size:10px;color:var(--chrome-3);">' + escHtml(p.confidence.split(' — ')[0]) + '</td>' : '';
+        var pfcgCell = fi === 0 ?
+          '<td rowspan="' + fields.length + '"><span class="badge bl">Yes</span></td>' : '';
+        return '<tr>' + objCell +
+          '<td style="font-family:var(--font-mono);">' + escHtml(fld) + (isOrg ? ' <span class="tag" style="font-size:9px;">ORG</span>' : '') + '</td>' +
+          '<td style="font-family:var(--font-mono);' + valColor + '">' + escHtml(vals || '(any)') + escHtml(valNote) + '</td>' +
+          riskCell + srcCell + confCell + pfcgCell + '</tr>';
+      }).join('');
+    }).join('') +
+    '</tbody></table></div>' +
+
+    // Manual validation steps
+    '<div style="margin-top:12px;padding:10px 14px;background:rgba(241,194,27,0.06);border-left:3px solid var(--medium);border-radius:0 var(--r-sm) var(--r-sm) 0;font-size:12px;color:var(--medium);">' +
+    '<span style="font-family:var(--font-mono);font-size:9px;letter-spacing:1px;display:block;margin-bottom:3px;">MANUAL VALIDATION STEPS</span>' +
+    '<span style="color:var(--chrome-2);">1. Open SU24 in your SAP system and enter <strong>' + escHtml(tc) + '</strong>.<br>' +
+    '2. Compare these reference objects against your system\'s current SU24 proposal.<br>' +
+    '3. Run STAUTHTRACE (STUSR) while executing the transaction to capture runtime authorization values.<br>' +
+    '4. Cross-reference with PFCG role assignments before adding to any role.<br>' +
+    '5. Never apply to production without SAP Security approval and change management.</span></div>' +
+
+    // Actions
+    '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--panel-border);padding-top:10px;">' +
+    '<button class="btn btn-g btn-sm" onclick="addTcodeToAudit(\'' + escHtml(tc) + '\')">Add to Audit Evidence</button>' +
+    '<button class="btn btn-s btn-sm" onclick="exportSingleTcode(\'' + escHtml(tc) + '\')">Export This T-Code</button>' +
+    '</div>' +
+    '</div></div>';
+
+  return html;
+}
+
+// ─── Live search / suggestions ────────────────────────────────────────────────
+var _tcSuggestTimer = null;
+function tcLiveSearch(val) {
+  clearTimeout(_tcSuggestTimer);
+  var box = document.getElementById('tcSuggestBox');
+  if (!box) return;
+  if (!val || val.length < 2) { box.style.display = 'none'; return; }
+  _tcSuggestTimer = setTimeout(function() {
+    var q = val.toUpperCase();
+    var keys = Object.keys(TCODE_DB);
+    var matches = keys.filter(function(k) { return k.indexOf(q) !== -1; }).slice(0, 15);
+    if (matches.length === 0) { box.style.display = 'none'; return; }
+    box.innerHTML = matches.map(function(m) {
+      var count = TCODE_DB[m].length;
+      return '<div onclick="selectTcSuggest(\'' + escHtml(m) + '\')" style="padding:7px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(70,137,255,0.07);" onmouseover="this.style.background=\'rgba(70,137,255,0.08)\'" onmouseout="this.style.background=\'\'">' +
+        '<span style="font-family:var(--font-mono);font-size:12px;color:var(--ibm-blue-40);">' + escHtml(m) + '</span>' +
+        '<span class="badge bi" style="font-size:9px;">' + count + ' obj</span></div>';
+    }).join('');
+    box.style.display = 'block';
+  }, 180);
+}
+
+function selectTcSuggest(tc) {
+  var inp = document.getElementById('tcSearch');
+  if (inp) inp.value = tc;
+  var box = document.getElementById('tcSuggestBox');
+  if (box) box.style.display = 'none';
+  runTcodeAnalysis();
+}
+
+// ─── Single T-Code analysis (from search bar) ────────────────────────────────
+function runTcodeAnalysis() {
+  var searchVal = (document.getElementById('tcSearch') || {}).value || '';
+  var tc = searchVal.trim().toUpperCase();
+  if (!tc) { alert('Please enter a T-Code or program name.'); return; }
+
+  var box = document.getElementById('tcSuggestBox');
+  if (box) box.style.display = 'none';
+
+  var sys = (document.getElementById('tcSys') || {}).value || 'S4HANA_OP';
+  var release = (document.getElementById('tcRelease') || {}).value || 'S/4HANA 2023';
+  var context = (document.getElementById('tcContext') || {}).value || '';
+
+  setEl('tcLastSearch', tc);
+
+  var proposals = TCODE_DB[tc] || null;
+  var found = proposals ? 1 : 0;
+  setEl('tcResultCount', found + ' T-Code' + (found !== 1 ? 's' : '') + ' found');
+
+  var html = renderTcodeCard(tc, proposals, sys, release, context);
   var ra = document.getElementById('tcResultsArea');
   if (ra) ra.innerHTML = html;
+
+  SESSION.scansRun++;
+  addAuditEvent('SCAN', SESSION.user, tc, '—', 'T-Code analysis — ' + (proposals ? proposals.length + ' objects' : 'not found'));
+}
+
+// ─── Batch analysis (from textarea) ─────────────────────────────────────────
+function runTcodeBatch() {
+  var input = (document.getElementById('tcTcode') || {}).value || '';
+  if (!input.trim()) { alert('Please enter at least one T-Code in the batch input.'); return; }
+
+  var sys = (document.getElementById('tcSys') || {}).value || 'S4HANA_OP';
+  var release = (document.getElementById('tcRelease') || {}).value || 'S/4HANA 2023';
+  var context = (document.getElementById('tcContext') || {}).value || '';
+
+  // Split on comma or newline, deduplicate, limit to 200
+  var tcodes = input.split(/[\n,]/)
+    .map(function(t) { return t.trim().toUpperCase(); })
+    .filter(function(t) { return t.length > 0; })
+    .filter(function(t, i, a) { return a.indexOf(t) === i; })
+    .slice(0, 200);
+
+  if (tcodes.length === 0) { alert('No valid T-Codes found in input.'); return; }
+
+  var found = 0, notFound = 0;
+  var html = '<div style="margin-bottom:14px;padding:10px 14px;background:var(--card-bg);border:1px solid var(--panel-border);border-radius:var(--r-sm);font-size:12px;color:var(--chrome-3);">Analyzing <strong style="color:var(--chrome-1);">' + tcodes.length + '</strong> T-Codes from USOBT/USOBX…</div>';
+
+  tcodes.forEach(function(tc) {
+    var proposals = TCODE_DB[tc] || null;
+    if (proposals) found++; else notFound++;
+    html += renderTcodeCard(tc, proposals, sys, release, context);
+    SESSION.scansRun++;
+    addAuditEvent('SCAN', SESSION.user, tc, '—', 'Batch T-Code analysis');
+  });
+
+  // Summary bar
+  var summaryHtml = '<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;padding:10px 14px;background:var(--card-bg);border:1px solid var(--panel-border);border-radius:var(--r-sm);font-size:12px;">' +
+    '<span>Analyzed: <strong style="color:var(--chrome-1);">' + tcodes.length + '</strong></span>' +
+    '<span style="color:var(--low);">Found: <strong>' + found + '</strong></span>' +
+    '<span style="color:var(--medium);">Not in DB: <strong>' + notFound + '</strong></span>' +
+    '</div>';
+
+  setEl('tcLastSearch', tcodes.length + ' T-Codes (batch)');
+  setEl('tcResultCount', found + ' found, ' + notFound + ' not in DB');
+
+  var ra = document.getElementById('tcResultsArea');
+  if (ra) ra.innerHTML = summaryHtml + html;
+}
+
+function loadTcodeSample() {
+  var ta = document.getElementById('tcTcode');
+  if (ta) ta.value = 'ME21N\nME22N\nME23N\nME2N\nFB01\nFB02\nFB03\nFBL1N\nFBL3N\nVA01\nVA02\nVA03\nMIGO\nMIRO\nMM01\nMM02\nVL01N\nVL02N\nF110\nSU01\nPFCG\nSE16\nSM30\nSA38\nPA30\nPP01\nIW31\nCOR1\nKO01\nKS01';
+}
+
+function clearTcodeResults() {
+  var ta = document.getElementById('tcTcode'); if (ta) ta.value = '';
+  var inp = document.getElementById('tcSearch'); if (inp) inp.value = '';
+  var ra = document.getElementById('tcResultsArea'); if (ra) ra.innerHTML = '';
+  setEl('tcLastSearch','—'); setEl('tcResultCount','—');
+}
+
+function addTcodeToAudit(tc) {
+  addAuditEvent('EVIDENCE_ADDED', SESSION.user, tc, '—', 'T-Code proposal added to audit evidence');
+  alert('T-Code ' + tc + ' authorization proposal added to audit evidence trail.');
+}
+
+function exportSingleTcode(tc) {
+  var proposals = TCODE_DB[tc];
+  if (!proposals) { alert('No data for ' + tc); return; }
+  var rows = proposals.map(function(raw) {
+    return parseTcProposal(tc, raw,
+      (document.getElementById('tcSys')||{}).value||'',
+      (document.getElementById('tcRelease')||{}).value||'',
+      (document.getElementById('tcContext')||{}).value||'');
+  });
+  var data = rows.map(function(p) {
+    return { TCode: p.tc, Object: p.obj, Fields: JSON.stringify(p.fields), Risk: p.risk, Source: p.src, Confidence: p.confidence };
+  });
+  downloadCSV(data, tc + '_auth_proposal.csv');
+}
+
+function exportTcodeResults() {
+  // Export all currently visible T-Code results
+  var cards = document.querySelectorAll('#tcResultsArea .fc-card');
+  if (cards.length === 0) { alert('No results to export. Run an analysis first.'); return; }
+  var sys = (document.getElementById('tcSys')||{}).value||'';
+  var release = (document.getElementById('tcRelease')||{}).value||'';
+  var allData = [];
+  cards.forEach(function(card) {
+    var tcEl = card.querySelector('.fc-hdr span[style*="font-mono"]');
+    if (!tcEl) return;
+    var tc = tcEl.textContent.trim();
+    var proposals = TCODE_DB[tc] || [];
+    proposals.forEach(function(raw) {
+      var p = parseTcProposal(tc, raw, sys, release, '');
+      var fields = Object.keys(p.fields).map(function(f){ return f + '=' + p.fields[f]; }).join('; ');
+      allData.push({ TCode: p.tc, Object: p.obj, Fields: fields, Risk: p.risk, Source: p.src });
+    });
+  });
+  downloadCSV(allData, 'tcode_auth_proposals.csv');
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1807,11 +3146,701 @@ function searchGuide(query) {
 }
 
 // ═══════════════════════════════════════════════════════
+//  EXECUTIVE DASHBOARD
+// ═══════════════════════════════════════════════════════
+function refreshExecutiveDashboard() {
+  var f = SESSION.findings;
+  var total = f.length;
+  var open = f.filter(function(x){ return x.status==='Open'; }).length;
+  var closed = f.filter(function(x){ return x.status==='Closed'; }).length;
+  var fp = f.filter(function(x){ return x.status==='False Positive'; }).length;
+  var crit = f.filter(function(x){ return x.severity==='CRITICAL'; }).length;
+  var high = f.filter(function(x){ return x.severity==='HIGH'; }).length;
+  var med = f.filter(function(x){ return x.severity==='MEDIUM'; }).length;
+  var low = f.filter(function(x){ return x.severity==='LOW'||x.severity==='PASS'; }).length;
+  var abapFiles = SESSION.scanHistory.filter(function(h){ return h.type==='ABAP'; }).length;
+
+  // Audit-readiness score: weighted inverse of open critical/high
+  var score = total === 0 ? 100 : Math.max(0, Math.round(100 - (crit*15 + high*5 + med*2) / Math.max(total,1) * 10));
+
+  setEl('exArtifacts', SESSION.scansRun);
+  setEl('exAbapFiles', abapFiles);
+  setEl('exTotalFindings', total);
+  setEl('exOpenItems', open);
+  setEl('exAuditScore', score);
+
+  // Severity donut
+  var circumference = 238.76;
+  function donut(count, prevOffset) {
+    var arc = total > 0 ? (count/total)*circumference : 0;
+    return { dasharray: circumference, offset: prevOffset, arc: arc };
+  }
+  var critD = donut(crit, 0);
+  var highD = donut(high, critD.arc);
+  var medD  = donut(med, critD.arc + highD.arc);
+  var lowD  = donut(low, critD.arc + highD.arc + medD.arc);
+  function setDonut(id, d) {
+    var el = document.getElementById(id);
+    if (el) { el.setAttribute('stroke-dashoffset', circumference - d.arc + d.offset); el.setAttribute('stroke-dasharray', circumference); }
+  }
+  setDonut('exDonutC', {arc:critD.arc, offset:0});
+  setDonut('exDonutH', {arc:highD.arc, offset:critD.arc});
+  setDonut('exDonutM', {arc:medD.arc, offset:critD.arc+highD.arc});
+  setDonut('exDonutL', {arc:lowD.arc, offset:critD.arc+highD.arc+medD.arc});
+
+  setEl('exCritPct', crit + (total>0?' ('+Math.round(crit/total*100)+'%)':''));
+  setEl('exHighPct', high + (total>0?' ('+Math.round(high/total*100)+'%)':''));
+  setEl('exMedPct', med + (total>0?' ('+Math.round(med/total*100)+'%)':''));
+  setEl('exLowPct', low + (total>0?' ('+Math.round(low/total*100)+'%)':''));
+
+  var critBarEl=document.getElementById('exCritBar'); if(critBarEl) critBarEl.style.width=(total>0?Math.round(crit/total*100):0)+'%';
+  var highBarEl=document.getElementById('exHighBar'); if(highBarEl) highBarEl.style.width=(total>0?Math.round(high/total*100):0)+'%';
+  var medBarEl=document.getElementById('exMedBar');  if(medBarEl) medBarEl.style.width=(total>0?Math.round(med/total*100):0)+'%';
+  var lowBarEl=document.getElementById('exLowBar');  if(lowBarEl) lowBarEl.style.width=(total>0?Math.round(low/total*100):0)+'%';
+
+  setEl('exRemOpen', open); setEl('exRemClosed', closed); setEl('exRemFP', fp);
+  var openBarEl=document.getElementById('exRemOpenBar'); if(openBarEl) openBarEl.style.width=(total>0?Math.round(open/total*100):0)+'%';
+  var closedBarEl=document.getElementById('exRemClosedBar'); if(closedBarEl) closedBarEl.style.width=(total>0?Math.round(closed/total*100):0)+'%';
+  var fpBarEl=document.getElementById('exRemFPBar'); if(fpBarEl) fpBarEl.style.width=(total>0?Math.round(fp/total*100):0)+'%';
+
+  // Effort estimate (reference): critical=2d, high=1d, medium=0.5d
+  var effort = (crit*2 + high*1 + med*0.5).toFixed(1);
+  setEl('exEffort', effort + ' person-days');
+
+  // By App Type
+  var appTypes = {};
+  f.forEach(function(x){ var t=x.source||'Other'; appTypes[t]=(appTypes[t]||0)+1; });
+  var exByAppType = document.getElementById('exByAppType');
+  if (exByAppType) {
+    if (Object.keys(appTypes).length===0) { exByAppType.innerHTML='<div style="font-size:12px;color:var(--chrome-3);">No data yet.</div>'; }
+    else { exByAppType.innerHTML=Object.keys(appTypes).map(function(k){ return '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px;"><span>'+escHtml(k)+'</span><span class="badge bi">'+appTypes[k]+'</span></div><div class="pb"><div class="pf pfb" style="width:'+(total>0?Math.round(appTypes[k]/total*100):0)+'%"></div></div>'; }).join(''); }
+  }
+
+  // By Auth Object (top 5)
+  var objMap = {};
+  f.forEach(function(x){ var o=x.authObj||'Unknown'; if(o.indexOf('(')===0) o='(Dynamic/Unknown)'; objMap[o]=(objMap[o]||0)+1; });
+  var sortedObjs = Object.keys(objMap).sort(function(a,b){ return objMap[b]-objMap[a]; }).slice(0,5);
+  var exByAuthObj = document.getElementById('exByAuthObj');
+  if (exByAuthObj) {
+    if (sortedObjs.length===0) { exByAuthObj.innerHTML='<div style="font-size:12px;color:var(--chrome-3);">No data yet.</div>'; }
+    else { exByAuthObj.innerHTML=sortedObjs.map(function(o){ return '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px;"><span style="font-family:var(--font-mono);font-size:11px;">'+escHtml(o)+'</span><span class="badge bc">'+objMap[o]+'</span></div>'; }).join(''); }
+  }
+
+  // Recurring weaknesses (rules with multiple findings)
+  var ruleMap = {};
+  f.forEach(function(x){ var r=x.rule||'Unknown'; ruleMap[r]=(ruleMap[r]||0)+1; });
+  var sortedRules = Object.keys(ruleMap).sort(function(a,b){ return ruleMap[b]-ruleMap[a]; }).slice(0,5);
+  var exRecurring = document.getElementById('exRecurring');
+  if (exRecurring) {
+    if (sortedRules.length===0) { exRecurring.innerHTML='<div style="font-size:12px;color:var(--chrome-3);">No data yet.</div>'; }
+    else { exRecurring.innerHTML='<table class="dt"><thead><tr><th>Rule</th><th>Count</th></tr></thead><tbody>'+sortedRules.map(function(r){ return '<tr><td style="font-family:var(--font-mono);">'+escHtml(r)+'</td><td><span class="badge bc">'+ruleMap[r]+'</span></td></tr>'; }).join('')+'</tbody></table>'; }
+  }
+
+  // By SAP System
+  var sysMap = {};
+  f.forEach(function(x){ var s=x.sysType||'Unknown'; sysMap[s]=(sysMap[s]||0)+1; });
+  var exBySys = document.getElementById('exBySys');
+  if (exBySys) {
+    if (Object.keys(sysMap).length===0) { exBySys.innerHTML='<div style="font-size:12px;color:var(--chrome-3);">No data yet.</div>'; }
+    else { exBySys.innerHTML='<table class="dt"><thead><tr><th>System</th><th>Findings</th></tr></thead><tbody>'+Object.keys(sysMap).map(function(s){ return '<tr><td>'+escHtml(s)+'</td><td><span class="badge bi">'+sysMap[s]+'</span></td></tr>'; }).join('')+'</tbody></table>'; }
+  }
+
+  // Drill-down table
+  var tbody = document.getElementById('exDrillBody');
+  if (tbody) {
+    if (f.length===0) {
+      tbody.innerHTML='<tr><td colspan="11" style="text-align:center;color:var(--chrome-3);padding:24px;">No findings yet.</td></tr>';
+    } else {
+      tbody.innerHTML=f.slice(0,50).map(function(x){
+        var bc={CRITICAL:'bc',HIGH:'bh',MEDIUM:'bm',LOW:'bl',PASS:'bp'}[x.severity]||'bi';
+        return '<tr><td style="font-family:var(--font-mono);font-size:11px;"><a href="#" onclick="showFindingDetail(\''+escHtml(x.id||'')+'\');return false;" style="color:var(--ibm-blue-40);">'+escHtml(x.id||'')+'</a></td>' +
+          '<td><span class="badge '+bc+'">'+escHtml(x.severity||'')+'</span></td>' +
+          '<td style="font-size:11px;">'+escHtml(x.sysType||'—')+'</td>' +
+          '<td style="font-size:11px;">'+escHtml(x.source||'—')+'</td>' +
+          '<td style="font-family:var(--font-mono);font-size:11px;">'+escHtml(x.artifact||'—')+'</td>' +
+          '<td style="font-family:var(--font-mono);font-size:11px;">'+escHtml(String(x.line||'—'))+'</td>' +
+          '<td style="font-family:var(--font-mono);font-size:11px;">'+escHtml(x.authObj||'—')+'</td>' +
+          '<td style="font-size:11px;">'+escHtml(x.fields||'—')+'</td>' +
+          '<td style="font-family:var(--font-mono);font-size:11px;">'+escHtml(x.rule||'—')+'</td>' +
+          '<td style="font-size:11px;">'+escHtml(x.status||'Open')+'</td>' +
+          '<td style="font-size:11px;">'+escHtml(SESSION.user||'—')+'</td></tr>';
+      }).join('');
+    }
+  }
+}
+
+function filterExecView(sys) {
+  // Future: filter drill-down table by sys type
+  refreshExecutiveDashboard();
+}
+
+function exportExecDashboard() {
+  exportAllFindings();
+}
+
+function exportExecDrilldown() {
+  downloadCSV(SESSION.findings, 'executive_drilldown.csv');
+}
+
+function showFindingDetail(id) {
+  showView('findings');
+  // Scroll to and expand the finding
+  setTimeout(function(){
+    var cards = document.querySelectorAll('.fc-card');
+    cards.forEach(function(card){
+      var badge = card.querySelector('.fmi-v');
+      if (badge && badge.textContent === id) {
+        card.scrollIntoView({behavior:'smooth'});
+        var body = card.querySelector('.fc-body');
+        if (body) body.classList.add('open');
+      }
+    });
+  }, 300);
+}
+
+// ═══════════════════════════════════════════════════════
+//  AUDIT EVIDENCE — ADD FINDING
+// ═══════════════════════════════════════════════════════
+function addToAuditEvidence(id) {
+  var f = SESSION.findings.find(function(x){ return x.id===id; });
+  if (!f) return;
+  addAuditEvent('EVIDENCE_ADDED', SESSION.user, f.artifact||'—', id, 'Manually added to audit evidence');
+  alert('Finding ' + id + ' added to audit evidence trail.');
+}
+
+// ═══════════════════════════════════════════════════════
+//  HOOK: refresh executive dashboard on every findings update
+// ═══════════════════════════════════════════════════════
+var _origAddFinding = addFinding;
+addFinding = function(f) {
+  _origAddFinding(f);
+  refreshExecutiveDashboard();
+};
+
+// ═══════════════════════════════════════════════════════
+//  GUIDEBOOK ADDITIONAL CONTENT (sections 11–20)
+//  Appended to guideContent on DOMContentLoaded
+// ═══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function(){
+  var gc = document.getElementById('guideContent');
+  if (!gc) return;
+  var extra = [
+    '<div class="g-h2">11. How to Validate Authorization Proposals</div>',
+    '<div class="g-p">After running any analyzer, review the SU24 Proposal output. Each proposal is labelled by source type:</div>',
+    '<div class="g-ul"><li><strong>SAP-Delivered:</strong> Confirmed from SAP standard SU24 data — use as-is in PFCG.</li><li><strong>Project-Specific:</strong> Customer-maintained — validate against your project requirements.</li><li><strong>Trace-Derived:</strong> Captured from STAUTHTRACE or ST01 — confirm in the system before adding to roles.</li><li><strong>Inferred:</strong> Tool recommendation — requires mandatory manual validation before use.</li><li><strong>Unverified:</strong> Cannot confirm without system access — run STAUTHTRACE in target system.</li></ul>',
+    '<div class="g-warn">Never add an Inferred or Unverified proposal to a role without first validating it in the target system using STAUTHTRACE or ST01.</div>',
+
+    '<div class="g-h2">12. How to Review Corrected Code</div>',
+    '<div class="g-p">Every finding with a code-level issue includes a side-by-side <strong>Before (Vulnerable)</strong> and <strong>After (Corrected)</strong> code comparison. The corrected code is a <em>reference recommendation only</em> — it must not be applied to any SAP system without:</div>',
+    '<div class="g-ul"><li>Review and approval by a qualified SAP Security professional.</li><li>ABAP developer review for syntax and context correctness.</li><li>Testing in a development/sandbox system.</li><li>Standard change management and transport process.</li></ul>',
+    '<div class="g-note">The corrected code uses placeholder values (e.g. &lt;AUTH_OBJECT&gt;, &lt;ORG_FIELD&gt;). Replace these with the correct object and field names from your system\'s SU24 configuration.</div>',
+
+    '<div class="g-h2">13. How to Export Audit Evidence</div>',
+    '<div class="g-p">Navigate to <strong>Audit Evidence → Export Options</strong>. Three export formats are available:</div>',
+    '<div class="g-ul"><li><strong>CSV:</strong> Excel-compatible. Includes all finding fields. Import into audit management tools.</li><li><strong>JSON:</strong> Machine-readable. Full finding data model. Suitable for integration with GRC platforms.</li><li><strong>HTML Report:</strong> Printable human-readable report. Include in audit working papers.</li><li><strong>Full Package:</strong> All three formats exported simultaneously with session metadata.</li></ul>',
+    '<div class="g-p">All exports are session-scoped and do not persist to any external server. Exports include timestamps, user identity, finding confidence levels, and approval status.</div>',
+
+    '<div class="g-h2">14. How to Manage False Positives</div>',
+    '<div class="g-p">Every finding card has a <strong>Mark as False Positive</strong> button. Clicking it prompts for a justification comment. The finding is then:</div>',
+    '<div class="g-ul"><li>Reclassified as "False Positive" — it does not disappear from the record.</li><li>Logged in the audit trail with the reviewer\'s identity and timestamp.</li><li>Included in the audit evidence export with the FP justification.</li></ul>',
+    '<div class="g-warn">False positives require a written justification. Unsubstantiated false-positive classifications may be challenged during audit review.</div>',
+
+    '<div class="g-h2">15. How to Approve Remediation</div>',
+    '<div class="g-p">Navigate to <strong>Audit Evidence → Approvals</strong>. The approval workflow covers:</div>',
+    '<div class="g-ul"><li>SAP Security Architect reviews the finding and corrected code.</li><li>Reviewer marks the finding as Resolved using the <strong>Mark Resolved</strong> button.</li><li>All approval actions are recorded in the audit trail.</li><li>Resolved findings remain in the evidence record and are included in the next export.</li></ul>',
+    '<div class="g-note">No SAP system change is made automatically by this tool. Resolved status reflects approval of the recommended correction — the actual ABAP change must be implemented through standard change management.</div>',
+
+    '<div class="g-h2">16. How to Maintain Rule Definitions</div>',
+    '<div class="g-p">Navigate to <strong>Administration → Rule Engine</strong>. From this panel you can:</div>',
+    '<div class="g-ul"><li>Enable or disable individual detection rules using the toggle.</li><li>View the default severity for each rule.</li><li>Rules take effect on the next scan — existing findings are not retroactively updated.</li></ul>',
+    '<div class="g-warn">Disabling rules reduces the detection coverage of the tool. Only disable rules with documented justification (e.g. rules not applicable to your system type).</div>',
+
+    '<div class="g-h2">17. How to Handle Unsupported SAP Versions</div>',
+    '<div class="g-p">If your SAP system is not in the supported version list:</div>',
+    '<div class="g-ul"><li>Select the closest supported version for analysis.</li><li>All findings will be labelled as "Manual Review Required" with a version compatibility note.</li><li>Do not rely on corrected-code recommendations without validating syntax for your specific release.</li><li>Contact <a href="mailto:sap-security@ibm.com" style="color:var(--ibm-blue-40);">sap-security@ibm.com</a> to request version support evaluation.</li></ul>',
+    '<div class="g-note">SAP ECC versions prior to EhP4, and S/4HANA versions prior to 1809, are not in the current support matrix. Analysis can still be performed but findings must be manually reviewed for release-specific applicability.</div>',
+
+    '<div class="g-h2">18. Troubleshooting</div>',
+    '<div class="g-ul">',
+    '<li><strong>Scan produces no results:</strong> Ensure ABAP code contains at least one AUTHORITY-CHECK, database operation, or RFC/SUBMIT statement. The scanner requires parseable ABAP syntax.</li>',
+    '<li><strong>Dynamic object warning (AUTH-014):</strong> Cannot resolve dynamically constructed object names statically. Run STAUTHTRACE (transaction STUSR) to capture the actual runtime object name.</li>',
+    '<li><strong>Wrong SAP release selected:</strong> Some rules are version-specific. Select the correct release for accurate results. Version filtering is applied automatically.</li>',
+    '<li><strong>Export fails or downloads nothing:</strong> Ensure your browser allows file downloads from this application. Check browser download settings and pop-up blockers.</li>',
+    '<li><strong>Login button unresponsive:</strong> The SSO simulation button completes in 1.4 seconds. If the page is slow, wait for the spinner to complete before interacting.</li>',
+    '<li><strong>Guidebook search shows no results:</strong> The search is case-insensitive but requires a minimum of 2 characters. Clear the search box to restore all sections.</li>',
+    '</div>',
+
+    '<div class="g-h2">19. How to Contact Support</div>',
+    '<div class="g-p"><strong>Tool Support:</strong> <a href="mailto:sap-security@ibm.com" style="color:var(--ibm-blue-40);">sap-security@ibm.com</a></div>',
+    '<div class="g-p"><strong>Tool Owner:</strong> IBM SAP Security Practice</div>',
+    '<div class="g-p"><strong>Version:</strong> 2.0 · 2026</div>',
+    '<div class="g-p">Include in your support request: the tool version, the SAP system type and release, the ABAP code sample (redacted of sensitive data), and the finding IDs in question.</div>',
+    '<div class="g-warn">Never include production passwords, encryption keys, or personal data in support requests or code samples submitted for analysis.</div>',
+
+    '<div class="g-h2">20. End-to-End Operating Procedure</div>',
+    '<div class="g-h3">Phase 1 — Preparation</div>',
+    '<div class="g-ul"><li>Log in using your IBM corporate email and complete MFA.</li><li>Identify the ABAP program, T-Code, Fiori app, or OData service to be reviewed.</li><li>Obtain the source code export from SE38/SE24/ADT (for ABAP) or the technical artifact name.</li><li>Select the correct SAP system type and release in the scanner configuration.</li></ul>',
+    '<div class="g-h3">Phase 2 — Analysis</div>',
+    '<div class="g-ul"><li>Paste or upload the ABAP source code, or enter the T-Code/App ID.</li><li>Select Analysis Mode: Full Analysis for comprehensive coverage.</li><li>Click Run Analysis and wait for results.</li><li>Review each finding, expanding the card to view all 20 fields.</li></ul>',
+    '<div class="g-h3">Phase 3 — Review and Triage</div>',
+    '<div class="g-ul"><li>For each finding: review root cause, exploit scenario, and corrected code.</li><li>Mark genuine false positives with written justification.</li><li>For Manual Review findings: conduct STAUTHTRACE trace and update accordingly.</li><li>Discuss critical/high findings with the ABAP developer and SAP Security Architect.</li></ul>',
+    '<div class="g-h3">Phase 4 — Remediation and Evidence</div>',
+    '<div class="g-ul"><li>Submit findings report to the development team for correction.</li><li>After correction: verify in development system, transport to QA, regression test.</li><li>Mark findings as Resolved in the tool after confirmation.</li><li>Export audit evidence package from Audit Evidence → Export Options.</li><li>Include the exported package in your project security documentation.</li></ul>'
+  ].join('');
+  gc.insertAdjacentHTML('beforeend', extra);
+});
+
+// ═══════════════════════════════════════════════════════
 //  UTIL
 // ═══════════════════════════════════════════════════════
 function setEl(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
 function setEl2(id, val) { var el = document.getElementById(id); if (el) el.value = val; }
 function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ═══════════════════════════════════════════════════════
+//  LOGIN HELPER
+// ═══════════════════════════════════════════════════════
+function togglePwd() {
+  var inp = document.getElementById('loginPassword');
+  if (inp) inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+// ═══════════════════════════════════════════════════════
+//  COVERAGE CHECKER ENGINE
+// ═══════════════════════════════════════════════════════
+var COV_SESSION = {
+  serviceName:'', dpcClass:'', methods:[], callGraph:{},
+  matrix:{}, findings:[], scores:{}, testPlan:[], remediation:[]
+};
+
+var COV_RULES = [
+  { id:'AUTH-COV-001', sev:'CRITICAL', title:'Missing AUTHORITY-CHECK in CREATE method',
+    test:function(m){ return /CREATE_ENTITY|_CREATE_/i.test(m.name) && !m.hasAuth; } },
+  { id:'AUTH-COV-002', sev:'CRITICAL', title:'Missing AUTHORITY-CHECK in UPDATE method',
+    test:function(m){ return /UPDATE_ENTITY|_UPDATE_/i.test(m.name) && !m.hasAuth; } },
+  { id:'AUTH-COV-003', sev:'CRITICAL', title:'Missing AUTHORITY-CHECK in DELETE method',
+    test:function(m){ return /DELETE_ENTITY|_DELETE_/i.test(m.name) && !m.hasAuth; } },
+  { id:'AUTH-COV-004', sev:'HIGH', title:'Missing AUTHORITY-CHECK in READ_ENTITY method',
+    test:function(m){ return /READ_ENTITY|_READ_SINGLE/i.test(m.name) && !m.hasAuth; } },
+  { id:'AUTH-COV-005', sev:'HIGH', title:'Missing AUTHORITY-CHECK in GET_ENTITYSET (query) method',
+    test:function(m){ return /GET_ENTITYSET|_QUERY/i.test(m.name) && !m.hasAuth; } },
+  { id:'AUTH-COV-006', sev:'CRITICAL', title:'EXECUTE (FunctionImport) handler has no authority check',
+    test:function(m){ return /EXECUTE_ACTION|_EXECUTE_|INVOKE_/i.test(m.name) && !m.hasAuth; } },
+  { id:'AUTH-COV-007', sev:'HIGH', title:'SY-SUBRC not evaluated after authority check in DPC_EXT method',
+    test:function(m){ return m.hasAuth && !m.hasSubrcCheck; } },
+  { id:'AUTH-COV-008', sev:'MEDIUM', title:'Authority check delegated to helper but not verified on return',
+    test:function(m){ return m.callsHelper && !m.hasAuth && !m.hasSubrcCheck; } },
+  { id:'AUTH-COV-009', sev:'HIGH', title:'$batch operation method has no authority check',
+    test:function(m){ return /BATCH/i.test(m.name) && !m.hasAuth; } },
+  { id:'AUTH-COV-010', sev:'MEDIUM', title:'Mass-read (QUERY) bypasses per-record authorization',
+    test:function(m){ return /GET_ENTITYSET|_QUERY/i.test(m.name) && m.hasAuth && /SELECT/i.test(m.body) && !/LOOP/i.test(m.body); } },
+  { id:'AUTH-COV-011', sev:'MEDIUM', title:'Hardcoded authorization value in DPC_EXT method',
+    test:function(m){ return m.hasAuth && /ID\s+'\w+'\s+FIELD\s+'[0-9]'/.test(m.body); } },
+  { id:'AUTH-COV-012', sev:'HIGH', title:'Authority check placed after database operation (post-read)',
+    test:function(m){ return m.hasAuth && m.authLine > m.firstSelectLine && m.firstSelectLine > 0; } },
+  { id:'AUTH-COV-013', sev:'MEDIUM', title:'No BYPASS_BUFFER check for SELECT SINGLE in DPC_EXT',
+    test:function(m){ return m.body && /SELECT SINGLE/i.test(m.body) && !/BYPASS BUFFER/i.test(m.body); } },
+  { id:'AUTH-COV-014', sev:'LOW', title:'Dynamic authority-check object — cannot be verified statically',
+    test:function(m){ return m.hasAuth && /AUTHORITY-CHECK OBJECT\s+[lg]v_/i.test(m.body); } },
+  { id:'AUTH-COV-015', sev:'MEDIUM', title:'EXPAND operation method lacks authority check',
+    test:function(m){ return /EXPAND|_EXPAND_/i.test(m.name) && !m.hasAuth; } }
+];
+
+function parseDpcExtClass(code) {
+  var methods = [];
+  var mp = /METHOD\s+(\w+)\s*\.([\s\S]*?)ENDMETHOD\s*\./gi;
+  var match;
+  while ((match = mp.exec(code)) !== null) {
+    var name = match[1].toUpperCase();
+    var body = match[2];
+    var lines = body.split('\n');
+    var hasAuth = /AUTHORITY-CHECK\s+OBJECT/i.test(body);
+    var hasSubrcCheck = hasAuth && (/IF\s+sy-subrc/i.test(body) || /CHECK\s+sy-subrc/i.test(body));
+    var callsHelper = /CALL METHOD|->|lcl_|zcl_/i.test(body);
+    var authLine = 0, firstSelectLine = 0;
+    for (var i = 0; i < lines.length; i++) {
+      if (/AUTHORITY-CHECK/i.test(lines[i]) && authLine === 0) authLine = i+1;
+      if (/\bSELECT\b/i.test(lines[i]) && firstSelectLine === 0) firstSelectLine = i+1;
+    }
+    var calls = []; var cr = /(?:CALL METHOD|->)(\w+)/gi; var cm;
+    while ((cm = cr.exec(body)) !== null) calls.push(cm[1].toUpperCase());
+    methods.push({ name:name, body:body, lines:lines, hasAuth:hasAuth, hasSubrcCheck:hasSubrcCheck,
+      callsHelper:callsHelper, authLine:authLine, firstSelectLine:firstSelectLine, calls:calls });
+  }
+  return methods;
+}
+
+function applyCoverageRules(methods) {
+  var findings = [];
+  methods.forEach(function(m) {
+    COV_RULES.forEach(function(rule) {
+      if (rule.test(m)) findings.push({ id:rule.id, sev:rule.sev, title:rule.title, method:m.name,
+        authLine:m.authLine, firstSelectLine:m.firstSelectLine, fix:generateCovFix(rule.id) });
+    });
+  });
+  return findings;
+}
+
+function generateCovFix(ruleId) {
+  var fx = {
+    'AUTH-COV-001':"AUTHORITY-CHECK OBJECT 'S_TABU_DIS'\n  ID 'ACTVT' FIELD '01'.\nIF sy-subrc <> 0.\n  RAISE EXCEPTION TYPE zcx_no_authority.\nENDIF.",
+    'AUTH-COV-002':"AUTHORITY-CHECK OBJECT 'S_TABU_DIS'\n  ID 'ACTVT' FIELD '02'.\nIF sy-subrc <> 0.\n  RAISE EXCEPTION TYPE zcx_no_authority.\nENDIF.",
+    'AUTH-COV-003':"AUTHORITY-CHECK OBJECT 'S_TABU_DIS'\n  ID 'ACTVT' FIELD '06'.\nIF sy-subrc <> 0.\n  RAISE EXCEPTION TYPE zcx_no_authority.\nENDIF.",
+    'AUTH-COV-004':"AUTHORITY-CHECK OBJECT 'S_TABU_DIS'\n  ID 'ACTVT' FIELD '03'.\nIF sy-subrc <> 0.\n  RAISE EXCEPTION TYPE zcx_no_authority.\nENDIF.",
+    'AUTH-COV-005':"AUTHORITY-CHECK OBJECT 'S_TABU_DIS'\n  ID 'ACTVT' FIELD '03'.\nIF sy-subrc <> 0.\n  RAISE EXCEPTION TYPE zcx_no_authority.\nENDIF.",
+    'AUTH-COV-007':"IF sy-subrc <> 0.\n  RAISE EXCEPTION TYPE zcx_no_authority.\nENDIF.",
+    'AUTH-COV-012':'* Move AUTHORITY-CHECK BEFORE the SELECT statement'
+  };
+  return fx[ruleId] || '* Add AUTHORITY-CHECK OBJECT with IF sy-subrc evaluation before sensitive operation.';
+}
+
+function buildCoverageMatrix(methods) {
+  var ops = [
+    {op:'CREATE',re:/CREATE_ENTITY|_CREATE_/i},{op:'READ',re:/READ_ENTITY|_READ_SINGLE/i},
+    {op:'QUERY',re:/GET_ENTITYSET|_QUERY/i},{op:'UPDATE',re:/UPDATE_ENTITY|_UPDATE_/i},
+    {op:'DELETE',re:/DELETE_ENTITY|_DELETE_/i},{op:'EXECUTE',re:/EXECUTE_ACTION|_EXECUTE_|INVOKE_/i},
+    {op:'BATCH',re:/BATCH/i},{op:'EXPAND',re:/EXPAND|_EXPAND_/i}
+  ];
+  var entities = (document.getElementById('covEntities').value||'Default').split(',').map(function(e){return e.trim();}).filter(Boolean);
+  return entities.map(function(entity) {
+    var row = {entity:entity};
+    ops.forEach(function(op){
+      var matched = methods.filter(function(m){return op.re.test(m.name);});
+      if (!matched.length) { row[op.op]='na'; return; }
+      var full = matched.filter(function(m){return m.hasAuth&&m.hasSubrcCheck;});
+      var part = matched.filter(function(m){return m.hasAuth&&!m.hasSubrcCheck;});
+      row[op.op] = full.length?'covered':part.length?'partial':'missing';
+    });
+    return row;
+  });
+}
+
+function calculateCoverageScores(methods, findings) {
+  var total = methods.length;
+  if (!total) return {overall:0,dims:[]};
+  function pct2(fn) {
+    var rel = methods.filter(function(m){return /CREATE_ENTITY|_CREATE_|READ_ENTITY|GET_ENTITYSET|UPDATE_ENTITY|DELETE_ENTITY|EXECUTE_ACTION|INVOKE_/i.test(m.name);});
+    return rel.length ? Math.round(rel.filter(fn).length/rel.length*100) : 100;
+  }
+  var authMethods = methods.filter(function(m){return m.hasAuth;});
+  var dims = [
+    {name:'CREATE coverage',  score:pct2(function(m){return /CREATE_ENTITY|_CREATE_/i.test(m.name)&&m.hasAuth&&m.hasSubrcCheck;})},
+    {name:'READ coverage',    score:pct2(function(m){return /READ_ENTITY/i.test(m.name)&&m.hasAuth;})},
+    {name:'QUERY coverage',   score:pct2(function(m){return /GET_ENTITYSET/i.test(m.name)&&m.hasAuth;})},
+    {name:'UPDATE coverage',  score:pct2(function(m){return /UPDATE_ENTITY|_UPDATE_/i.test(m.name)&&m.hasAuth&&m.hasSubrcCheck;})},
+    {name:'DELETE coverage',  score:pct2(function(m){return /DELETE_ENTITY|_DELETE_/i.test(m.name)&&m.hasAuth&&m.hasSubrcCheck;})},
+    {name:'EXECUTE coverage', score:pct2(function(m){return /EXECUTE_ACTION|INVOKE_/i.test(m.name)&&m.hasAuth;})},
+    {name:'SY-SUBRC handling',score:authMethods.length?Math.round(authMethods.filter(function(m){return m.hasSubrcCheck;}).length/authMethods.length*100):100},
+    {name:'Pre-read checks',  score:(function(){var a=methods.filter(function(m){return m.hasAuth&&m.firstSelectLine>0;});return a.length?Math.round(a.filter(function(m){return m.authLine<m.firstSelectLine;}).length/a.length*100)|0:100;})()},
+    {name:'No hardcoded vals',score:Math.max(0,100-findings.filter(function(f){return f.id==='AUTH-COV-011';}).length*20)},
+    {name:'No dynamic objs',  score:Math.max(0,100-findings.filter(function(f){return f.id==='AUTH-COV-014';}).length*20)},
+    {name:'Helper resolution',score:(function(){var h=methods.filter(function(m){return m.callsHelper;});return h.length?Math.round(h.filter(function(m){return m.hasAuth;}).length/h.length*100):100;})()}
+  ];
+  dims.forEach(function(d){d.score=Math.max(0,Math.min(100,d.score||0));});
+  return {overall:Math.round(dims.reduce(function(a,d){return a+d.score;},0)/dims.length),dims:dims};
+}
+
+function generateTestPlan(methods) {
+  var ops=[{op:'CREATE',actvt:'01'},{op:'READ',actvt:'03'},{op:'UPDATE',actvt:'02'},{op:'DELETE',actvt:'06'},{op:'EXECUTE',actvt:'16'}];
+  var entities=(document.getElementById('covEntities').value||'TestEntity').split(',').map(function(e){return e.trim();}).filter(Boolean);
+  var plan=[];
+  entities.forEach(function(entity){
+    ops.forEach(function(def){
+      plan.push({testId:'TC-'+def.op+'-'+entity.replace(/\s/g,''),operation:def.op,entity:entity,actvt:def.actvt,
+        positive:'User with ACTVT '+def.actvt+' — operation succeeds',
+        negative:'User without ACTVT '+def.actvt+' — zcx_no_authority raised',status:'PENDING'});
+    });
+  });
+  return plan;
+}
+
+function generateRemediation(findings) {
+  return findings.map(function(f,i){
+    return {id:'REM-'+String(i+1).padStart(3,'0'),findingId:f.id,severity:f.sev,method:f.method,title:f.title,
+      rootCause:'DPC_EXT method overrides parent without adding AUTHORITY-CHECK.',
+      businessRisk:f.sev==='CRITICAL'?'Unauthorized data manipulation via OData API':'Unauthorized data access via OData API',
+      correctedCode:f.fix,approvalRequired:true,status:'OPEN'};
+  });
+}
+
+function correlateRuntimeEvidence(traceData) {
+  var results=[];
+  traceData.split('\n').forEach(function(line){
+    var om=line.match(/Object[:\s]+([A-Z0-9_]{1,30})/i);
+    var fm=line.match(/Field[:\s]+([A-Z0-9_]{1,20})/i);
+    var vm=line.match(/Value[:\s]+([A-Z0-9_*]{1,20})/i);
+    var rm=line.match(/\b(OK|FAILED|NO AUTH)\b/i);
+    if(om) results.push({object:om[1],field:fm?fm[1]:'—',value:vm?vm[1]:'—',result:rm?rm[1]:'UNKNOWN'});
+  });
+  return results;
+}
+
+function runCoverageAnalysis() {
+  var code=(document.getElementById('covCode').value||'').trim();
+  if(!code){alert('Please paste DPC_EXT class code first.');return;}
+  var helperCode=document.getElementById('covHelperCode').value||'';
+  var methods=parseDpcExtClass(code+'\n'+helperCode);
+  if(!methods.length){alert('No METHOD...ENDMETHOD blocks found. Include full ABAP method implementations.');return;}
+  var findings=applyCoverageRules(methods);
+  var matrix=buildCoverageMatrix(methods);
+  var scores=calculateCoverageScores(methods,findings);
+  var testPlan=generateTestPlan(methods);
+  var remediation=generateRemediation(findings);
+  COV_SESSION={serviceName:document.getElementById('covServiceName').value||'Unknown',
+    dpcClass:document.getElementById('covDpcClass').value||'Unknown',
+    methods:methods,matrix:matrix,findings:findings,scores:scores,testPlan:testPlan,remediation:remediation};
+  addAuditEvent('SCAN',SESSION.user,COV_SESSION.dpcClass,'—','Coverage: '+methods.length+' methods, '+findings.length+' findings');
+  setEl('covScoreKpi',scores.overall);
+  setEl('covOpsCovered',methods.filter(function(m){return m.hasAuth&&m.hasSubrcCheck;}).length+'/'+methods.length);
+  setEl('covMethodsTotal',methods.length);
+  setEl('covFindingsCount',findings.length);
+  setEl('covManualCount',findings.filter(function(f){return f.id==='AUTH-COV-014';}).length);
+  var nb=document.getElementById('nbCoverage');
+  if(nb){nb.style.display=findings.length?'':'none';nb.textContent=findings.length;}
+  renderCovScorecard(scores); renderCovServiceSummary(methods);
+  renderCovInventory(methods); renderCovMatrix(matrix);
+  renderCovFindings(findings); renderCovTestPlan(testPlan);
+  renderCovRemediation(remediation); populateCovPathSelector(methods);
+  SESSION.scansRun++;
+  if(typeof updateBadges==='function') updateBadges();
+  switchTab('coverage','cov-overview',document.querySelector('[onclick*="cov-overview"]'));
+  alert('Coverage analysis complete. '+methods.length+' methods, '+findings.length+' AUTH-COV findings.');
+}
+
+function renderCovScorecard(s) {
+  var el=document.getElementById('covScorecard'); if(!el) return;
+  var c=function(v){return v>=80?'var(--low)':v>=50?'var(--medium)':'var(--critical)';};
+  el.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;">'+
+    s.dims.map(function(d){return '<div style="background:rgba(70,137,255,0.04);border:1px solid var(--panel-border);border-radius:var(--r-md);padding:12px;">'+
+      '<div style="font-size:11px;color:var(--chrome-3);margin-bottom:5px;">'+escHtml(d.name)+'</div>'+
+      '<div style="font-size:22px;font-weight:700;font-family:var(--font-cond);color:'+c(d.score)+';">'+d.score+'<span style="font-size:11px;">%</span></div>'+
+      '<div class="pb" style="margin-top:4px;"><div class="pf" style="width:'+d.score+'%;background:'+c(d.score)+';height:3px;border-radius:2px;"></div></div></div>';
+    }).join('')+'</div><div style="margin-top:12px;padding:12px;background:rgba(70,137,255,0.06);border-radius:var(--r-md);text-align:center;">'+
+    '<span style="font-family:var(--font-cond);font-size:28px;font-weight:700;color:'+c(s.overall)+';">'+s.overall+'</span>'+
+    '<span style="font-size:12px;color:var(--chrome-3);margin-left:6px;">/ 100 Overall Coverage Score</span></div>';
+}
+
+function renderCovServiceSummary(methods) {
+  var el=document.getElementById('covServiceSummary'); if(!el) return;
+  var auth=methods.filter(function(m){return m.hasAuth;}).length;
+  el.innerHTML='<table class="dt"><tbody>'+
+    '<tr><td style="color:var(--chrome-3);font-size:11px;">Service</td><td>'+escHtml(COV_SESSION.serviceName)+'</td></tr>'+
+    '<tr><td style="color:var(--chrome-3);font-size:11px;">DPC_EXT Class</td><td style="font-family:var(--font-mono);font-size:11px;">'+escHtml(COV_SESSION.dpcClass)+'</td></tr>'+
+    '<tr><td style="color:var(--chrome-3);font-size:11px;">Methods Found</td><td>'+methods.length+'</td></tr>'+
+    '<tr><td style="color:var(--chrome-3);font-size:11px;">With Auth-Check</td><td style="color:var(--low);">'+auth+'</td></tr>'+
+    '<tr><td style="color:var(--chrome-3);font-size:11px;">Without Auth-Check</td><td style="color:var(--critical);">'+(methods.length-auth)+'</td></tr>'+
+    '</tbody></table>';
+}
+
+function renderCovInventory(methods) {
+  var el=document.getElementById('covInventoryArea'); if(!el) return;
+  setEl('covInventoryCount',' — '+methods.length+' methods');
+  el.innerHTML='<table class="dt"><thead><tr><th>Method</th><th>Auth-Check</th><th>SY-SUBRC OK</th><th>Helper Calls</th><th>Auth Line</th><th>First SELECT</th></tr></thead><tbody>'+
+    methods.map(function(m){
+      return '<tr><td style="font-family:var(--font-mono);font-size:11px;">'+escHtml(m.name)+'</td>'+
+        '<td>'+(m.hasAuth?'<span class="badge bl">YES</span>':'<span class="badge bc">NO</span>')+'</td>'+
+        '<td>'+(m.hasAuth?(m.hasSubrcCheck?'<span class="badge bl">YES</span>':'<span class="badge bm">NO</span>'):'<span class="badge bi">N/A</span>')+'</td>'+
+        '<td>'+(m.callsHelper?'<span class="badge bm">YES</span>':'—')+'</td>'+
+        '<td style="font-family:var(--font-mono);">'+(m.authLine||'—')+'</td>'+
+        '<td style="font-family:var(--font-mono);">'+(m.firstSelectLine||'—')+'</td></tr>';
+    }).join('')+'</tbody></table>';
+}
+
+function renderCovMatrix(matrix) {
+  var el=document.getElementById('covMatrixArea'); if(!el) return;
+  var ops=['CREATE','READ','QUERY','UPDATE','DELETE','EXECUTE','BATCH','EXPAND'];
+  var cell=function(v){
+    if(v==='covered') return '<td style="background:rgba(36,161,72,0.18);color:var(--low);text-align:center;font-size:11px;">✓</td>';
+    if(v==='partial')  return '<td style="background:rgba(241,194,27,0.14);color:var(--medium);text-align:center;font-size:11px;">⚠</td>';
+    if(v==='missing')  return '<td style="background:rgba(218,30,40,0.12);color:var(--critical);text-align:center;font-size:11px;">✗</td>';
+    return '<td style="color:var(--chrome-3);text-align:center;font-size:11px;">—</td>';
+  };
+  el.innerHTML='<table class="mt"><thead><tr><th>Entity Set</th>'+ops.map(function(o){return '<th>'+o+'</th>';}).join('')+'</tr></thead><tbody>'+
+    matrix.map(function(row){
+      return '<tr><td style="font-family:var(--font-mono);font-size:11px;text-align:left;">'+escHtml(row.entity)+'</td>'+ops.map(function(o){return cell(row[o]||'na');}).join('')+'</tr>';
+    }).join('')+'</tbody></table>';
+}
+
+function renderCovFindings(findings) {
+  var el=document.getElementById('covFindingsArea'); if(!el) return;
+  if(!findings.length){el.innerHTML='<div class="alert a-i"><span>✓</span><span>No AUTH-COV violations detected. All operation methods have authority-check coverage.</span></div>';return;}
+  var sc={CRITICAL:'bc',HIGH:'bh',MEDIUM:'bm',LOW:'bl'};
+  el.innerHTML=findings.map(function(f){
+    return '<div class="fc-card" style="margin-bottom:12px;border:1px solid var(--panel-border);border-radius:var(--r-md);overflow:hidden;">'+
+      '<div class="fc-hdr" onclick="toggleFinding(this)" style="cursor:pointer;padding:11px 16px;display:flex;align-items:center;gap:10px;background:rgba(70,137,255,0.04);">'+
+        '<span class="badge '+(sc[f.sev]||'bi')+'">'+f.sev+'</span>'+
+        '<span style="font-family:var(--font-mono);font-size:11px;color:var(--chrome-3);">'+escHtml(f.id)+'</span>'+
+        '<span style="font-size:13px;color:var(--chrome-1);flex:1;">'+escHtml(f.title)+'</span>'+
+        '<span style="font-family:var(--font-mono);font-size:11px;color:var(--ibm-blue-40);">'+escHtml(f.method)+'</span></div>'+
+      '<div class="fc-body" style="display:none;padding:16px;">'+
+        '<div class="g-h3">Recommended ABAP Fix</div>'+
+        '<div class="code" style="margin-bottom:10px;">'+escHtml(f.fix)+'</div>'+
+        '<div class="alert a-w"><span>⚠</span><span>Verify the correct authorization object and field values for your business context before applying. SAP Security Architect approval required.</span></div>'+
+      '</div></div>';
+  }).join('');
+}
+
+function renderCovTestPlan(testPlan) {
+  var el=document.getElementById('covTestPlanArea'); if(!el) return;
+  el.innerHTML='<table class="dt"><thead><tr><th>Test ID</th><th>Op</th><th>Entity</th><th>ACTVT</th><th>Positive Case</th><th>Negative Case</th><th>Status</th></tr></thead><tbody>'+
+    testPlan.map(function(t){
+      return '<tr><td style="font-family:var(--font-mono);font-size:11px;">'+escHtml(t.testId)+'</td>'+
+        '<td><span class="badge bi">'+escHtml(t.operation)+'</span></td>'+
+        '<td>'+escHtml(t.entity)+'</td><td style="font-family:var(--font-mono);">'+escHtml(t.actvt)+'</td>'+
+        '<td style="font-size:11px;color:var(--low);">'+escHtml(t.positive)+'</td>'+
+        '<td style="font-size:11px;color:var(--critical);">'+escHtml(t.negative)+'</td>'+
+        '<td><span class="badge bm">PENDING</span></td></tr>';
+    }).join('')+'</tbody></table>';
+}
+
+function renderCovRemediation(remediation) {
+  var el=document.getElementById('covRemediationArea'); if(!el) return;
+  if(!remediation.length){el.innerHTML='<div class="alert a-i"><span>✓</span><span>No remediation items.</span></div>';return;}
+  var sc={CRITICAL:'bc',HIGH:'bh',MEDIUM:'bm',LOW:'bl'};
+  el.innerHTML=remediation.map(function(r){
+    return '<div class="card" style="margin-bottom:12px;"><div class="ch"><span class="badge '+(sc[r.severity]||'bi')+'">'+escHtml(r.severity)+'</span>&nbsp;'+
+      '<span style="font-family:var(--font-mono);font-size:11px;color:var(--chrome-3);">'+escHtml(r.id)+' / '+escHtml(r.findingId)+'</span>&nbsp;'+
+      '<span style="font-size:13px;">'+escHtml(r.title)+'</span></div>'+
+      '<div class="cb"><div class="g2" style="gap:14px;">'+
+        '<div><div class="g-h3">Root Cause</div><div class="g-p">'+escHtml(r.rootCause)+'</div>'+
+          '<div class="g-h3">Business Risk</div><div class="g-p">'+escHtml(r.businessRisk)+'</div></div>'+
+        '<div><div class="g-h3">Corrected ABAP Pattern</div><div class="code">'+escHtml(r.correctedCode)+'</div>'+
+          '<div class="alert a-w" style="margin-top:8px;"><span>⚠</span><span>Requires SAP Security Architect approval before transport.</span></div></div>'+
+      '</div></div></div>';
+  }).join('');
+}
+
+function populateCovPathSelector(methods) {
+  var sel=document.getElementById('covPathMethod'); if(!sel) return;
+  sel.innerHTML='<option value="">— select method —</option>'+
+    methods.map(function(m){return '<option value="'+escHtml(m.name)+'">'+escHtml(m.name)+'</option>';}).join('');
+}
+
+function covShowPath() {
+  var sel=document.getElementById('covPathMethod');
+  var name=sel&&sel.value; if(!name) return;
+  var method=null;
+  for(var i=0;i<COV_SESSION.methods.length;i++){if(COV_SESSION.methods[i].name===name){method=COV_SESSION.methods[i];break;}}
+  var el=document.getElementById('covPathArea'); if(!el||!method) return;
+  var html='<div style="margin-bottom:8px;"><strong style="color:var(--ibm-blue-40);">METHOD '+escHtml(method.name)+'</strong></div>';
+  method.lines.forEach(function(line,i){
+    var t=line.trim(); if(!t) return;
+    var col='var(--chrome-2)';
+    if(/AUTHORITY-CHECK/i.test(line)) col='var(--low)';
+    else if(/IF\s+sy-subrc|CHECK\s+sy-subrc/i.test(line)) col='var(--ibm-blue-40)';
+    else if(/RAISE EXCEPTION/i.test(line)) col='var(--critical)';
+    else if(/\bSELECT\b|CALL METHOD|->/i.test(line)) col='var(--medium)';
+    html+='<div style="color:'+col+';padding:1px 0;"><span style="color:var(--chrome-3);user-select:none;margin-right:8px;font-size:10px;">'+String(i+1).padStart(4,' ')+'</span>'+escHtml(line)+'</div>';
+  });
+  if(method.calls.length){
+    html+='<div style="margin-top:10px;padding:10px;background:rgba(70,137,255,0.06);border-radius:var(--r-sm);"><div style="font-size:11px;color:var(--chrome-3);margin-bottom:4px;">Out-calls:</div>'+
+      method.calls.map(function(c){
+        var cm=null;
+        for(var j=0;j<COV_SESSION.methods.length;j++){if(COV_SESSION.methods[j].name===c){cm=COV_SESSION.methods[j];break;}}
+        var status=cm?(cm.hasAuth?'<span style="color:var(--medium);">→ has auth (helper)</span>':'<span style="color:var(--critical);">→ no auth in helper</span>'):'<span style="color:var(--chrome-3);">→ external</span>';
+        return '<div style="font-family:var(--font-mono);font-size:11px;padding:2px 0;">'+escHtml(c)+' '+status+'</div>';
+      }).join('')+'</div>';
+  }
+  el.innerHTML=html;
+}
+
+function covCorrelateTrace() {
+  var input=document.getElementById('covTraceInput').value.trim();
+  if(!input){alert('Paste STAUTHTRACE or SU53 output first.');return;}
+  addAuditEvent('SCAN',SESSION.user,'STAUTHTRACE','—','Runtime evidence correlation');
+  var results=correlateRuntimeEvidence(input);
+  var el=document.getElementById('covTraceResults'); if(!el) return;
+  if(!results.length){el.innerHTML='<div class="alert a-w"><span>⚠</span><span>No recognizable STAUTHTRACE/SU53 patterns found.</span></div>';return;}
+  el.innerHTML='<table class="dt"><thead><tr><th>Object</th><th>Field</th><th>Value</th><th>Runtime Result</th></tr></thead><tbody>'+
+    results.map(function(r){
+      var col=r.result==='OK'?'var(--low)':r.result==='FAILED'||r.result==='NO AUTH'?'var(--critical)':'var(--medium)';
+      return '<tr><td style="font-family:var(--font-mono);">'+escHtml(r.object)+'</td><td>'+escHtml(r.field)+'</td><td style="font-family:var(--font-mono);">'+escHtml(r.value)+'</td><td><span style="color:'+col+';font-weight:600;">'+escHtml(r.result)+'</span></td></tr>';
+    }).join('')+'</tbody></table>';
+}
+
+function covExportFindings(){if(!COV_SESSION.findings.length){alert('Run analysis first.');return;}downloadCSV(COV_SESSION.findings.map(function(f){return{id:f.id,severity:f.sev,title:f.title,method:f.method};}), 'coverage_findings.csv');}
+function covExportTestPlan(){if(!COV_SESSION.testPlan.length){alert('Run analysis first.');return;}downloadCSV(COV_SESSION.testPlan,'coverage_test_plan.csv');}
+function covExportRemediation(){if(!COV_SESSION.remediation.length){alert('Run analysis first.');return;}downloadCSV(COV_SESSION.remediation.map(function(r){return{id:r.id,findingId:r.findingId,severity:r.severity,method:r.method,title:r.title};}), 'coverage_remediation.csv');}
+function covExportReport(){covGenReport('executive');}
+
+function covGenReport(type) {
+  var prev=document.getElementById('covReportPreview');
+  if(!COV_SESSION.methods.length){if(prev)prev.innerHTML='<div class="alert a-w"><span>⚠</span><span>Run analysis first.</span></div>';return;}
+  if(type==='executive'){
+    var s=COV_SESSION.scores.overall||0;
+    var c=s>=80?'var(--low)':s>=50?'var(--medium)':'var(--critical)';
+    var html='<h2 style="font-family:var(--font-cond);color:var(--chrome-1);">Coverage Report — '+escHtml(COV_SESSION.serviceName)+'</h2>'+
+      '<p style="font-size:12px;color:var(--chrome-3);">Class: '+escHtml(COV_SESSION.dpcClass)+' | '+new Date().toLocaleString()+' | '+escHtml(SESSION.user)+'</p>'+
+      '<div style="font-size:32px;font-weight:700;font-family:var(--font-cond);color:'+c+';">'+s+' / 100</div>'+
+      '<p style="font-size:12px;color:var(--chrome-2);">Methods: '+COV_SESSION.methods.length+' | Findings: '+COV_SESSION.findings.length+' | Test Cases: '+COV_SESSION.testPlan.length+'</p>';
+    if(prev) prev.innerHTML=html;
+    downloadBlob(html,'text/html','coverage_executive_report.html');
+  } else if(type==='callgraph'){
+    var txt=COV_SESSION.methods.map(function(m){return m.name+' -> ['+m.calls.join(', ')+']';}).join('\n');
+    downloadBlob(txt,'text/plain','coverage_callgraph.txt');
+    if(prev) prev.innerHTML='<pre style="font-family:var(--font-mono);font-size:11px;color:var(--chrome-2);">'+escHtml(txt)+'</pre>';
+  } else if(type==='audit'){
+    var pkg=JSON.stringify({service:COV_SESSION.serviceName,dpcClass:COV_SESSION.dpcClass,scores:COV_SESSION.scores,findings:COV_SESSION.findings,generatedBy:SESSION.user,generatedAt:new Date().toISOString()},null,2);
+    downloadBlob(pkg,'application/json','coverage_audit_package.json');
+    if(prev) prev.innerHTML='<pre style="font-family:var(--font-mono);font-size:11px;color:var(--chrome-2);">'+escHtml(pkg.substring(0,1200))+'\n...(truncated)</pre>';
+  } else if(type==='matrix'||type==='findings'){covExportFindings();}
+    else if(type==='testplan'){covExportTestPlan();}
+    else if(type==='remediation'){covExportRemediation();}
+}
+
+function covLoadDemo() {
+  document.getElementById('covServiceName').value='ZMAT_MATERIAL_SRV';
+  document.getElementById('covDpcClass').value='ZCL_ZMAT_MATERIAL_SRV_DPC_EXT';
+  document.getElementById('covEntities').value='MaterialSet, PlantDataSet';
+  document.getElementById('covCode').value=[
+    'CLASS ZCL_ZMAT_MATERIAL_SRV_DPC_EXT IMPLEMENTATION.',
+    'METHOD MATERIALSET_CREATE_ENTITY.',
+    '* Missing authority check - AUTH-COV-001',
+    '  io_data_provider->read_entry_data( IMPORTING es_data = ls_material ).',
+    '  INSERT zmaterial FROM ls_material.',
+    'ENDMETHOD.',
+    'METHOD MATERIALSET_GET_ENTITY.',
+    '  AUTHORITY-CHECK OBJECT \'M_MATE_WRK\'',
+    '    ID \'ACTVT\' FIELD \'03\'.',
+    '* Missing sy-subrc check - AUTH-COV-007',
+    '  SELECT SINGLE * FROM zmaterial INTO ls_material WHERE matnr = lv_matnr.',
+    'ENDMETHOD.',
+    'METHOD MATERIALSET_GET_ENTITYSET.',
+    '  AUTHORITY-CHECK OBJECT \'M_MATE_WRK\'',
+    '    ID \'ACTVT\' FIELD \'03\'.',
+    '  IF sy-subrc <> 0.',
+    '    RAISE EXCEPTION TYPE zcx_no_authority.',
+    '  ENDIF.',
+    '  SELECT * FROM zmaterial INTO TABLE et_entityset.',
+    'ENDMETHOD.',
+    'METHOD MATERIALSET_UPDATE_ENTITY.',
+    '* Missing authority check - AUTH-COV-002',
+    '  SELECT SINGLE * FROM zmaterial INTO ls_material WHERE matnr = lv_matnr.',
+    '  MODIFY zmaterial FROM ls_material.',
+    'ENDMETHOD.',
+    'METHOD MATERIALSET_DELETE_ENTITY.',
+    '  AUTHORITY-CHECK OBJECT \'M_MATE_WRK\'',
+    '    ID \'ACTVT\' FIELD \'06\'.',
+    '  IF sy-subrc <> 0.',
+    '    RAISE EXCEPTION TYPE zcx_no_authority.',
+    '  ENDIF.',
+    '  DELETE FROM zmaterial WHERE matnr = lv_matnr.',
+    'ENDMETHOD.',
+    'ENDCLASS.'
+  ].join('\n');
+  switchTab('coverage','cov-upload',document.querySelector('[onclick*="cov-upload"]'));
+}
+
+function covReset() {
+  COV_SESSION={serviceName:'',dpcClass:'',methods:[],callGraph:{},matrix:{},findings:[],scores:{},testPlan:[],remediation:[]};
+  ['covCode','covHelperCode','covTraceInput','covServiceName','covDpcClass','covEntities'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  ['covScoreKpi','covOpsCovered','covMethodsTotal','covFindingsCount','covManualCount'].forEach(function(id){setEl(id,'—');});
+  ['covScorecard','covServiceSummary','covInventoryArea','covMatrixArea','covFindingsArea','covTestPlanArea','covRemediationArea','covTraceResults','covPathArea','covReportPreview'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.innerHTML='<div style="padding:24px;text-align:center;color:var(--chrome-3);font-size:12px;">Run analysis to populate.</div>';
+  });
+  var nb=document.getElementById('nbCoverage'); if(nb)nb.style.display='none';
 }
 </script>
