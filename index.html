@@ -28,8 +28,71 @@
 }
 html,body{height:100%;overflow:hidden;}
 body{font-family:var(--font-sans);background:var(--obsidian);color:var(--chrome-1);display:flex;flex-direction:column;min-height:100vh;position:relative;}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 120% 80% at 20% 10%,rgba(0,67,206,0.15) 0%,transparent 55%),radial-gradient(ellipse 80% 60% at 80% 90%,rgba(19,136,8,0.07) 0%,transparent 45%),radial-gradient(ellipse 100% 100% at 100% 0%,rgba(0,0,128,0.1) 0%,transparent 50%);pointer-events:none;z-index:0;}
-body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(70,137,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(70,137,255,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;animation:gridDrift 40s linear infinite;}
+/* Cinematic background — Indian futuristic cityscape inspired by reference image */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    /* Deep space sky — deep navy at top fading to dark */
+    radial-gradient(ellipse 180% 60% at 50% -10%, rgba(0,10,40,0.98) 0%, transparent 55%),
+    /* Planet glow top-right (amber/orange) */
+    radial-gradient(ellipse 22% 22% at 88% 8%, rgba(210,120,30,0.55) 0%, rgba(160,80,20,0.3) 35%, transparent 65%),
+    /* Second planet top-right smaller */
+    radial-gradient(ellipse 10% 10% at 96% 18%, rgba(180,100,40,0.45) 0%, transparent 60%),
+    /* Ashoka Chakra blue core glow — left side */
+    radial-gradient(ellipse 45% 70% at 15% 55%, rgba(15,98,254,0.28) 0%, rgba(0,50,160,0.18) 40%, transparent 70%),
+    /* Saffron energy arc — sweeping from chakra center upward */
+    radial-gradient(ellipse 60% 35% at 30% 30%, rgba(255,107,0,0.18) 0%, rgba(255,140,0,0.08) 50%, transparent 75%),
+    /* India-green energy arc — lower sweep */
+    radial-gradient(ellipse 55% 30% at 25% 75%, rgba(19,136,8,0.15) 0%, rgba(50,200,50,0.06) 55%, transparent 75%),
+    /* City skyline ambient warm glow — bottom horizon */
+    radial-gradient(ellipse 140% 35% at 65% 98%, rgba(255,140,30,0.35) 0%, rgba(255,100,0,0.15) 40%, transparent 65%),
+    /* City ground light scatter */
+    radial-gradient(ellipse 80% 20% at 70% 100%, rgba(70,137,255,0.2) 0%, rgba(255,107,0,0.12) 50%, transparent 70%),
+    /* Overall dark base */
+    linear-gradient(180deg, rgb(4,6,18) 0%, rgb(6,8,20) 40%, rgb(8,10,16) 70%, rgb(5,7,14) 100%);
+}
+/* Futuristic city tower silhouettes + grid overlay */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    /* City tower silhouettes via repeating gradient — bottom 30% of screen */
+    linear-gradient(rgba(70,137,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(70,137,255,0.03) 1px, transparent 1px);
+  background-size:48px 48px;
+  animation:gridDrift 40s linear infinite;
+}
+/* Energy stream arcs — saffron & green light trails */
+.bg-energy{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.bg-energy::before{
+  content:'';position:absolute;
+  top:5%;left:5%;width:55%;height:60%;
+  background:conic-gradient(from 220deg at 20% 50%,
+    transparent 0deg, rgba(255,107,0,0.12) 20deg, rgba(255,160,0,0.18) 40deg,
+    transparent 60deg, transparent 180deg,
+    rgba(19,136,8,0.1) 200deg, rgba(50,220,50,0.14) 220deg,
+    transparent 240deg, transparent 360deg);
+  border-radius:50%;
+  animation:energyPulse 8s ease-in-out infinite alternate;
+  filter:blur(18px);
+}
+.bg-energy::after{
+  content:'';position:absolute;
+  top:20%;left:8%;width:45%;height:55%;
+  background:conic-gradient(from 160deg at 25% 45%,
+    transparent 0deg, rgba(255,107,0,0.08) 15deg, transparent 40deg,
+    transparent 130deg, rgba(19,136,8,0.1) 150deg, transparent 170deg, transparent 360deg);
+  border-radius:50%;
+  animation:energyPulse 11s ease-in-out infinite alternate-reverse;
+  filter:blur(22px);
+}
+@keyframes energyPulse{0%{opacity:0.6;transform:scale(1) rotate(0deg);}100%{opacity:1;transform:scale(1.08) rotate(8deg);}}
+/* City skyline silhouette SVG mask via clip — tower shapes at bottom */
+.bg-city{position:fixed;bottom:0;left:0;right:0;height:38%;pointer-events:none;z-index:0;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(255,120,20,0.06) 50%, rgba(255,80,0,0.04) 100%);
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 300' preserveAspectRatio='none'%3E%3Cpolygon points='0,300 0,220 30,220 30,180 50,180 50,200 70,200 70,120 90,120 90,160 110,160 110,80 130,80 130,140 150,140 150,60 165,60 165,100 180,100 180,40 195,40 195,90 210,90 210,50 225,50 225,30 240,30 240,80 260,80 260,110 280,110 280,70 300,70 300,130 320,130 320,90 340,90 340,160 360,160 360,100 380,100 380,140 400,140 400,80 420,80 420,120 450,120 450,150 480,150 480,110 510,110 510,170 540,170 540,130 570,130 570,100 600,100 600,160 640,160 640,120 680,120 680,180 720,180 720,140 760,140 760,110 800,110 800,160 840,160 840,120 880,120 880,170 920,170 920,140 960,140 960,110 1000,110 1000,160 1040,160 1040,130 1080,130 1080,170 1120,170 1120,140 1160,140 1160,120 1200,120 1200,160 1240,160 1240,200 1280,200 1280,180 1320,180 1320,220 1360,220 1360,240 1400,240 1400,260 1440,260 1440,300' fill='black'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 300' preserveAspectRatio='none'%3E%3Cpolygon points='0,300 0,220 30,220 30,180 50,180 50,200 70,200 70,120 90,120 90,160 110,160 110,80 130,80 130,140 150,140 150,60 165,60 165,100 180,100 180,40 195,40 195,90 210,90 210,50 225,50 225,30 240,30 240,80 260,80 260,110 280,110 280,70 300,70 300,130 320,130 320,90 340,90 340,160 360,160 360,100 380,100 380,140 400,140 400,80 420,80 420,120 450,120 450,150 480,150 480,110 510,110 510,170 540,170 540,130 570,130 570,100 600,100 600,160 640,160 640,120 680,120 680,180 720,180 720,140 760,140 760,110 800,110 800,160 840,160 840,120 880,120 880,170 920,170 920,140 960,140 960,110 1000,110 1000,160 1040,160 1040,130 1080,130 1080,170 1120,170 1120,140 1160,140 1160,120 1200,120 1200,160 1240,160 1240,200 1280,200 1280,180 1320,180 1320,220 1360,220 1360,240 1400,240 1400,260 1440,260 1440,300' fill='black'/%3E%3C/svg%3E");
+  -webkit-mask-size:100% 100%;
+  mask-size:100% 100%;
+}
 @keyframes gridDrift{0%{background-position:0 0;}100%{background-position:48px 48px;}}
 .scanlines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.05) 3px,rgba(0,0,0,0.05) 4px);pointer-events:none;z-index:1;opacity:0.4;}
 ::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-track{background:var(--obsidian);}::-webkit-scrollbar-thumb{background:var(--ibm-blue-70);border-radius:3px;}
@@ -318,6 +381,8 @@ select.fc{cursor:pointer;}
 </head>
 <body>
 <div class="scanlines" aria-hidden="true"></div>
+<div class="bg-energy" aria-hidden="true"></div>
+<div class="bg-city" aria-hidden="true"></div>
 
 <!-- LOGIN OVERLAY — cinematic 3-panel layout -->
 <div id="loginOverlay" role="dialog" aria-modal="true" aria-label="IBM Enterprise Sign In">
@@ -1854,10 +1919,15 @@ document.querySelector('.sidebar').addEventListener('click', function(e){
 // ═══════════════════════════════════════════════════════
 function switchTab(viewId, tabId, el) {
   var prefix = viewId + '-';
+  // Hide all tab panels whose id starts with viewId-
   document.querySelectorAll('[id^="' + prefix + '"]').forEach(function(tp){
-    tp.classList.remove('active');
+    if (tp.classList.contains('tp')) tp.classList.remove('active');
   });
-  var target = document.getElementById(tabId);
+  // Panel IDs follow the pattern: viewId-tabId
+  var resolvedId = viewId + '-' + tabId;
+  var target = document.getElementById(resolvedId);
+  // Fallback: try bare tabId for legacy panels
+  if (!target) target = document.getElementById(tabId);
   if (target) target.classList.add('active');
   if (el && el.closest('.tab-bar')) {
     el.closest('.tab-bar').querySelectorAll('.tb-btn').forEach(function(b){ b.classList.remove('active'); });
@@ -3605,7 +3675,7 @@ function runCoverageAnalysis() {
   renderCovRemediation(remediation); populateCovPathSelector(methods);
   SESSION.scansRun++;
   if(typeof updateBadges==='function') updateBadges();
-  switchTab('coverage','cov-overview',document.querySelector('[onclick*="cov-overview"]'));
+  switchTab('coverage','cov-overview',document.querySelector('.tab-bar .tb-btn.active'));
   alert('Coverage analysis complete. '+methods.length+' methods, '+findings.length+' AUTH-COV findings.');
 }
 
@@ -3830,7 +3900,7 @@ function covLoadDemo() {
     'ENDMETHOD.',
     'ENDCLASS.'
   ].join('\n');
-  switchTab('coverage','cov-upload',document.querySelector('[onclick*="cov-upload"]'));
+  switchTab('coverage','cov-upload',null);
 }
 
 function covReset() {
