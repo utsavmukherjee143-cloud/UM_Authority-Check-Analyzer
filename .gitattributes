@@ -1,0 +1,9 @@
+﻿# Prevent line ending conversion for all files
+* -text
+
+# Explicitly mark HTML/JS/CSS as binary-safe UTF-8
+*.html binary
+*.js binary
+*.css binary
+*.json binary
+*.md text eol=lf
