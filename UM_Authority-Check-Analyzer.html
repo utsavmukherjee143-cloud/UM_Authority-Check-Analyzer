@@ -331,15 +331,16 @@ select.fc{cursor:pointer;}
 #loginOverlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:stretch;background:#060810;overflow:hidden;}
 /* Left hero panel */
 .l-hero{flex:1 1 0;min-width:0;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0;}
-.l-hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 80% at 60% 30%,rgba(0,67,206,0.28) 0%,transparent 60%),radial-gradient(ellipse 60% 60% at 20% 80%,rgba(19,136,8,0.15) 0%,transparent 55%),radial-gradient(ellipse 70% 70% at 80% 70%,rgba(255,107,0,0.10) 0%,transparent 55%),linear-gradient(180deg,rgba(6,8,16,0.30) 0%,rgba(6,8,16,0.85) 100%);}
-.l-hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(70,137,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(70,137,255,0.04) 1px,transparent 1px);background-size:44px 44px;}
+.l-hero-bg{position:absolute;inset:0;background-image:url('UM_Authority-Check-Analyser_Cinematic_UI_Theme_4K.jpeg');background-size:cover;background-position:center top;background-repeat:no-repeat;}
+.l-hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,8,16,0.10) 0%,rgba(6,8,16,0.72) 80%,rgba(6,8,16,0.92) 100%);}
+.l-hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(70,137,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(70,137,255,0.04) 1px,transparent 1px);background-size:44px 44px;opacity:0.4;}
 .l-chakra-big{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:340px;height:340px;opacity:0.85;pointer-events:none;}
 .l-chakra-ring1{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,107,0,0.45);animation:chakraSpin 18s linear infinite;}
 .l-chakra-ring2{position:absolute;inset:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.18);animation:chakraSpin 28s linear infinite reverse;}
 .l-chakra-ring3{position:absolute;inset:50px;border-radius:50%;border:1.5px solid rgba(19,136,8,0.45);animation:chakraSpin 12s linear infinite;}
 .l-chakra-ring4{position:absolute;inset:80px;border-radius:50%;border:2px solid rgba(70,137,255,0.6);box-shadow:0 0 40px rgba(70,137,255,0.25),inset 0 0 40px rgba(70,137,255,0.1);}
 .l-hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(70,137,255,0.35) 0%,transparent 70%);filter:blur(20px);}
-.l-hero-text{position:relative;z-index:2;padding:32px 40px;}
+.l-hero-text{position:relative;z-index:2;padding:32px 40px 32px 220px;}
 .l-hero-brand{font-family:var(--font-cond);font-size:28px;font-weight:700;color:var(--chrome-1);line-height:1.1;margin-bottom:6px;}
 .l-hero-brand .c-saffron{color:var(--saffron);}
 .l-hero-brand .c-blue{color:var(--ibm-blue-50);}
@@ -366,16 +367,18 @@ select.fc{cursor:pointer;}
 .l-notice{margin-top:14px;padding:9px 12px;background:rgba(70,137,255,0.06);border:1px solid rgba(70,137,255,0.2);border-radius:var(--r-sm);font-size:11px;color:var(--chrome-3);line-height:1.5;}
 .l-notice strong{color:var(--ibm-blue-40);}
 /* KPIs above main area */
-.l-kpi-row{position:relative;z-index:2;display:flex;gap:10px;padding:0 40px 14px;}
+.l-kpi-row{position:relative;z-index:2;display:flex;gap:10px;padding:0 40px 14px 220px;}
 .l-kpi{background:rgba(10,14,26,0.82);border:1px solid var(--panel-border);border-radius:var(--r-md);padding:10px 16px;min-width:120px;}
 .l-kpi-lbl{font-size:10px;color:var(--chrome-3);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:3px;}
 .l-kpi-val{font-family:var(--font-cond);font-size:20px;font-weight:700;color:var(--chrome-1);}
 .l-kpi-tr{font-size:10px;color:var(--india-green);margin-top:1px;}
 /* Nav preview */
-.l-nav{position:relative;z-index:2;display:flex;flex-direction:column;gap:2px;padding:16px 28px 0;width:180px;position:absolute;left:0;top:0;bottom:0;justify-content:center;background:rgba(6,8,16,0.65);border-right:1px solid rgba(70,137,255,0.12);}
-.l-nav-item{display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:var(--r-sm);font-size:13px;color:var(--chrome-3);border-left:3px solid transparent;}
-.l-nav-item.l-nav-active{background:rgba(70,137,255,0.12);color:var(--ibm-blue-40);border-left-color:var(--ibm-blue-60);}
-.l-nav-ic{font-size:13px;width:16px;text-align:center;}
+.l-nav{position:absolute;left:0;top:0;bottom:0;z-index:2;display:flex;flex-direction:column;gap:1px;padding:20px 0 20px;width:200px;justify-content:center;background:rgba(6,8,16,0.72);border-right:1px solid rgba(70,137,255,0.15);backdrop-filter:blur(8px);}
+.l-nav-sec{font-family:var(--font-mono);font-size:9px;color:var(--chrome-3);letter-spacing:2px;text-transform:uppercase;padding:10px 16px 4px;}
+.l-nav-item{display:flex;align-items:center;gap:9px;padding:7px 16px;font-size:12.5px;color:var(--chrome-3);border-left:3px solid transparent;}
+.l-nav-item.l-nav-active{background:rgba(70,137,255,0.14);color:var(--ibm-blue-40);border-left-color:var(--ibm-blue-60);font-weight:500;}
+.l-nav-ic{font-size:13px;width:16px;text-align:center;flex-shrink:0;}
+.l-nav-badge{margin-left:auto;font-family:var(--font-mono);font-size:9px;padding:1px 5px;border-radius:8px;background:rgba(218,30,40,0.2);border:1px solid rgba(218,30,40,0.4);color:#ff8389;}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
 </style>
 </head>
@@ -389,60 +392,29 @@ select.fc{cursor:pointer;}
 
   <!-- Left nav preview panel -->
   <div class="l-nav" aria-hidden="true">
+    <div class="l-nav-sec">Main</div>
     <div class="l-nav-item l-nav-active"><span class="l-nav-ic">⊞</span>Dashboard</div>
-    <div class="l-nav-item"><span class="l-nav-ic">⟨/⟩</span>Code Scanner</div>
-    <div class="l-nav-item"><span class="l-nav-ic">⚑</span>Findings</div>
+    <div class="l-nav-item"><span class="l-nav-ic">◉</span>Executive Summary</div>
+    <div class="l-nav-sec">Analyzers</div>
+    <div class="l-nav-item"><span class="l-nav-ic">⟨/⟩</span>ABAP Code Scanner</div>
+    <div class="l-nav-item"><span class="l-nav-ic">⌘</span>T-Code Analyzer</div>
+    <div class="l-nav-item"><span class="l-nav-ic">◈</span>Fiori App Analyzer</div>
+    <div class="l-nav-item"><span class="l-nav-ic">◫</span>Web Dynpro Analyzer</div>
+    <div class="l-nav-item"><span class="l-nav-ic">⧉</span>OData Service Analyzer</div>
+    <div class="l-nav-item"><span class="l-nav-ic">⊕</span>SU24/SU25 Analysis</div>
+    <div class="l-nav-item"><span class="l-nav-ic">⬡</span>Coverage Checker</div>
+    <div class="l-nav-sec">Results</div>
+    <div class="l-nav-item"><span class="l-nav-ic">⚑</span>Findings &amp; Remediation</div>
     <div class="l-nav-item"><span class="l-nav-ic">☰</span>Audit Evidence</div>
+    <div class="l-nav-sec">Knowledge</div>
+    <div class="l-nav-item"><span class="l-nav-ic">📖</span>Operational Guidebook</div>
+    <div class="l-nav-item"><span class="l-nav-ic">ℹ</span>About Tool</div>
   </div>
 
   <!-- Centre hero panel -->
   <div class="l-hero">
     <div class="l-hero-bg" aria-hidden="true"></div>
     <div class="l-hero-grid" aria-hidden="true"></div>
-    <!-- Ashoka Chakra -->
-    <div class="l-hero-glow" aria-hidden="true"></div>
-    <div class="l-chakra-big" aria-hidden="true">
-      <div class="l-chakra-ring1"></div>
-      <div class="l-chakra-ring2"></div>
-      <div class="l-chakra-ring3"></div>
-      <div class="l-chakra-ring4">
-        <svg style="position:absolute;inset:20px;" viewBox="0 0 160 160" aria-hidden="true">
-          <circle cx="80" cy="80" r="60" fill="none" stroke="rgba(70,137,255,0.5)" stroke-width="2"/>
-          <circle cx="80" cy="80" r="30" fill="none" stroke="rgba(70,137,255,0.35)" stroke-width="1.5"/>
-          <circle cx="80" cy="80" r="6" fill="rgba(70,137,255,0.9)"/>
-          <!-- 24 spokes -->
-          <g stroke="rgba(70,137,255,0.5)" stroke-width="1.2">
-            <line x1="80" y1="20" x2="80" y2="140"/>
-            <line x1="20" y1="80" x2="140" y2="80"/>
-            <line x1="33" y1="33" x2="127" y2="127"/>
-            <line x1="127" y1="33" x2="33" y2="127"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(15,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(30,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(45,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(60,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(75,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(90,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(105,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(120,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(135,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(150,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(165,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(180,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(195,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(210,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(225,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(240,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(255,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(270,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(285,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(300,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(315,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(330,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(345,80,80)"/>
-          </g>
-        </svg>
-      </div>
-    </div>
     <!-- Hero text at bottom left (above KPIs) -->
     <div class="l-hero-text">
       <div class="l-hero-brand">UM_<span class="c-blue">Authority</span>-<span class="c-saffron">Check</span>-Analyzer</div>
@@ -477,7 +449,7 @@ select.fc{cursor:pointer;}
     </div>
 
     <button class="l-sso" onclick="handleSSO()" id="ssoBtn" type="button">
-      Analyse Code
+      🔒 Sign in with IBM
     </button>
 
     <!-- Risk legend (matches image) -->
