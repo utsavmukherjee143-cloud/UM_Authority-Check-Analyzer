@@ -8,5 +8,6 @@
     "c4c.scanServer.url": "http://127.0.0.1:3222/UM_Authority-Check-Analyzer.html",
     "workbench.editor.enablePreviewFromCodeNavigation": true,
     "workbench.editor.enablePreviewFromQuickOpen": true,
-    "c4c.licensePath": "C:\\Users\\UtsavMukherjee\\Documents\\IBM Basis+Security Curriculam\\SAP GEN AI\\Agentic AI\\ASSEP\\UM_Authority-Check-Analyzer\\certs"
+    "c4c.licensePath": "C:\\Users\\UtsavMukherjee\\Documents\\IBM Basis+Security Curriculam\\SAP GEN AI\\Agentic AI\\ASSEP\\UM_Authority-Check-Analyzer\\certs",
+    "abapfs.mcpServer.autoStart": true
 }
