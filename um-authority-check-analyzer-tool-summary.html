@@ -1,0 +1,314 @@
+
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>UM_Authority-Check-Analyzer — Tool Summary</title>
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,"Segoe UI",system-ui,sans-serif;font-size:14px;line-height:1.6;background:#ffffff;color:#1f2328;max-width:760px;margin:0 auto;padding:32px 24px 48px;}
+  h1{font-size:22px;font-weight:700;color:#1f2328;margin-bottom:2px;}
+  .subtitle{font-size:13px;color:#57606a;margin-bottom:24px;}
+  .meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px;}
+  .badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;letter-spacing:0.3px;}
+  .b-blue{background:#e8f0fe;color:#1a56db;border:1px solid #c3d5fd;}
+  .b-green{background:#e6f4ea;color:#1e7e34;border:1px solid #b3d9bc;}
+  .b-orange{background:#fff3e0;color:#e65100;border:1px solid #ffcc80;}
+  .b-grey{background:#f6f8fa;color:#57606a;border:1px solid #e5e7eb;}
+  .b-purple{background:#f3e8ff;color:#6b21a8;border:1px solid #d8b4fe;}
+  h2{font-size:15px;font-weight:700;color:#1f2328;margin:28px 0 10px;padding-bottom:6px;border-bottom:1px solid #e5e7eb;}
+  h3{font-size:12px;font-weight:700;color:#3b82d4;text-transform:uppercase;letter-spacing:0.6px;margin:16px 0 6px;}
+  p,li{font-size:13px;color:#1f2328;line-height:1.75;}
+  ul{padding-left:18px;margin-bottom:8px;}
+  li{margin-bottom:2px;}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px;}
+  .card{background:#f7f8fa;border:1px solid #e5e7eb;border-radius:8px;padding:14px 16px;}
+  .card h3{margin-top:0;}
+  .rule-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:8px;}
+  .rule-table th{background:#f7f8fa;color:#57606a;font-weight:600;padding:6px 10px;border:1px solid #e5e7eb;text-align:left;letter-spacing:0.4px;}
+  .rule-table td{padding:5px 10px;border:1px solid #e5e7eb;color:#1f2328;vertical-align:top;}
+  .rule-table tr:nth-child(even) td{background:#fafafa;}
+  .sev-c{color:#b91c1c;font-weight:600;}
+  .sev-h{color:#c2410c;font-weight:600;}
+  .sev-m{color:#92400e;font-weight:600;}
+  .sev-l{color:#166534;font-weight:600;}
+  .url-box{background:#f0f7ff;border:1px solid #c3d5fd;border-radius:8px;padding:14px 18px;margin:16px 0;text-align:center;}
+  .url-box a{font-size:15px;font-weight:700;color:#1a56db;text-decoration:none;letter-spacing:0.2px;}
+  .url-box a:hover{text-decoration:underline;}
+  .url-label{font-size:11px;color:#57606a;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.8px;}
+  .stat-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px;}
+  .stat{background:#f7f8fa;border:1px solid #e5e7eb;border-radius:8px;padding:12px;text-align:center;}
+  .stat-n{font-size:22px;font-weight:700;color:#1f2328;line-height:1.1;}
+  .stat-l{font-size:10px;color:#57606a;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px;}
+  .timeline{border-left:2px solid #e5e7eb;padding-left:16px;margin-top:8px;}
+  .tl-item{position:relative;margin-bottom:14px;}
+  .tl-item::before{content:'';position:absolute;left:-21px;top:5px;width:8px;height:8px;border-radius:50%;background:#3b82d4;border:2px solid #fff;outline:1px solid #3b82d4;}
+  .tl-ver{font-size:11px;font-weight:700;color:#3b82d4;margin-bottom:1px;}
+  .tl-date{font-size:10px;color:#57606a;}
+  .tl-desc{font-size:12px;color:#1f2328;margin-top:2px;}
+  .notice{background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:10px 14px;font-size:12px;color:#92400e;margin-top:20px;}
+  .notice strong{color:#78350f;}
+  .two-col{columns:2;column-gap:24px;}
+  .two-col li{break-inside:avoid;}
+  .mode-box{background:#f3e8ff;border:1px solid #d8b4fe;border-radius:8px;padding:14px 16px;margin-top:16px;}
+  .mode-box h3{color:#6b21a8;margin-top:0;}
+  .footer{margin-top:36px;padding-top:14px;border-top:1px solid #e5e7eb;text-align:center;font-size:11px;color:#57606a;}
+</style>
+</head>
+<body>
+
+
+<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:6px">
+  <div>
+    <h1>UM_Authority-Check-Analyzer</h1>
+    <div class="subtitle">IBM SAP Security Intelligence  |  Engineering Intelligence for SAP Authorization Security</div>
+  </div>
+  <div style="font-size:20px;font-weight:700;color:#1a56db;letter-spacing:5px;flex-shrink:0">IBM</div>
+</div>
+
+<div class="meta-row">
+  <span class="badge b-blue">Version 2.1 — August 2026</span>
+  <span class="badge b-green">Public — GitHub Pages</span>
+  <span class="badge b-orange">39 Detection Rules</span>
+  <span class="badge b-grey">80,802 T-Codes</span>
+  <span class="badge b-purple">Single-File HTML</span>
+  <span class="badge b-grey">No Server Required</span>
+</div>
+
+
+<div class="url-box">
+  <div class="url-label">Live Public URL</div>
+  <a href="https://ica-bob.github.io/UM_Authority-Check-Analyzer/" target="_blank">
+    https://ica-bob.github.io/UM_Authority-Check-Analyzer/
+  </a>
+</div>
+
+
+<div class="stat-row">
+  <div class="stat"><div class="stat-n">14</div><div class="stat-l">Views</div></div>
+  <div class="stat"><div class="stat-n">39</div><div class="stat-l">Rules</div></div>
+  <div class="stat"><div class="stat-n">80,802</div><div class="stat-l">T-Codes</div></div>
+  <div class="stat"><div class="stat-n">3,666</div><div class="stat-l">Lines of code</div></div>
+  <div class="stat"><div class="stat-n">10</div><div class="stat-l">COV screens</div></div>
+</div>
+
+
+<h2>What It Does</h2>
+<p>UM_Authority-Check-Analyzer is a browser-only IBM enterprise tool that automates SAP authorization security analysis across ABAP code, T-Codes, Fiori apps, Web Dynpro components, OData services, and SU24/SU25 proposals. It detects missing, weak, or misplaced <code>AUTHORITY-CHECK</code> statements; proposes corrected ABAP patterns; scores authorization coverage; and produces audit-ready evidence packages — all without connecting to any live SAP system.</p>
+
+
+<h2>Architecture</h2>
+<div class="grid-2">
+  <div class="card">
+    <h3>Deployment</h3>
+    <ul>
+      <li>Single HTML file — no build step, no server</li>
+      <li>Companion <code>tcode-db.js</code> (10.1 MB, 80,802 T-Codes)</li>
+      <li>Hosted on GitHub Pages (ica-bob org)</li>
+      <li>IBM enterprise SSO / OIDC + MFA login</li>
+      <li>Session-only state — no external persistence</li>
+      <li>HTTPS enforced — TLS 1.3 via GitHub Pages CDN</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Design System</h3>
+    <ul>
+      <li>Dark obsidian background (<code>#060810</code>)</li>
+      <li>IBM Blue palette + Indian tricolor accents</li>
+      <li>Cinematic login: Ashoka Chakra + city skyline</li>
+      <li>IBM Plex Sans / IBM Plex Mono fonts</li>
+      <li>Glassmorphism cards, animated grid, energy arcs</li>
+      <li>WCAG 2.1 AA compliant — ARIA labels throughout</li>
+    </ul>
+  </div>
+</div>
+
+
+<h2>7 Analyzer Modules</h2>
+<div class="grid-3">
+  <div class="card">
+    <h3>ABAP Code Scanner</h3>
+    <ul>
+      <li>24 rules (AUTH-001–024)</li>
+      <li>Version-aware: S/4HANA 1809–2023, ECC EhP4–8, BW/4HANA, NetWeaver</li>
+      <li>20-field finding cards</li>
+      <li>Before/after code diff</li>
+      <li>Confidence scoring</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>T-Code Analyzer</h3>
+    <ul>
+      <li>80,802 T-Codes from USOBT/USOBX</li>
+      <li>Live search with suggestions</li>
+      <li>Batch analysis (up to 200)</li>
+      <li>Full SAP-delivered proposal cards</li>
+      <li>CSV export</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Fiori App Analyzer</h3>
+    <ul>
+      <li>BSP / SICF service check</li>
+      <li>OData binding review</li>
+      <li>IAM app descriptor check</li>
+      <li>Backend auth-check review</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Web Dynpro Analyzer</h3>
+    <ul>
+      <li>WD component authority review</li>
+      <li>BSP app auth chain</li>
+      <li>RFC / BAPI check coverage</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>OData Service Analyzer</h3>
+    <ul>
+      <li>V2 / V4 DPC_EXT protection</li>
+      <li>Operation-level coverage</li>
+      <li>IWBEP / IWFND gateway check</li>
+      <li>CREATE/READ/UPDATE/DELETE/EXECUTE</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>SU24 / SU25 Analysis</h3>
+    <ul>
+      <li>SU24 proposal lookup</li>
+      <li>SU25 upgrade impact planner</li>
+      <li>PFCG alignment check</li>
+      <li>SU53 / STAUTHTRACE interpreter</li>
+    </ul>
+  </div>
+</div>
+
+
+<h2>Coverage Checker (New in v2.1)</h2>
+<p style="margin-bottom:10px">Full DPC_EXT / OData authorization coverage analysis engine with 10 screens and 15 AUTH-COV rules.</p>
+<div class="grid-2">
+  <div class="card">
+    <h3>10 Analysis Screens</h3>
+    <ul>
+      <li>Coverage Overview — 11-dimension scorecard</li>
+      <li>Upload &amp; Config — service, class, entity scope</li>
+      <li>Method Inventory — call graph, per-method detail</li>
+      <li>Coverage Matrix — colour-coded operation x entity grid</li>
+      <li>Findings — AUTH-COV-001 to AUTH-COV-015 cards</li>
+      <li>Code Path Explorer — syntax-coloured call chain</li>
+      <li>Runtime Evidence — STAUTHTRACE / SU53 correlation</li>
+      <li>Test Planner — auto-generated positive + negative cases</li>
+      <li>Remediation — corrected ABAP patterns, approval workflow</li>
+      <li>Reports — 7 export types (HTML, CSV, JSON, TXT)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>15 AUTH-COV Rules</h3>
+    <ul>
+      <li><span class="sev-c">CRITICAL</span> — Missing check in CREATE / UPDATE / DELETE / EXECUTE</li>
+      <li><span class="sev-h">HIGH</span> — Missing check in READ_ENTITY / GET_ENTITYSET</li>
+      <li><span class="sev-h">HIGH</span> — SY-SUBRC not evaluated after check</li>
+      <li><span class="sev-h">HIGH</span> — Auth check after database SELECT (post-read)</li>
+      <li><span class="sev-h">HIGH</span> — $batch method unprotected</li>
+      <li><span class="sev-m">MEDIUM</span> — Helper delegation without return verification</li>
+      <li><span class="sev-m">MEDIUM</span> — Mass-read bypasses per-record authorization</li>
+      <li><span class="sev-m">MEDIUM</span> — Hardcoded authorization value</li>
+      <li><span class="sev-m">MEDIUM</span> — Missing BYPASS_BUFFER on SELECT SINGLE</li>
+      <li><span class="sev-m">MEDIUM</span> — EXPAND method unprotected</li>
+      <li><span class="sev-l">LOW</span> — Dynamic auth object (cannot verify statically)</li>
+    </ul>
+  </div>
+</div>
+
+
+<h2>Rule Engine — 39 Rules Total</h2>
+<table class="rule-table">
+  <thead>
+    <tr><th>Range</th><th>Category</th><th>Count</th><th>Top severities</th></tr>
+  </thead>
+  <tbody>
+    <tr><td style="font-family:monospace">AUTH-001 – 008</td><td>Core AUTHORITY-CHECK weaknesses</td><td>8</td><td><span class="sev-c">3 CRITICAL</span>, <span class="sev-h">3 HIGH</span>, <span class="sev-m">2 MED</span></td></tr>
+    <tr><td style="font-family:monospace">AUTH-009 – 016</td><td>RFC, OData, CRUD, dynamic objects</td><td>8</td><td><span class="sev-c">2 CRITICAL</span>, <span class="sev-h">4 HIGH</span>, <span class="sev-m">2 MED</span></td></tr>
+    <tr><td style="font-family:monospace">AUTH-017 – 024</td><td>Bypass, S/4HANA, Clean Core, hard-code</td><td>8</td><td><span class="sev-c">2 CRITICAL</span>, <span class="sev-h">3 HIGH</span>, <span class="sev-m">3 MED</span></td></tr>
+    <tr><td style="font-family:monospace">AUTH-COV-001 – 006</td><td>DPC_EXT operation coverage</td><td>6</td><td><span class="sev-c">4 CRITICAL</span>, <span class="sev-h">2 HIGH</span></td></tr>
+    <tr><td style="font-family:monospace">AUTH-COV-007 – 015</td><td>SY-SUBRC, helper, post-read, misc</td><td>9</td><td><span class="sev-h">3 HIGH</span>, <span class="sev-m">5 MED</span>, <span class="sev-l">1 LOW</span></td></tr>
+  </tbody>
+</table>
+
+
+<h2>14 Application Views</h2>
+<div class="two-col">
+  <ul>
+    <li><strong>Dashboard</strong> — 5 KPIs, audit ring, matrices</li>
+    <li><strong>Executive Summary</strong> — severity donut, 11-col drill-down</li>
+    <li><strong>ABAP Code Scanner</strong> — paste/upload, 24 rules</li>
+    <li><strong>T-Code Analyzer</strong> — 80,802 T-Codes, batch mode</li>
+    <li><strong>Fiori App Analyzer</strong> — BSP, OData, IAM review</li>
+    <li><strong>Web Dynpro Analyzer</strong> — WD component coverage</li>
+    <li><strong>OData Service Analyzer</strong> — V2/V4, DPC_EXT</li>
+    <li><strong>SU24/SU25 Analysis</strong> — 4 tabs</li>
+    <li><strong>Coverage Checker</strong> — 10 tabs, 15 rules</li>
+    <li><strong>Findings &amp; Remediation</strong> — filter, FP workflow</li>
+    <li><strong>Audit Evidence</strong> — trail, CSV/JSON/HTML export</li>
+    <li><strong>Operational Guidebook</strong> — 20 sections, search</li>
+    <li><strong>About Tool</strong> — full feature inventory</li>
+    <li><strong>Administration</strong> — session, rules, RBAC, system info</li>
+  </ul>
+</div>
+
+
+<h2>Release History</h2>
+<div class="timeline">
+  <div class="tl-item">
+    <div class="tl-ver">v2.1 — August 2026</div>
+    <div class="tl-desc">Coverage Checker (10 screens, AUTH-COV-001–015), cinematic login UI (Ashoka Chakra hero, 3-panel layout), Full Feature Inventory in About Tool, .gitattributes binary fix for UTF-8 integrity, GitHub Pages on ica-bob org, Bob mode (aca-analyst).</div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-ver">v2.0 — August 2026</div>
+    <div class="tl-desc">Full IBM enterprise UI (glassmorphism, Indian flag theme), all 7 analyzer modules, SU53/STAUTHTRACE interpreter, OData V4, Clean Core flags, audit export package, 80,802 T-Code DB from USOBT/USOBX.</div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-ver">v1.0 — July 2026</div>
+    <div class="tl-desc">Initial release: ABAP scanner, SU24 analysis, OData V2, chat-based interface, IBM BOB + ICA + MCP Gateway integration.</div>
+  </div>
+</div>
+
+
+<div class="mode-box">
+  <h3>Bob Mode: ACA — SAP Authority Analyst</h3>
+  <p><strong>Slug:</strong> <code>aca-analyst</code>    <strong>File:</strong> <code>.bob/custom_modes.yaml</code> (workspace scope)</p>
+  <p style="margin-top:6px">A dedicated Bob persona with full knowledge of the tool architecture, all 39 rules, the DPC_EXT coverage engine, deployment pipeline, SAP domain (AUTHORITY-CHECK, SU24/SU25, PFCG, STAUTHTRACE, Clean Core), and security rules. Grants read + edit + execute + skill + todo + subagent + mode permissions. Select <strong>ACA — SAP Authority Analyst</strong> in the mode picker when working on this project.</p>
+</div>
+
+
+<div class="notice">
+  <strong>Responsible Use:</strong> This tool is for authorized IBM and client SAP security professionals only. All findings are diagnostic and require human expert review. No SAP system changes occur automatically. Never apply corrections without SAP Security Architect approval and proper change management. The tool does not access live SAP systems.
+</div>
+
+
+<h2>Project Metadata</h2>
+<div class="grid-2">
+  <div class="card">
+    <h3>Repository</h3>
+    <ul>
+      <li><strong>Primary:</strong> github.com/ica-bob/UM_Authority-Check-Analyzer</li>
+      <li><strong>Mirror:</strong> github.com/utsavmukherjee143-cloud/UM_Authority-Check-Analyzer</li>
+      <li><strong>Active branch:</strong> UM_GIT-Branch1 (merged to main for deploy)</li>
+      <li><strong>Encoding:</strong> UTF-8, binary via .gitattributes</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Classification &amp; Support</h3>
+    <ul>
+      <li><strong>Owner:</strong> IBM SAP Security Practice</li>
+      <li><strong>Classification:</strong> IBM Internal — Security Tooling</li>
+      <li><strong>License:</strong> IBM Proprietary</li>
+      <li><strong>Support:</strong> sap-security@ibm.com</li>
+      <li><strong>Auth:</strong> IBM Enterprise SSO (OIDC/SAML) + MFA</li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer">Made with IBM Bob</div>
+</body>
+</html>
