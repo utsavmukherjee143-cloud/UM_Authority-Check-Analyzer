@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACA - SAP Authority Analyst | Capability Demo | IBM</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,"Segoe UI",system-ui,sans-serif;background:#0a0d16;color:#e2e8f0;min-height:100vh;}
+.topbar{background:linear-gradient(90deg,#060810,#0f1628);border-bottom:1px solid rgba(70,137,255,0.22);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.topbar-left{display:flex;align-items:center;gap:14px;}
+.topbar h1{font-size:15px;font-weight:700;color:#e2e8f0;letter-spacing:0.3px;}
+.topbar h1 span{color:#4589ff;}
+.ibm{font-size:18px;font-weight:700;color:#4589ff;letter-spacing:5px;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.dl-btn{background:#0f62fe;border:none;color:#fff;font-size:12px;font-weight:600;padding:7px 16px;border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background 0.15s;}
+.dl-btn:hover{background:#0353e9;}
+.hero{background:linear-gradient(135deg,rgba(15,98,254,0.13),rgba(255,107,0,0.07),rgba(19,136,8,0.07));border-bottom:1px solid rgba(70,137,255,0.15);padding:32px 32px 26px;}
+.hero-title{font-size:28px;font-weight:700;color:#f1f5f9;margin-bottom:4px;letter-spacing:-0.3px;}
+.hero-title .saf{color:#ff6b00;}.hero-title .blu{color:#4589ff;}
+.hero-sub{font-size:13px;color:#64748b;margin-bottom:18px;}
+.tags{display:flex;flex-wrap:wrap;gap:8px;}
+.tag{font-size:11px;font-weight:600;padding:3px 12px;border-radius:12px;letter-spacing:0.3px;}
+.t-blue{background:rgba(70,137,255,0.15);border:1px solid rgba(70,137,255,0.35);color:#78a9ff;}
+.t-saf{background:rgba(255,107,0,0.15);border:1px solid rgba(255,107,0,0.35);color:#ff832b;}
+.t-grn{background:rgba(19,136,8,0.15);border:1px solid rgba(19,136,8,0.35);color:#42be65;}
+.t-grey{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);color:#94a3b8;}
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 160px);}
+.sidebar{background:rgba(6,8,16,0.85);border-right:1px solid rgba(70,137,255,0.12);padding:16px 0;position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;}
+.nav-sec{font-size:9px;font-weight:700;color:#475569;letter-spacing:1.8px;text-transform:uppercase;padding:16px 16px 6px;}
+.nav-btn{display:flex;align-items:center;gap:9px;width:100%;padding:9px 16px;background:none;border:none;border-left:3px solid transparent;color:#64748b;font-size:12.5px;cursor:pointer;text-align:left;transition:all 0.15s;font-family:inherit;}
+.nav-btn:hover{color:#e2e8f0;background:rgba(70,137,255,0.06);border-left-color:rgba(70,137,255,0.4);}
+.nav-btn.active{color:#78a9ff;background:rgba(70,137,255,0.1);border-left-color:#0f62fe;font-weight:600;}
+.nav-ic{font-size:13px;width:18px;text-align:center;flex-shrink:0;}
+.main{padding:30px 32px;overflow-y:auto;}
+.panel{display:none;animation:fadeIn 0.2s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+h2{font-size:20px;font-weight:700;color:#f1f5f9;margin-bottom:4px;}
+.sub{font-size:12.5px;color:#64748b;margin-bottom:22px;line-height:1.6;}
+.section-label{font-size:10px;font-weight:700;color:#4589ff;letter-spacing:1px;text-transform:uppercase;margin:0 0 10px;}
+.card{background:rgba(12,18,38,0.92);border:1px solid rgba(70,137,255,0.16);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px;}
+.grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px;}
+@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr;}.layout{grid-template-columns:1fr;}.sidebar{position:static;height:auto;}.grid-5{grid-template-columns:repeat(3,1fr);}}
+pre,code,.code-block{font-family:"Cascadia Code","Fira Code",Consolas,monospace;font-size:12px;line-height:1.75;}
+.code-block{background:rgba(0,0,0,0.45);border:1px solid rgba(70,137,255,0.12);border-radius:8px;padding:16px 18px;overflow-x:auto;white-space:pre;margin-bottom:10px;}
+.kw{color:#f472b6;}.obj-c{color:#34d399;}.field-c{color:#fbbf24;}.val-c{color:#a78bfa;}.cmt-c{color:#475569;font-style:italic;}.err-c{color:#f87171;}.ok-c{color:#4ade80;}
+.finding{border-radius:8px;padding:13px 16px;margin-bottom:10px;border-left:4px solid;}
+.fc{border-color:#dc2626;background:rgba(220,38,38,0.07);}
+.fh{border-color:#ea580c;background:rgba(234,88,12,0.07);}
+.fm{border-color:#ca8a04;background:rgba(202,138,4,0.07);}
+.fl{border-color:#16a34a;background:rgba(22,163,74,0.07);}
+.f-header{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.f-id{font-family:monospace;font-size:10px;font-weight:700;color:#94a3b8;}
+.f-sev{font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px;}
+.sc{background:rgba(220,38,38,0.2);color:#f87171;}
+.sh{background:rgba(234,88,12,0.2);color:#fb923c;}
+.sm{background:rgba(202,138,4,0.2);color:#fbbf24;}
+.sl{background:rgba(22,163,74,0.2);color:#4ade80;}
+.f-title{font-size:13px;color:#e2e8f0;margin:6px 0 3px;font-weight:600;}
+.f-meta{font-size:11px;color:#64748b;margin-bottom:6px;}
+.f-fix{font-size:11.5px;color:#94a3b8;font-family:monospace;background:rgba(0,0,0,0.35);border-radius:5px;padding:7px 10px;border-left:2px solid #4589ff;}
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+th{background:rgba(70,137,255,0.08);color:#4589ff;font-size:10px;letter-spacing:0.5px;padding:8px 12px;border:1px solid rgba(70,137,255,0.1);text-align:left;font-weight:700;}
+td{padding:7px 12px;border:1px solid rgba(70,137,255,0.07);color:#cbd5e1;vertical-align:top;}
+tr:nth-child(even) td{background:rgba(255,255,255,0.018);}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px;letter-spacing:0.2px;}
+.bc{background:rgba(220,38,38,0.18);color:#f87171;border:1px solid rgba(220,38,38,0.3);}
+.bh{background:rgba(234,88,12,0.18);color:#fb923c;border:1px solid rgba(234,88,12,0.3);}
+.bm{background:rgba(202,138,4,0.18);color:#fbbf24;border:1px solid rgba(202,138,4,0.3);}
+.bl{background:rgba(22,163,74,0.18);color:#4ade80;border:1px solid rgba(22,163,74,0.3);}
+.bi{background:rgba(70,137,255,0.18);color:#78a9ff;border:1px solid rgba(70,137,255,0.3);}
+.kpi{background:rgba(12,18,38,0.92);border:1px solid rgba(70,137,255,0.16);border-radius:8px;padding:14px;text-align:center;}
+.kpi-n{font-size:26px;font-weight:700;color:#f1f5f9;font-variant-numeric:tabular-nums;line-height:1.1;}
+.kpi-l{font-size:10px;color:#64748b;margin-top:3px;text-transform:uppercase;letter-spacing:0.5px;}
+.pb{height:5px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;margin-top:5px;}
+.pf{height:100%;border-radius:3px;}
+.matrix-cell{text-align:center;font-size:11.5px;font-weight:700;padding:6px 8px;}
+.mc-ok{color:#4ade80;background:rgba(22,163,74,0.1);}
+.mc-warn{color:#fbbf24;background:rgba(202,138,4,0.1);}
+.mc-err{color:#f87171;background:rgba(220,38,38,0.1);}
+.mc-na{color:#475569;}
+.url-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(70,137,255,0.1);border:1px solid rgba(70,137,255,0.3);border-radius:6px;padding:7px 14px;font-size:12.5px;font-weight:600;color:#78a9ff;margin:4px 0;text-decoration:none;word-break:break-all;}
+.url-chip:hover{background:rgba(70,137,255,0.18);}
+.alert{display:flex;gap:10px;border-radius:8px;padding:11px 14px;font-size:12.5px;margin-bottom:14px;line-height:1.5;}
+.a-warn{background:rgba(202,138,4,0.08);border:1px solid rgba(202,138,4,0.3);color:#fbbf24;}
+.a-info{background:rgba(70,137,255,0.08);border:1px solid rgba(70,137,255,0.25);color:#78a9ff;}
+.a-ok{background:rgba(22,163,74,0.08);border:1px solid rgba(22,163,74,0.25);color:#4ade80;}
+.timeline{border-left:2px solid rgba(70,137,255,0.2);padding-left:18px;margin-top:6px;}
+.tl{position:relative;margin-bottom:14px;}
+.tl::before{content:'';position:absolute;left:-23px;top:5px;width:8px;height:8px;border-radius:50%;background:#4589ff;border:2px solid #0a0d16;box-shadow:0 0 6px rgba(70,137,255,0.5);}
+.tl-v{font-size:12px;font-weight:700;color:#4589ff;margin-bottom:2px;}
+.tl-d{font-size:12px;color:#94a3b8;line-height:1.6;}
+.ask-row{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(70,137,255,0.07);}
+.ask-q{flex:1;font-size:12.5px;color:#78a9ff;font-style:italic;font-family:monospace;}
+.ask-a{flex:1.4;font-size:12px;color:#94a3b8;}
+.score-dim{padding:11px 13px;background:rgba(0,0,0,0.3);border-radius:7px;border:1px solid rgba(70,137,255,0.1);}
+.score-name{font-size:10px;color:#475569;margin-bottom:4px;}
+.score-val{font-size:20px;font-weight:700;line-height:1.1;}
+.sep{height:1px;background:rgba(70,137,255,0.1);margin:20px 0;}
+.footer{text-align:center;padding:20px;font-size:11px;color:#475569;border-top:1px solid rgba(70,137,255,0.1);margin-top:24px;}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <h1>ACA &mdash; <span>SAP Authority Analyst</span> &nbsp;|&nbsp; Capability Demo</h1>
+  </div>
+  <div class="topbar-right">
+    <button class="dl-btn" onclick="downloadSelf()">&#11015; Download HTML</button>
+    <div class="ibm">IBM</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-title">UM_<span class="blu">Authority</span>-<span class="saf">Check</span>-Analyzer</div>
+  <div class="hero-sub">Everything the ACA &mdash; SAP Authority Analyst mode can do &mdash; demonstrated with real code from the workspace</div>
+  <div class="tags">
+    <span class="tag t-blue">39 Detection Rules</span>
+    <span class="tag t-saf">ABAP Static Analysis</span>
+    <span class="tag t-grn">DPC_EXT Coverage Checker</span>
+    <span class="tag t-blue">80,802 T-Codes</span>
+    <span class="tag t-grn">Surgical Code Edits</span>
+    <span class="tag t-saf">Git + Pages Deployment</span>
+    <span class="tag t-grey">Automated Validation</span>
+    <span class="tag t-grey">Bob Mode Author</span>
+    <span class="tag t-blue">SAP Domain Expert</span>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="nav-sec">Capabilities</div>
+    <button class="nav-btn active" onclick="show('abap')"><span class="nav-ic">&#10100;/&#10101;</span>1. ABAP Analysis</button>
+    <button class="nav-btn" onclick="show('coverage')"><span class="nav-ic">&#9649;</span>2. Coverage Checker</button>
+    <button class="nav-btn" onclick="show('tcode')"><span class="nav-ic">&#8984;</span>3. T-Code Lookup</button>
+    <button class="nav-btn" onclick="show('edits')"><span class="nav-ic">&#9998;</span>4. Code Edits</button>
+    <button class="nav-btn" onclick="show('deploy')"><span class="nav-ic">&#9729;</span>5. Git &amp; Deploy</button>
+    <button class="nav-btn" onclick="show('validation')"><span class="nav-ic">&#10003;</span>6. Validation</button>
+    <button class="nav-btn" onclick="show('domain')"><span class="nav-ic">&#9873;</span>7. SAP Domain</button>
+    <div class="nav-sec">Reference</div>
+    <button class="nav-btn" onclick="show('mode')"><span class="nav-ic">&#9673;</span>8. Mode &amp; Summary</button>
+    <button class="nav-btn" onclick="show('ask')"><span class="nav-ic">&#8594;</span>9. What to Ask</button>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- ════════════════════════════════════════════
+         PANEL 1 — ABAP ANALYSIS
+    ════════════════════════════════════════════ -->
+    <div class="panel active" id="p-abap">
+      <h2>Capability 1 &mdash; ABAP Authorization Analysis</h2>
+      <div class="sub">24 rules (AUTH-001&ndash;024) applied against raw ABAP code. Every finding is grounded in the rule engine at <code>UM_Authority-Check-Analyzer.html</code> lines 2216&ndash;2594. Each rule carries: id, severity, category, pattern, postCheck lookahead, obj, fields, rootCause, businessRisk, exploit scenario, cleanCore flag, fix function, fixExplanation, and versions array.</div>
+
+      <div class="section-label">Sample ABAP Input</div>
+      <div class="code-block"><span class="cmt-c">* ZCL_MM_AUTH_CHECK &mdash; Material management authorization handler</span>
+<span class="kw">METHOD</span> check_authority.
+  <span class="kw">AUTHORITY-CHECK OBJECT</span> <span class="obj-c">'M_MATE_WRK'</span>
+    <span class="kw">ID</span> <span class="field-c">'WERKS'</span> <span class="kw">FIELD</span> <span class="val-c">iv_werks</span>
+    <span class="kw">ID</span> <span class="field-c">'ACTVT'</span> <span class="kw">FIELD</span> <span class="val-c">'03'</span>
+    <span class="kw">ID</span> <span class="field-c">'MATNR'</span> <span class="kw">FIELD</span> <span class="val-c">iv_matnr</span>.
+  <span class="cmt-c">* sy-subrc never checked &mdash; AUTH-002 fires here</span>
+  <span class="kw">SELECT SINGLE</span> * <span class="kw">FROM</span> mara <span class="kw">INTO</span> ls_mara <span class="kw">WHERE</span> matnr = iv_matnr.
+<span class="kw">ENDMETHOD</span>.
+
+<span class="kw">METHOD</span> post_goods.
+  <span class="cmt-c">* No authority-check before sensitive DB write &mdash; AUTH-001 fires</span>
+  <span class="kw">MODIFY</span> mseg <span class="kw">FROM TABLE</span> lt_mseg.
+<span class="kw">ENDMETHOD</span>.
+
+<span class="kw">METHOD</span> debug_bypass.
+  gs_auth-auth_check = 0.    <span class="cmt-c">* AUTH-008 CRITICAL &mdash; bypass pattern</span>
+  <span class="kw">PERFORM</span> skip_authorization.
+<span class="kw">ENDMETHOD</span>.</div>
+
+      <div class="section-label">Findings Generated</div>
+
+      <div class="finding fc">
+        <div class="f-header"><span class="f-id">AUTH-002</span><span class="f-sev sc">CRITICAL</span><span class="badge" style="background:rgba(70,137,255,0.15);color:#78a9ff;border:1px solid rgba(70,137,255,0.3);">Confirmed weakness</span></div>
+        <div class="f-title">SY-SUBRC not evaluated after AUTHORITY-CHECK</div>
+        <div class="f-meta">Line 6 &nbsp;|&nbsp; Object: M_MATE_WRK &nbsp;|&nbsp; Confidence: HIGH &nbsp;|&nbsp; postCheck: scans next 6 lines for IF/CHECK sy-subrc</div>
+        <div class="f-fix">IF sy-subrc &lt;&gt; 0.
+  RAISE EXCEPTION TYPE zcx_no_authority
+    EXPORTING textid = zcx_no_authority=&gt;no_authority.
+ENDIF.</div>
+      </div>
+
+      <div class="finding fc">
+        <div class="f-header"><span class="f-id">AUTH-001</span><span class="f-sev sc">CRITICAL</span><span class="badge" style="background:rgba(70,137,255,0.15);color:#78a9ff;border:1px solid rgba(70,137,255,0.3);">Confirmed weakness</span></div>
+        <div class="f-title">Missing AUTHORITY-CHECK before sensitive MODIFY operation</div>
+        <div class="f-meta">Line 13 &nbsp;|&nbsp; Artifact: ZCL_MM_AUTH_CHECK &nbsp;|&nbsp; Business risk: Unauthorized inventory manipulation</div>
+        <div class="f-fix">AUTHORITY-CHECK OBJECT 'M_MATE_WRK'
+  ID 'ACTVT' FIELD '02'.   " 02 = Change
+IF sy-subrc &lt;&gt; 0.
+  RAISE EXCEPTION TYPE zcx_no_authority.
+ENDIF.</div>
+      </div>
+
+      <div class="finding fc">
+        <div class="f-header"><span class="f-id">AUTH-008</span><span class="f-sev sc">CRITICAL</span><span class="badge" style="background:rgba(220,38,38,0.2);color:#f87171;border:1px solid rgba(220,38,38,0.3);">Exploit risk</span></div>
+        <div class="f-title">Debug / authorization-bypass pattern detected</div>
+        <div class="f-meta">Line 18 &nbsp;|&nbsp; Pattern: auth_check = 0 + skip_authorization &nbsp;|&nbsp; Exploit: Direct system access bypassing all role checks</div>
+        <div class="f-fix">" REMOVE this line entirely.
+" Bypass patterns must never reach production.
+" Raise a security incident if found in production code.</div>
+      </div>
+
+      <div class="finding fh">
+        <div class="f-header"><span class="f-id">AUTH-003</span><span class="f-sev sh">HIGH</span><span class="badge" style="background:rgba(234,88,12,0.2);color:#fb923c;border:1px solid rgba(234,88,12,0.3);">Probable weakness</span></div>
+        <div class="f-title">AUTHORITY-CHECK performed after database SELECT (post-read vulnerability)</div>
+        <div class="f-meta">Auth at line 3, SELECT at line 7 &mdash; data already retrieved before authorization completes &nbsp;|&nbsp; Clean Core: non-compliant</div>
+        <div class="f-fix">" Move AUTHORITY-CHECK BEFORE the SELECT SINGLE statement.
+" Pattern: Check first, read second.</div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="section-label">All 24 Rule IDs Active in Engine</div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:8px;">
+        <span class="badge bc">AUTH-001</span><span class="badge bc">AUTH-002</span><span class="badge bh">AUTH-003</span>
+        <span class="badge bh">AUTH-004</span><span class="badge bm">AUTH-005</span><span class="badge bc">AUTH-006</span>
+        <span class="badge bh">AUTH-007</span><span class="badge bc">AUTH-008</span><span class="badge bh">AUTH-009</span>
+        <span class="badge bc">AUTH-010</span><span class="badge bh">AUTH-011</span><span class="badge bh">AUTH-012</span>
+        <span class="badge bm">AUTH-013</span><span class="badge bh">AUTH-014</span><span class="badge bh">AUTH-015</span>
+        <span class="badge bh">AUTH-016</span><span class="badge bm">AUTH-017</span><span class="badge bh">AUTH-018</span>
+        <span class="badge bm">AUTH-019</span><span class="badge bh">AUTH-020</span><span class="badge bm">AUTH-021</span>
+        <span class="badge bm">AUTH-022</span><span class="badge bh">AUTH-023</span><span class="badge bm">AUTH-024</span>
+      </div>
+      <div style="font-size:11px;color:#475569;">Source: <code>UM_Authority-Check-Analyzer.html</code> lines 2216&ndash;2594. Each rule object has 15+ fields. Version-aware severity overrides for S/4HANA 1809&ndash;2023, ECC EhP4&ndash;8, BW/4HANA, NetWeaver.</div>
+    </div>
+
+    <!-- ════════════════════════════════════════════
+         PANEL 2 — COVERAGE CHECKER
+    ════════════════════════════════════════════ -->
+    <div class="panel" id="p-coverage">
+      <h2>Capability 2 &mdash; DPC_EXT Coverage Checker</h2>
+      <div class="sub">15 AUTH-COV rules (lines 3489&ndash;3517). Parses every METHOD...ENDMETHOD block, builds a call graph, maps operations to auth coverage, scores 11 dimensions. Includes test plan generator, runtime evidence correlator, and 7 report export types.</div>
+
+      <div class="grid-5">
+        <div class="kpi"><div class="kpi-n" style="color:#f87171;">3</div><div class="kpi-l">CRITICAL</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:#fb923c;">2</div><div class="kpi-l">HIGH</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:#fbbf24;">62</div><div class="kpi-l">Coverage Score</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:#4589ff;">5</div><div class="kpi-l">Methods Found</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:#42be65;">10</div><div class="kpi-l">Test Cases</div></div>
+      </div>
+
+      <div class="card">
+        <div class="section-label">Operation Coverage Matrix &mdash; ZCL_ZMAT_MATERIAL_SRV_DPC_EXT</div>
+        <table>
+          <thead><tr><th>Entity Set</th><th>CREATE</th><th>READ</th><th>QUERY</th><th>UPDATE</th><th>DELETE</th><th>EXECUTE</th><th>BATCH</th></tr></thead>
+          <tbody>
+            <tr>
+              <td style="font-family:monospace;font-size:11px;">MaterialSet</td>
+              <td class="matrix-cell mc-err">&#10007; Missing</td>
+              <td class="matrix-cell mc-warn">&#9651; Partial</td>
+              <td class="matrix-cell mc-ok">&#10003; OK</td>
+              <td class="matrix-cell mc-err">&#10007; Missing</td>
+              <td class="matrix-cell mc-ok">&#10003; OK</td>
+              <td class="matrix-cell mc-na">&mdash;</td>
+              <td class="matrix-cell mc-na">&mdash;</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:11px;">PlantDataSet</td>
+              <td class="matrix-cell mc-err">&#10007; Missing</td>
+              <td class="matrix-cell mc-ok">&#10003; OK</td>
+              <td class="matrix-cell mc-ok">&#10003; OK</td>
+              <td class="matrix-cell mc-na">&mdash;</td>
+              <td class="matrix-cell mc-na">&mdash;</td>
+              <td class="matrix-cell mc-na">&mdash;</td>
+              <td class="matrix-cell mc-na">&mdash;</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-label">11-Dimension Scorecard</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:16px;">
+        <div class="score-dim"><div class="score-name">CREATE coverage</div><div class="score-val" style="color:#f87171;">0%</div><div class="pb"><div class="pf" style="width:0%;background:#dc2626;"></div></div></div>
+        <div class="score-dim"><div class="score-name">READ coverage</div><div class="score-val" style="color:#fbbf24;">50%</div><div class="pb"><div class="pf" style="width:50%;background:#ca8a04;"></div></div></div>
+        <div class="score-dim"><div class="score-name">QUERY coverage</div><div class="score-val" style="color:#4ade80;">100%</div><div class="pb"><div class="pf" style="width:100%;background:#16a34a;"></div></div></div>
+        <div class="score-dim"><div class="score-name">UPDATE coverage</div><div class="score-val" style="color:#f87171;">0%</div><div class="pb"><div class="pf" style="width:0%;background:#dc2626;"></div></div></div>
+        <div class="score-dim"><div class="score-name">DELETE coverage</div><div class="score-val" style="color:#4ade80;">100%</div><div class="pb"><div class="pf" style="width:100%;background:#16a34a;"></div></div></div>
+        <div class="score-dim"><div class="score-name">SY-SUBRC handling</div><div class="score-val" style="color:#fbbf24;">67%</div><div class="pb"><div class="pf" style="width:67%;background:#ca8a04;"></div></div></div>
+        <div class="score-dim"><div class="score-name">Pre-read checks</div><div class="score-val" style="color:#fb923c;">33%</div><div class="pb"><div class="pf" style="width:33%;background:#ea580c;"></div></div></div>
+        <div class="score-dim"><div class="score-name">No hardcoded vals</div><div class="score-val" style="color:#4ade80;">100%</div><div class="pb"><div class="pf" style="width:100%;background:#16a34a;"></div></div></div>
+        <div class="score-dim"><div class="score-name">Helper resolution</div><div class="score-val" style="color:#4ade80;">100%</div><div class="pb"><div class="pf" style="width:100%;background:#16a34a;"></div></div></div>
+        <div class="score-dim"><div class="score-name">No dynamic objs</div><div class="score-val" style="color:#4ade80;">100%</div><div class="pb"><div class="pf" style="width:100%;background:#16a34a;"></div></div></div>
+        <div class="score-dim"><div class="score-name">EXECUTE coverage</div><div class="score-val" style="color:#475569;">N/A</div><div class="pb"><div class="pf" style="width:0%;background:#475569;"></div></div></div>
+      </div>
+
+      <div class="section-label">AUTH-COV Findings</div>
+      <div class="finding fc">
+        <div class="f-header"><span class="f-id">AUTH-COV-001</span><span class="f-sev sc">CRITICAL</span></div>
+        <div class="f-title">Missing AUTHORITY-CHECK in CREATE method (MATERIALSET_CREATE_ENTITY)</div>
+        <div class="f-fix">AUTHORITY-CHECK OBJECT 'S_TABU_DIS'
+  ID 'ACTVT' FIELD '01'.
+IF sy-subrc &lt;&gt; 0.
+  RAISE EXCEPTION TYPE zcx_no_authority.
+ENDIF.</div>
+      </div>
+      <div class="finding fc">
+        <div class="f-header"><span class="f-id">AUTH-COV-002</span><span class="f-sev sc">CRITICAL</span></div>
+        <div class="f-title">Missing AUTHORITY-CHECK in UPDATE method (MATERIALSET_UPDATE_ENTITY)</div>
+        <div class="f-fix">AUTHORITY-CHECK OBJECT 'S_TABU_DIS'
+  ID 'ACTVT' FIELD '02'.
+IF sy-subrc &lt;&gt; 0.
+  RAISE EXCEPTION TYPE zcx_no_authority.
+ENDIF.</div>
+      </div>
+      <div class="finding fh">
+        <div class="f-header"><span class="f-id">AUTH-COV-007</span><span class="f-sev sh">HIGH</span></div>
+        <div class="f-title">SY-SUBRC not evaluated after authority check in MATERIALSET_GET_ENTITY</div>
+        <div class="f-fix">IF sy-subrc &lt;&gt; 0.
+  RAISE EXCEPTION TYPE zcx_no_authority.
+ENDIF.</div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════
+         PANEL 3 — T-CODE LOOKUP
+    ════════════════════════════════════════════ -->
+    <div class="panel" id="p-tcode">
+      <h2>Capability 3 &mdash; T-Code Authorization Lookup</h2>
+      <div class="sub">80,802 T-Codes from SAP USOBT/USOBX loaded in <code>tcode-db.js</code> (10.1 MB). Each entry: <code>OBJ|FIELD=VAL|SOURCE</code>. Source is SAP-Proposed (OKFLAG Y from USOBT) or SAP-Active (OKFLAG X from USOBX).</div>
+
+      <div class="grid-5" style="grid-template-columns:repeat(5,1fr);">
+        <div class="kpi"><div class="kpi-n">80,802</div><div class="kpi-l">T-Codes</div></div>
+        <div class="kpi"><div class="kpi-n">~340k</div><div class="kpi-l">Proposals</div></div>
+        <div class="kpi"><div class="kpi-n">10.1 MB</div><div class="kpi-l">DB Size</div></div>
+        <div class="kpi"><div class="kpi-n">USOBT</div><div class="kpi-l">Proposed (Y)</div></div>
+        <div class="kpi"><div class="kpi-n">USOBX</div><div class="kpi-l">Active (X)</div></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="section-label">ME22N &mdash; Change Purchase Order</div>
+          <table>
+            <thead><tr><th>Auth Object</th><th>Field</th><th>Value</th><th>Source</th></tr></thead>
+            <tbody>
+              <tr><td>M_BEST_EKO</td><td>EKORG</td><td>*</td><td><span class="badge bi">SAP-Proposed</span></td></tr>
+              <tr><td>M_BEST_EKO</td><td>ACTVT</td><td>02</td><td><span class="badge bi">SAP-Proposed</span></td></tr>
+              <tr><td>M_BEST_BSA</td><td>BSART</td><td>*</td><td><span class="badge bi">SAP-Active</span></td></tr>
+              <tr><td>M_BEST_WRK</td><td>WERKS</td><td>*</td><td><span class="badge bi">SAP-Proposed</span></td></tr>
+              <tr><td>S_TCODE</td><td>TCD</td><td>ME22N</td><td><span class="badge bi">SAP-Active</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="section-label">FB01 &mdash; Post FI Document</div>
+          <table>
+            <thead><tr><th>Auth Object</th><th>Field</th><th>Value</th><th>Source</th></tr></thead>
+            <tbody>
+              <tr><td>F_BKPF_BUK</td><td>BUKRS</td><td>*</td><td><span class="badge bi">SAP-Proposed</span></td></tr>
+              <tr><td>F_BKPF_BUK</td><td>ACTVT</td><td>01</td><td><span class="badge bi">SAP-Active</span></td></tr>
+              <tr><td>F_BKPF_KOA</td><td>KOART</td><td>*</td><td><span class="badge bi">SAP-Proposed</span></td></tr>
+              <tr><td>S_TCODE</td><td>TCD</td><td>FB01</td><td><span class="badge bi">SAP-Active</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-label">VA01 &mdash; Create Sales Order</div>
+        <table>
+          <thead><tr><th>Auth Object</th><th>Field</th><th>Value</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td>V_VBAK_AAT</td><td>AUART</td><td>*</td><td><span class="badge bi">SAP-Proposed</span></td></tr>
+            <tr><td>V_VBAK_AAT</td><td>ACTVT</td><td>01</td><td><span class="badge bi">SAP-Active</span></td></tr>
+            <tr><td>S_TCODE</td><td>TCD</td><td>VA01</td><td><span class="badge bi">SAP-Active</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════
+         PANEL 4 — CODE EDITS
+    ════════════════════════════════════════════ -->
+    <div class="panel" id="p-edits">
+      <h2>Capability 4 &mdash; Surgical Code Edits</h2>
+      <div class="sub">Precise <code>apply_diff</code> edits with exact line numbers. Never rewrites what hasn't been read. Every changed line traces directly to the requirement. Engineering discipline: minimal change that solves the problem.</div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="section-label">What can be changed</div>
+          <ul style="font-size:12.5px;color:#94a3b8;line-height:2.1;padding-left:16px;">
+            <li>Add new detection rules (AUTH-025+)</li>
+            <li>Add new AUTH-COV coverage rules</li>
+            <li>Add new UI views or tab screens</li>
+            <li>Fix JS bugs &mdash; syntax, logic, ID mismatches</li>
+            <li>Update CSS themes, backgrounds, animations</li>
+            <li>Add export formats (PDF, Excel, SARIF)</li>
+            <li>Extend Coverage Checker screens</li>
+            <li>Update Guidebook / About content</li>
+            <li>Add new SAP system types to dropdowns</li>
+            <li>Integrate new USOBT/USOBX data releases</li>
+            <li>Fix encoding / CRLF corruption issues</li>
+            <li>Improve login screen UI</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="section-label">Engineering Process</div>
+          <div class="timeline">
+            <div class="tl"><div class="tl-v">1. Read first</div><div class="tl-d"><code>read_file</code> on exact lines before touching anything. Never edit blind.</div></div>
+            <div class="tl"><div class="tl-v">2. Minimal change</div><div class="tl-d"><code>apply_diff</code> for surgical SEARCH/REPLACE. <code>write_file</code> only for new files.</div></div>
+            <div class="tl"><div class="tl-v">3. Validate locally</div><div class="tl-d">Brace balance, zero corruption markers, 25/25 function presence &mdash; PowerShell.</div></div>
+            <div class="tl"><div class="tl-v">4. Commit</div><div class="tl-d">Semantic message on UM_GIT-Branch1.</div></div>
+            <div class="tl"><div class="tl-v">5. Deploy</div><div class="tl-d">Merge to main, push both remotes, poll Pages API until built.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-label">Example: Adding AUTH-025 &mdash; BAPI FM missing check</div>
+        <div class="code-block"><span class="cmt-c">// Appended to ABAP_RULES array via apply_diff at the exact insertion line</span>
+{ id:<span class="val-c">'AUTH-025'</span>, sev:<span class="val-c">'HIGH'</span>, category:<span class="val-c">'Probable weakness'</span>,
+  title:<span class="val-c">'Missing AUTHORITY-CHECK in BAPI function module'</span>,
+  pattern:<span class="obj-c">/FUNCTION\s+BAPI_/i</span>,
+  postCheck: <span class="kw">function</span>(lines, idx) {
+    <span class="kw">for</span> (<span class="kw">var</span> i=idx+1; i&lt;Math.min(idx+15,lines.length); i++) {
+      <span class="kw">if</span> (<span class="obj-c">/AUTHORITY-CHECK/i</span>.test(lines[i])) <span class="kw">return false</span>;
+      <span class="kw">if</span> (<span class="obj-c">/ENDFUNCTION/i</span>.test(lines[i])) <span class="kw">return true</span>;
+    }
+    <span class="kw">return true</span>;
+  },
+  obj:<span class="val-c">'S_RFC'</span>, fields:<span class="val-c">'RFC_NAME, ACTVT'</span>,
+  rootCause:<span class="val-c">'BAPI function module callable via RFC without authorization check'</span>,
+  fix: <span class="kw">function</span>(line){ <span class="kw">return</span> line +
+    <span class="val-c">"\n  AUTHORITY-CHECK OBJECT 'S_RFC'\n    ID 'RFC_NAME' FIELD lv_bapi\n    ID 'ACTVT' FIELD '16'.\n  IF sy-subrc &lt;&gt; 0.\n    RAISE EXCEPTION TYPE zcx_no_authority.\n  ENDIF."</span>; }
+}</div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════
+         PANEL 5 — GIT & DEPLOY
+    ════════════════════════════════════════════ -->
+    <div class="panel" id="p-deploy">
+      <h2>Capability 5 &mdash; Git &amp; GitHub Pages Deployment</h2>
+      <div class="sub">Full CI/CD pipeline managed entirely on your behalf &mdash; from edit to live public URL. Two remotes maintained simultaneously.</div>
+
+      <div class="alert a-ok"><span>&#10003;</span><span>Both remotes active. <code>ica-bob/UM_Authority-Check-Analyzer</code> is canonical. <code>utsavmukherjee143-cloud</code> is the mirror. <code>.gitattributes</code> marks <code>*.html</code> and <code>*.js</code> as binary &mdash; zero CRLF corruption.</span></div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="section-label">Deployment Pipeline</div>
+          <div class="timeline">
+            <div class="tl"><div class="tl-v">1. Edit on UM_GIT-Branch1</div><div class="tl-d">apply_diff surgical edits. Validate braces + encoding locally with PowerShell.</div></div>
+            <div class="tl"><div class="tl-v">2. Commit</div><div class="tl-d"><code>git commit -m "feat/fix: ..."</code> with semantic message.</div></div>
+            <div class="tl"><div class="tl-v">3. Push branch</div><div class="tl-d"><code>git push origin UM_GIT-Branch1</code></div></div>
+            <div class="tl"><div class="tl-v">4. Merge to main</div><div class="tl-d">Checkout main, cherry-pick HTML + .gitattributes, create <code>index.html</code> alias for Pages.</div></div>
+            <div class="tl"><div class="tl-v">5. Push both remotes</div><div class="tl-d"><code>git push origin main</code> &amp; <code>git push ica-bob main</code></div></div>
+            <div class="tl"><div class="tl-v">6. Poll Pages API</div><div class="tl-d">GitHub REST API poll every 30s until <code>status = "built"</code>.</div></div>
+            <div class="tl"><div class="tl-v">7. Verify live</div><div class="tl-d">Invoke-WebRequest to canonical URL &mdash; check function presence, file size, zero corruption.</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-label">Live URLs</div>
+          <div style="margin-bottom:14px;">
+            <div style="font-size:10px;color:#475569;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.6px;">Canonical (ica-bob org)</div>
+            <a class="url-chip" href="https://ica-bob.github.io/UM_Authority-Check-Analyzer/" target="_blank">
+              &#127760; https://ica-bob.github.io/UM_Authority-Check-Analyzer/
+            </a>
+          </div>
+          <div style="margin-bottom:18px;">
+            <div style="font-size:10px;color:#475569;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.6px;">Mirror (utsavmukherjee143-cloud)</div>
+            <a class="url-chip" href="https://utsavmukherjee143-cloud.github.io/UM_Authority-Check-Analyzer/" target="_blank">
+              &#127760; https://utsavmukherjee143-cloud.github.io/UM_Authority-Check-Analyzer/
+            </a>
+          </div>
+          <div class="section-label">.gitattributes (critical)</div>
+          <div class="code-block" style="font-size:11px;"># Prevents CRLF from corrupting UTF-8 multi-byte chars
+* -text
+*.html binary
+*.js   binary
+*.css  binary
+*.json binary</div>
+          <div style="font-size:11px;color:#475569;">Without this, <code>core.autocrlf=true</code> was mangling em-dashes, arrows, checkmarks &mdash; silently breaking all JS on every push.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════
+         PANEL 6 — VALIDATION
+    ════════════════════════════════════════════ -->
+    <div class="panel" id="p-validation">
+      <h2>Capability 6 &mdash; Automated Validation Suite</h2>
+      <div class="sub">9-check PowerShell validation suite runs after every edit before touching git. Catches JS syntax errors, encoding corruption, structural DOM issues, and deployment failures.</div>
+
+      <div class="card">
+        <table>
+          <thead><tr><th>Check</th><th>Method</th><th>Pass Criteria</th><th>Last Result</th></tr></thead>
+          <tbody>
+            <tr><td>Brace balance</td><td>PowerShell <code>.ToCharArray()</code> count</td><td><code>{</code> count == <code>}</code> count</td><td><span class="badge bl">513 = 513 &#10003;</span></td></tr>
+            <tr><td>Paren balance</td><td>PowerShell char count</td><td><code>(</code> count == <code>)</code> count</td><td><span class="badge bl">1746 = 1746 &#10003;</span></td></tr>
+            <tr><td>Square bracket balance</td><td>PowerShell char count</td><td><code>[</code> == <code>]</code></td><td><span class="badge bl">204 = 204 &#10003;</span></td></tr>
+            <tr><td>UTF-8 corruption</td><td>Regex <code>replacement chars</code></td><td>0 matches</td><td><span class="badge bl">0 found &#10003;</span></td></tr>
+            <tr><td>Required functions (25)</td><td><code>-match "function NAME"</code></td><td>25/25 present</td><td><span class="badge bl">25/25 &#10003;</span></td></tr>
+            <tr><td>View IDs in DOM</td><td>grep <code>id="view-*"</code></td><td>14 views inside <code>&lt;main&gt;</code></td><td><span class="badge bl">14 found &#10003;</span></td></tr>
+            <tr><td>Tab panel resolution</td><td>switchTab call vs panel ID match</td><td>100% resolved</td><td><span class="badge bl">22/22 &#10003;</span></td></tr>
+            <tr><td>Deployed file integrity</td><td>Invoke-WebRequest + content check</td><td>286k+ chars, key functions present</td><td><span class="badge bl">286,443 chars &#10003;</span></td></tr>
+            <tr><td>Pages build status</td><td>GitHub REST API <code>/pages/builds/latest</code></td><td><code>status = "built"</code></td><td><span class="badge bl">built (77s) &#10003;</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert a-warn"><span>&#9888;</span><span><strong>Known failure mode diagnosed and fixed:</strong> <code>git core.autocrlf=true</code> silently corrupted the entire JS block on every push &mdash; hundreds of multi-byte UTF-8 sequences mangled into garbage bytes, making the browser unable to parse <code>&lt;script&gt;</code>. Root cause found via PowerShell byte inspection. Permanent fix: <code>.gitattributes</code> with <code>*.html binary</code>.</span></div>
+    </div>
+
+    <!-- ════════════════════════════════════════════
+         PANEL 7 — SAP DOMAIN
+    ════════════════════════════════════════════ -->
+    <div class="panel" id="p-domain">
+      <h2>Capability 7 &mdash; SAP Authorization Domain Knowledge</h2>
+      <div class="sub">Deep SAP security expertise available on demand &mdash; grounded in the tool's own rule definitions and SAP documentation.</div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="section-label">AUTHORITY-CHECK Syntax (ABAP)</div>
+          <div class="code-block"><span class="cmt-c">" Correct S/4HANA + ECC pattern</span>
+<span class="kw">AUTHORITY-CHECK OBJECT</span> <span class="obj-c">'M_MATE_WRK'</span>
+  <span class="kw">ID</span> <span class="field-c">'WERKS'</span> <span class="kw">FIELD</span> <span class="val-c">lv_werks</span>
+  <span class="kw">ID</span> <span class="field-c">'ACTVT'</span> <span class="kw">FIELD</span> <span class="val-c">'01'</span>.
+<span class="kw">IF</span> sy-subrc <span class="kw">&lt;&gt;</span> 0.
+  <span class="kw">RAISE EXCEPTION TYPE</span> zcx_no_authority
+    <span class="kw">EXPORTING</span>
+      textid = zcx_no_authority=&gt;no_authority.
+<span class="kw">ENDIF</span>.
+
+<span class="cmt-c">" ACTVT field values:</span>
+<span class="cmt-c">" 01=Create  02=Change  03=Display</span>
+<span class="cmt-c">" 06=Delete  16=Execute 70=Transport</span></div>
+        </div>
+        <div class="card">
+          <div class="section-label">Key SAP Transactions</div>
+          <table>
+            <thead><tr><th>T-Code</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td style="font-family:monospace;">SU24</td><td>Authorization object proposals per T-Code &mdash; USOBT/USOBX reference</td></tr>
+              <tr><td style="font-family:monospace;">SU25</td><td>Upgrade comparison &mdash; Step 2A/2B: new vs existing proposals</td></tr>
+              <tr><td style="font-family:monospace;">PFCG</td><td>Role maintenance &mdash; assign authorization objects to roles</td></tr>
+              <tr><td style="font-family:monospace;">SU53</td><td>Display last failed authorization check for a user</td></tr>
+              <tr><td style="font-family:monospace;">STAUTHTRACE</td><td>Runtime authorization trace &mdash; captures every check in a session</td></tr>
+              <tr><td style="font-family:monospace;">SE16N</td><td>View USOBT/USOBX tables directly in the system</td></tr>
+              <tr><td style="font-family:monospace;">SUIM</td><td>User Information System &mdash; who has what access</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="section-label">USOBT vs USOBX</div>
+          <div style="font-size:12.5px;color:#94a3b8;line-height:1.85;">
+            <strong style="color:#e2e8f0;">USOBT</strong><br>SAP-delivered <em>proposed</em> auth objects per T-Code (OKFLAG = Y). Used as reference for SU24 proposals. Loaded in the T-Code Analyzer as "SAP-Proposed".<br><br>
+            <strong style="color:#e2e8f0;">USOBX</strong><br>SAP-delivered <em>active</em> auth objects (OKFLAG = X). Actually checked at runtime. Loaded as "SAP-Active".
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-label">DPC_EXT Architecture</div>
+          <div style="font-size:12.5px;color:#94a3b8;line-height:1.85;">
+            OData services inherit from a base Data Provider class. The <strong style="color:#e2e8f0;">DPC_EXT</strong> class overrides operations:<br><br>
+            <code>CREATE_ENTITY</code> &bull; <code>GET_ENTITY</code><br>
+            <code>GET_ENTITYSET</code> &bull; <code>UPDATE_ENTITY</code><br>
+            <code>DELETE_ENTITY</code> &bull; <code>EXECUTE_ACTION</code><br><br>
+            Each override must add an <code>AUTHORITY-CHECK</code> before any data operation.
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-label">Clean Core (S/4HANA)</div>
+          <div style="font-size:12.5px;color:#94a3b8;line-height:1.85;">
+            No modifications to SAP standard objects. Auth remediation must use:<br><br>
+            <strong style="color:#e2e8f0;">Released APIs only</strong><br>
+            Extension points (BAdI)<br>
+            Custom namespace (Z/Y)<br>
+            No direct SE16 edits<br>
+            Upgrade-stable patterns<br><br>
+            The tool flags Clean Core non-compliance on every finding card.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════
+         PANEL 8 — MODE & SUMMARY
+    ════════════════════════════════════════════ -->
+    <div class="panel" id="p-mode">
+      <h2>Capability 8 &mdash; Bob Mode &amp; Project Summary</h2>
+      <div class="sub">The <code>aca-analyst</code> mode is a dedicated Bob persona with full project knowledge baked in &mdash; available immediately from the mode picker.</div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="section-label">Mode: aca-analyst</div>
+          <table>
+            <tbody>
+              <tr><td style="color:#64748b;font-size:11px;width:110px;">Slug</td><td style="font-family:monospace;">aca-analyst</td></tr>
+              <tr><td style="color:#64748b;font-size:11px;">Display name</td><td>ACA - SAP Authority Analyst</td></tr>
+              <tr><td style="color:#64748b;font-size:11px;">Scope</td><td>Workspace &mdash; <code>.bob/custom_modes.yaml</code></td></tr>
+              <tr><td style="color:#64748b;font-size:11px;">Permissions</td><td>read, edit, execute, skill, todo, subagent, mode</td></tr>
+              <tr><td style="color:#64748b;font-size:11px;">Hot-reload</td><td>Available in mode picker immediately</td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top:12px;font-size:12px;color:#94a3b8;">The roleDefinition encodes: tool architecture, tab ID pattern, switchTab resolution, ASCII-safe JS rules, .gitattributes requirement, all 39 rule names, SAP AUTHORITY-CHECK syntax, DPC_EXT patterns, SU24/SU25/PFCG/STAUTHTRACE knowledge, Clean Core principles, deployment pipeline, and all security guardrails.</div>
+        </div>
+        <div class="card">
+          <div class="section-label">Project at a Glance</div>
+          <table>
+            <tbody>
+              <tr><td style="color:#64748b;font-size:11px;">Tool</td><td>UM_Authority-Check-Analyzer v2.1</td></tr>
+              <tr><td style="color:#64748b;font-size:11px;">Canonical URL</td><td><a href="https://ica-bob.github.io/UM_Authority-Check-Analyzer/" style="color:#78a9ff;">ica-bob.github.io/UM_Authority-Check-Analyzer/</a></td></tr>
+              <tr><td style="color:#64748b;font-size:11px;">Views</td><td>14 (Dashboard, Executive, 7 Analyzers, Findings, Audit, Guide, About, Admin)</td></tr>
+              <tr><td style="color:#64748b;font-size:11px;">Rules</td><td>39 total (AUTH-001&ndash;024 + AUTH-COV-001&ndash;015)</td></tr>
+              <tr><td style="color:#64748b;font-size:11px;">T-Codes</td><td>80,802 from USOBT + USOBX</td></tr>
+              <tr><td style="color:#64748b;font-size:11px;">File size</td><td>3,666 lines HTML + 10.1 MB tcode-db.js</td></tr>
+              <tr><td style="color:#64748b;font-size:11px;">Deployment</td><td>Single-file HTML, no server, GitHub Pages</td></tr>
+              <tr><td style="color:#64748b;font-size:11px;">Auth</td><td>IBM Enterprise SSO (OIDC/SAML) + MFA</td></tr>
+              <tr><td style="color:#64748b;font-size:11px;">Owner</td><td>IBM SAP Security Practice</td></tr>
+              <tr><td style="color:#64748b;font-size:11px;">Support</td><td>sap-security@ibm.com</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="border-color:rgba(255,107,0,0.22);">
+        <div class="section-label" style="color:#ff832b;">Security Guardrails (Always Enforced)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12.5px;color:#94a3b8;">
+          <div>&#8226; Never store IBM passwords or credentials</div>
+          <div>&#8226; No SAP system changes without human approval</div>
+          <div>&#8226; All findings are diagnostic only</div>
+          <div>&#8226; IBM enterprise SSO / OIDC pattern only</div>
+          <div>&#8226; WCAG 2.1 AA on every UI change</div>
+          <div>&#8226; No hardcoded secrets in any file</div>
+          <div>&#8226; TLS 1.2+ for all communications</div>
+          <div>&#8226; No 0.0.0.0 binding ever</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════
+         PANEL 9 — WHAT TO ASK
+    ════════════════════════════════════════════ -->
+    <div class="panel" id="p-ask">
+      <h2>Capability 9 &mdash; What to Ask This Mode</h2>
+      <div class="sub">Ready-to-use prompts across every capability area. Copy any of these into the chat when using the <code>aca-analyst</code> mode.</div>
+
+      <div class="card">
+        <div class="section-label">ABAP Analysis</div>
+        <div class="ask-row"><div class="ask-q">"Scan this ABAP method for authorization weaknesses"</div><div class="ask-a">Runs all 24 AUTH rules, returns severity-tagged findings with 20-field detail and corrected ABAP code.</div></div>
+        <div class="ask-row"><div class="ask-q">"Why is AUTH-003 firing on this code?"</div><div class="ask-a">Explains the post-read pattern, shows exact line numbers, quotes the rule definition from the engine.</div></div>
+        <div class="ask-row"><div class="ask-q">"Add rule AUTH-025 for BAPI function modules"</div><div class="ask-a">Reads the rules array, applies a surgical diff to insert the new rule object, validates, deploys.</div></div>
+      </div>
+
+      <div class="card">
+        <div class="section-label">Coverage Checker</div>
+        <div class="ask-row"><div class="ask-q">"Analyse this DPC_EXT class for coverage gaps"</div><div class="ask-a">Parses METHOD blocks, runs 15 COV rules, produces matrix + 11-dim scorecard + test plan.</div></div>
+        <div class="ask-row"><div class="ask-q">"What STAUTHTRACE output tells me about this OData call?"</div><div class="ask-a">Correlates runtime trace lines with static findings, highlights unmatched checks.</div></div>
+        <div class="ask-row"><div class="ask-q">"Generate test cases for the Material OData service"</div><div class="ask-a">Auto-generates positive + negative test cases per operation (CREATE/READ/UPDATE/DELETE/EXECUTE).</div></div>
+      </div>
+
+      <div class="card">
+        <div class="section-label">T-Code &amp; SU24</div>
+        <div class="ask-row"><div class="ask-q">"What authorization objects does T-Code MM03 need?"</div><div class="ask-a">Looks up in the 80,802-entry tcode-db.js, lists objects, fields, values, and USOBT/USOBX source.</div></div>
+        <div class="ask-row"><div class="ask-q">"How do I interpret SU25 Step 2A results?"</div><div class="ask-a">Explains the comparison report, what changed, and how to handle customer-maintained variants.</div></div>
+        <div class="ask-row"><div class="ask-q">"Check PFCG role Z_MM_BUYER against these T-Codes"</div><div class="ask-a">Cross-references role T-Codes with SU24 proposals, flags gaps.</div></div>
+      </div>
+
+      <div class="card">
+        <div class="section-label">Tool Modifications &amp; Deployment</div>
+        <div class="ask-row"><div class="ask-q">"Add a SAP BTP system type to the ABAP scanner"</div><div class="ask-a">Reads the system-type dropdown HTML, apply_diff to insert new option, validates, deploys.</div></div>
+        <div class="ask-row"><div class="ask-q">"Update the background to show a starfield effect"</div><div class="ask-a">Modifies CSS body::before gradient, adds keyframe animation, validates, deploys.</div></div>
+        <div class="ask-row"><div class="ask-q">"Run full validation on the current HTML file"</div><div class="ask-a">Executes all 9 PowerShell checks, reports every result with pass/fail status.</div></div>
+        <div class="ask-row"><div class="ask-q">"Deploy the latest changes to GitHub Pages"</div><div class="ask-a">Commits, merges to main, pushes both remotes, polls API, confirms live URL.</div></div>
+        <div class="ask-row"><div class="ask-q">"Add SARIF export format to the Findings view"</div><div class="ask-a">Reads findings export section, adds downloadBlob variant with SARIF JSON schema, deploys.</div></div>
+      </div>
+
+      <div class="card">
+        <div class="section-label">SAP Domain Questions</div>
+        <div class="ask-row"><div class="ask-q">"What is the difference between USOBT and USOBX?"</div><div class="ask-a">Explains OKFLAG Y (proposed) vs X (active), how they feed SU24, when each matters.</div></div>
+        <div class="ask-row"><div class="ask-q">"Explain Clean Core compliance for authorization"</div><div class="ask-a">Released APIs, no standard modifications, BAdI extension points, upgrade-stable patterns.</div></div>
+        <div class="ask-row"><div class="ask-q">"How does S/4HANA authorization differ from ECC?"</div><div class="ask-a">Covers Embedded Stewardship, new auth objects, CDS view authorization, deprecated patterns.</div></div>
+      </div>
+    </div>
+
+  </main>
+</div><!-- end layout -->
+
+<div class="footer">
+  ACA &mdash; SAP Authority Analyst &nbsp;|&nbsp; UM_Authority-Check-Analyzer v2.1 &nbsp;|&nbsp; IBM SAP Security Practice &nbsp;|&nbsp; &copy; 2026 IBM Corporation<br>
+  <span style="color:#374151;">All findings are diagnostic only. No SAP system changes occur automatically. Human expert review required before any correction is applied.</span>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  var panel = document.getElementById('p-' + id);
+  if (panel) panel.classList.add('active');
+  var btn = document.querySelector('.nav-btn[onclick="show(\'' + id + '\')"]');
+  if (btn) btn.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function downloadSelf() {
+  var html = document.documentElement.outerHTML;
+  var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'ACA-Demo-Capability-Guide.html';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(url); document.body.removeChild(a); }, 1000);
+}
+</script>
+
+</body>
+</html>

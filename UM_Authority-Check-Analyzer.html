@@ -331,15 +331,16 @@ select.fc{cursor:pointer;}
 #loginOverlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:stretch;background:#060810;overflow:hidden;}
 /* Left hero panel */
 .l-hero{flex:1 1 0;min-width:0;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0;}
-.l-hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 80% at 60% 30%,rgba(0,67,206,0.28) 0%,transparent 60%),radial-gradient(ellipse 60% 60% at 20% 80%,rgba(19,136,8,0.15) 0%,transparent 55%),radial-gradient(ellipse 70% 70% at 80% 70%,rgba(255,107,0,0.10) 0%,transparent 55%),linear-gradient(180deg,rgba(6,8,16,0.30) 0%,rgba(6,8,16,0.85) 100%);}
-.l-hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(70,137,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(70,137,255,0.04) 1px,transparent 1px);background-size:44px 44px;}
+.l-hero-bg{position:absolute;inset:0;background-image:url('UM_Authority-Check-Analyser_Cinematic_UI_Theme_4K.jpeg');background-size:cover;background-position:center top;background-repeat:no-repeat;}
+.l-hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,8,16,0.10) 0%,rgba(6,8,16,0.72) 80%,rgba(6,8,16,0.92) 100%);}
+.l-hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(70,137,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(70,137,255,0.04) 1px,transparent 1px);background-size:44px 44px;opacity:0.4;}
 .l-chakra-big{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:340px;height:340px;opacity:0.85;pointer-events:none;}
 .l-chakra-ring1{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,107,0,0.45);animation:chakraSpin 18s linear infinite;}
 .l-chakra-ring2{position:absolute;inset:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.18);animation:chakraSpin 28s linear infinite reverse;}
 .l-chakra-ring3{position:absolute;inset:50px;border-radius:50%;border:1.5px solid rgba(19,136,8,0.45);animation:chakraSpin 12s linear infinite;}
 .l-chakra-ring4{position:absolute;inset:80px;border-radius:50%;border:2px solid rgba(70,137,255,0.6);box-shadow:0 0 40px rgba(70,137,255,0.25),inset 0 0 40px rgba(70,137,255,0.1);}
 .l-hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(70,137,255,0.35) 0%,transparent 70%);filter:blur(20px);}
-.l-hero-text{position:relative;z-index:2;padding:32px 40px;}
+.l-hero-text{position:relative;z-index:2;padding:32px 40px 32px 220px;}
 .l-hero-brand{font-family:var(--font-cond);font-size:28px;font-weight:700;color:var(--chrome-1);line-height:1.1;margin-bottom:6px;}
 .l-hero-brand .c-saffron{color:var(--saffron);}
 .l-hero-brand .c-blue{color:var(--ibm-blue-50);}
@@ -366,16 +367,18 @@ select.fc{cursor:pointer;}
 .l-notice{margin-top:14px;padding:9px 12px;background:rgba(70,137,255,0.06);border:1px solid rgba(70,137,255,0.2);border-radius:var(--r-sm);font-size:11px;color:var(--chrome-3);line-height:1.5;}
 .l-notice strong{color:var(--ibm-blue-40);}
 /* KPIs above main area */
-.l-kpi-row{position:relative;z-index:2;display:flex;gap:10px;padding:0 40px 14px;}
+.l-kpi-row{position:relative;z-index:2;display:flex;gap:10px;padding:0 40px 14px 220px;}
 .l-kpi{background:rgba(10,14,26,0.82);border:1px solid var(--panel-border);border-radius:var(--r-md);padding:10px 16px;min-width:120px;}
 .l-kpi-lbl{font-size:10px;color:var(--chrome-3);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:3px;}
 .l-kpi-val{font-family:var(--font-cond);font-size:20px;font-weight:700;color:var(--chrome-1);}
 .l-kpi-tr{font-size:10px;color:var(--india-green);margin-top:1px;}
 /* Nav preview */
-.l-nav{position:relative;z-index:2;display:flex;flex-direction:column;gap:2px;padding:16px 28px 0;width:180px;position:absolute;left:0;top:0;bottom:0;justify-content:center;background:rgba(6,8,16,0.65);border-right:1px solid rgba(70,137,255,0.12);}
-.l-nav-item{display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:var(--r-sm);font-size:13px;color:var(--chrome-3);border-left:3px solid transparent;}
-.l-nav-item.l-nav-active{background:rgba(70,137,255,0.12);color:var(--ibm-blue-40);border-left-color:var(--ibm-blue-60);}
-.l-nav-ic{font-size:13px;width:16px;text-align:center;}
+.l-nav{position:absolute;left:0;top:0;bottom:0;z-index:2;display:flex;flex-direction:column;gap:1px;padding:20px 0 20px;width:200px;justify-content:center;background:rgba(6,8,16,0.72);border-right:1px solid rgba(70,137,255,0.15);backdrop-filter:blur(8px);}
+.l-nav-sec{font-family:var(--font-mono);font-size:9px;color:var(--chrome-3);letter-spacing:2px;text-transform:uppercase;padding:10px 16px 4px;}
+.l-nav-item{display:flex;align-items:center;gap:9px;padding:7px 16px;font-size:12.5px;color:var(--chrome-3);border-left:3px solid transparent;}
+.l-nav-item.l-nav-active{background:rgba(70,137,255,0.14);color:var(--ibm-blue-40);border-left-color:var(--ibm-blue-60);font-weight:500;}
+.l-nav-ic{font-size:13px;width:16px;text-align:center;flex-shrink:0;}
+.l-nav-badge{margin-left:auto;font-family:var(--font-mono);font-size:9px;padding:1px 5px;border-radius:8px;background:rgba(218,30,40,0.2);border:1px solid rgba(218,30,40,0.4);color:#ff8389;}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
 </style>
 </head>
@@ -389,60 +392,29 @@ select.fc{cursor:pointer;}
 
   <!-- Left nav preview panel -->
   <div class="l-nav" aria-hidden="true">
+    <div class="l-nav-sec">Main</div>
     <div class="l-nav-item l-nav-active"><span class="l-nav-ic">⊞</span>Dashboard</div>
-    <div class="l-nav-item"><span class="l-nav-ic">⟨/⟩</span>Code Scanner</div>
-    <div class="l-nav-item"><span class="l-nav-ic">⚑</span>Findings</div>
+    <div class="l-nav-item"><span class="l-nav-ic">◉</span>Executive Summary</div>
+    <div class="l-nav-sec">Analyzers</div>
+    <div class="l-nav-item"><span class="l-nav-ic">⟨/⟩</span>ABAP Code Scanner</div>
+    <div class="l-nav-item"><span class="l-nav-ic">⌘</span>T-Code Analyzer</div>
+    <div class="l-nav-item"><span class="l-nav-ic">◈</span>Fiori App Analyzer</div>
+    <div class="l-nav-item"><span class="l-nav-ic">◫</span>Web Dynpro Analyzer</div>
+    <div class="l-nav-item"><span class="l-nav-ic">⧉</span>OData Service Analyzer</div>
+    <div class="l-nav-item"><span class="l-nav-ic">⊕</span>SU24/SU25 Analysis</div>
+    <div class="l-nav-item"><span class="l-nav-ic">⬡</span>Coverage Checker</div>
+    <div class="l-nav-sec">Results</div>
+    <div class="l-nav-item"><span class="l-nav-ic">⚑</span>Findings &amp; Remediation</div>
     <div class="l-nav-item"><span class="l-nav-ic">☰</span>Audit Evidence</div>
+    <div class="l-nav-sec">Knowledge</div>
+    <div class="l-nav-item"><span class="l-nav-ic">📖</span>Operational Guidebook</div>
+    <div class="l-nav-item"><span class="l-nav-ic">ℹ</span>About Tool</div>
   </div>
 
   <!-- Centre hero panel -->
   <div class="l-hero">
     <div class="l-hero-bg" aria-hidden="true"></div>
     <div class="l-hero-grid" aria-hidden="true"></div>
-    <!-- Ashoka Chakra -->
-    <div class="l-hero-glow" aria-hidden="true"></div>
-    <div class="l-chakra-big" aria-hidden="true">
-      <div class="l-chakra-ring1"></div>
-      <div class="l-chakra-ring2"></div>
-      <div class="l-chakra-ring3"></div>
-      <div class="l-chakra-ring4">
-        <svg style="position:absolute;inset:20px;" viewBox="0 0 160 160" aria-hidden="true">
-          <circle cx="80" cy="80" r="60" fill="none" stroke="rgba(70,137,255,0.5)" stroke-width="2"/>
-          <circle cx="80" cy="80" r="30" fill="none" stroke="rgba(70,137,255,0.35)" stroke-width="1.5"/>
-          <circle cx="80" cy="80" r="6" fill="rgba(70,137,255,0.9)"/>
-          <!-- 24 spokes -->
-          <g stroke="rgba(70,137,255,0.5)" stroke-width="1.2">
-            <line x1="80" y1="20" x2="80" y2="140"/>
-            <line x1="20" y1="80" x2="140" y2="80"/>
-            <line x1="33" y1="33" x2="127" y2="127"/>
-            <line x1="127" y1="33" x2="33" y2="127"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(15,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(30,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(45,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(60,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(75,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(90,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(105,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(120,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(135,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(150,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(165,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(180,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(195,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(210,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(225,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(240,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(255,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(270,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(285,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(300,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(315,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(330,80,80)"/>
-            <line x1="80" y1="20" x2="80" y2="50" transform="rotate(345,80,80)"/>
-          </g>
-        </svg>
-      </div>
-    </div>
     <!-- Hero text at bottom left (above KPIs) -->
     <div class="l-hero-text">
       <div class="l-hero-brand">UM_<span class="c-blue">Authority</span>-<span class="c-saffron">Check</span>-Analyzer</div>
@@ -477,7 +449,7 @@ select.fc{cursor:pointer;}
     </div>
 
     <button class="l-sso" onclick="handleSSO()" id="ssoBtn" type="button">
-      Analyse Code
+      🔒 Sign in with IBM
     </button>
 
     <!-- Risk legend (matches image) -->
@@ -1253,88 +1225,500 @@ select.fc{cursor:pointer;}
 
     <!-- ═══════════ ABOUT TOOL ═══════════ -->
     <div class="view" id="view-about">
-      <div class="ph"><div class="ph-title">About UM_Authority-Check-Analyzer</div></div>
-      <div class="g2" style="margin-bottom:20px;">
-        <div>
-          <div class="card" style="margin-bottom:16px;"><div class="ch"><span class="ct">Tool Identity</span></div><div class="cb">
-            <div style="font-family:var(--font-cond);font-size:22px;font-weight:700;color:var(--chrome-1);margin-bottom:4px;">UM_Authority-Check-Analyzer</div>
-            <div style="font-size:13px;color:var(--ibm-blue-40);margin-bottom:12px;font-style:italic;">Engineering Intelligence for SAP Security</div>
-            <div style="font-size:12.5px;color:var(--chrome-2);line-height:1.75;">
-              <strong style="color:var(--chrome-1);">Version:</strong> 2.0 (August 2026)<br>
-              <strong style="color:var(--chrome-1);">Owner:</strong> IBM SAP Security Practice<br>
-              <strong style="color:var(--chrome-1);">Classification:</strong> IBM Internal — Security Tooling<br>
-              <strong style="color:var(--chrome-1);">License:</strong> IBM Proprietary<br>
-              <strong style="color:var(--chrome-1);">Support:</strong> <a href="mailto:sap-security@ibm.com" style="color:var(--ibm-blue-40);">sap-security@ibm.com</a>
-            </div>
-          </div></div>
-          <div class="card"><div class="ch"><span class="ct">Business Problem Addressed</span></div><div class="cb">
-            <div class="g-p">SAP authorization vulnerabilities — missing, weak, or misplaced AUTHORITY-CHECK statements — are among the most exploited security weaknesses in enterprise SAP landscapes. Manual code review is time-consuming, inconsistent, and error-prone. UM_Authority-Check-Analyzer provides automated, evidence-based, version-aware detection with corrected code recommendations, enabling security teams to identify and remediate authorization gaps at scale.</div>
-          </div></div>
+
+      <!-- PAGE HEADER -->
+      <div class="ph">
+        <div class="ph-row">
+          <div>
+            <div class="ph-title">About UM_Authority-Check-Analyzer</div>
+            <div class="ph-sub">IBM SAP Security Intelligence Platform &mdash; Engineering Intelligence for SAP Security</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <button class="btn btn-p btn-sm" onclick="aboutDownloadMarketing()" aria-label="Download Marketing One-Pager HTML">&#8681; Download Marketing One-Pager</button>
+            <a href="https://ica-bob.github.io/UM_Authority-Check-Analyzer/" target="_blank" rel="noopener" class="btn btn-s btn-sm" aria-label="Open live tool in new tab">&#8599; Open Live Tool</a>
+          </div>
         </div>
+      </div>
+
+      <!-- ═══ HERO BANNER ═══ -->
+      <div style="background:linear-gradient(135deg,rgba(0,67,206,0.18),rgba(255,107,0,0.10),rgba(19,136,8,0.10));border:1px solid var(--panel-border);border-radius:var(--r-lg);padding:32px 36px;margin-bottom:24px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-60px;right:-60px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(70,137,255,0.12),transparent 70%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:-40px;left:30%;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,0,0.08),transparent 70%);pointer-events:none;"></div>
+        <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap;">
+          <!-- Animated Chakra logo -->
+          <div style="flex-shrink:0;width:80px;height:80px;position:relative;" aria-hidden="true">
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" style="animation:chakraSpin 18s linear infinite;">
+              <circle cx="40" cy="40" r="36" stroke="rgba(70,137,255,0.55)" stroke-width="2"/>
+              <circle cx="40" cy="40" r="20" stroke="rgba(255,107,0,0.5)" stroke-width="1.5"/>
+              <circle cx="40" cy="40" r="7" fill="rgba(70,137,255,0.9)"/>
+              <line x1="40" y1="4" x2="40" y2="76" stroke="rgba(70,137,255,0.4)" stroke-width="1"/>
+              <line x1="4" y1="40" x2="76" y2="40" stroke="rgba(70,137,255,0.4)" stroke-width="1"/>
+              <line x1="10" y1="10" x2="70" y2="70" stroke="rgba(19,136,8,0.4)" stroke-width="1"/>
+              <line x1="70" y1="10" x2="10" y2="70" stroke="rgba(19,136,8,0.4)" stroke-width="1"/>
+              <line x1="40" y1="4" x2="70" y2="70" stroke="rgba(255,107,0,0.3)" stroke-width="1"/>
+              <line x1="40" y1="4" x2="10" y2="70" stroke="rgba(255,107,0,0.3)" stroke-width="1"/>
+            </svg>
+          </div>
+          <div style="flex:1;min-width:260px;">
+            <div style="font-family:var(--font-cond);font-size:30px;font-weight:700;color:var(--chrome-1);line-height:1.1;">UM_<span style="color:var(--ibm-blue-50);">Authority</span>-<span style="color:var(--saffron);">Check</span>-Analyzer</div>
+            <div style="font-size:14px;color:var(--ibm-blue-40);margin-top:4px;font-style:italic;letter-spacing:0.3px;">Engineering Intelligence for SAP Security</div>
+            <div style="font-size:13px;color:var(--chrome-2);margin-top:8px;line-height:1.6;">The only IBM-native, single-file, zero-install SAP authorization intelligence platform &mdash; covering ABAP, T-Code, Fiori, OData, SU24/SU25, and DPC_EXT coverage in one tool.</div>
+            <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;">
+              <span class="ht ht-b">v2.1 &bull; Aug 2026</span>
+              <span class="ht ht-s">39 Detection Rules</span>
+              <span class="ht ht-g">80,802 T-Codes</span>
+              <span class="ht ht-w">Zero Install</span>
+              <span class="ht ht-b">WCAG 2.1 AA</span>
+              <span class="ht ht-g">Clean Core</span>
+              <span class="ht ht-s">IBM SSO</span>
+            </div>
+          </div>
+          <!-- Stat pills -->
+          <div style="display:flex;flex-direction:column;gap:10px;flex-shrink:0;">
+            <div style="background:rgba(70,137,255,0.1);border:1px solid rgba(70,137,255,0.3);border-radius:var(--r-md);padding:10px 18px;text-align:center;">
+              <div style="font-family:var(--font-cond);font-size:28px;font-weight:700;color:var(--ibm-blue-40);">80,802</div>
+              <div style="font-size:10px;color:var(--chrome-3);letter-spacing:1px;text-transform:uppercase;">T-Code Entries</div>
+            </div>
+            <div style="background:rgba(255,107,0,0.1);border:1px solid rgba(255,107,0,0.3);border-radius:var(--r-md);padding:10px 18px;text-align:center;">
+              <div style="font-family:var(--font-cond);font-size:28px;font-weight:700;color:var(--saffron);">39</div>
+              <div style="font-size:10px;color:var(--chrome-3);letter-spacing:1px;text-transform:uppercase;">Detection Rules</div>
+            </div>
+            <div style="background:rgba(19,136,8,0.1);border:1px solid rgba(19,136,8,0.3);border-radius:var(--r-md);padding:10px 18px;text-align:center;">
+              <div style="font-family:var(--font-cond);font-size:28px;font-weight:700;color:var(--low);">13</div>
+              <div style="font-size:10px;color:var(--chrome-3);letter-spacing:1px;text-transform:uppercase;">Analyzer Modules</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ KPI BAR ═══ -->
+      <div class="g5" style="margin-bottom:24px;" role="region" aria-label="Tool statistics">
+        <div class="kpi kb"><div class="kpi-lbl">SAP Platforms</div><div class="kpi-val vb">5</div><div class="kpi-tr">S/4HANA, ECC, BW/4HANA, BW, NW</div></div>
+        <div class="kpi kb"><div class="kpi-lbl">SAP Releases</div><div class="kpi-val vb">12+</div><div class="kpi-tr">1809 &rarr; 2023, EhP4 &rarr; EhP8</div></div>
+        <div class="kpi kc"><div class="kpi-lbl">ABAP Rules</div><div class="kpi-val vc">24</div><div class="kpi-tr">AUTH-001 through AUTH-024</div></div>
+        <div class="kpi km"><div class="kpi-lbl">Coverage Rules</div><div class="kpi-val vm">15</div><div class="kpi-tr">AUTH-COV-001 through AUTH-COV-015</div></div>
+        <div class="kpi kl"><div class="kpi-lbl">Export Formats</div><div class="kpi-val vl">4</div><div class="kpi-tr">CSV, JSON, HTML, Full Package</div></div>
+      </div>
+
+      <!-- ═══ ARCHITECTURE INFOGRAPHIC ═══ -->
+      <div class="card" style="margin-bottom:24px;">
+        <div class="ch"><span class="ct">System Architecture &amp; Data Flow Infographic</span><span style="font-size:11px;color:var(--chrome-3);">Single-file HTML &bull; No server &bull; No installation</span></div>
+        <div class="cb" style="padding:24px;">
+          <svg viewBox="0 0 900 420" width="100%" style="max-width:900px;display:block;margin:0 auto;font-family:'IBM Plex Sans',sans-serif;" aria-label="Architecture infographic showing data flow from SAP sources through analyzers to outputs" role="img">
+            <!-- Background -->
+            <rect width="900" height="420" rx="12" fill="rgba(10,14,26,0.6)"/>
+            <!-- Title -->
+            <text x="450" y="30" text-anchor="middle" fill="#78a9ff" font-size="13" font-weight="600" letter-spacing="1">UM_AUTHORITY-CHECK-ANALYZER &mdash; ARCHITECTURE &amp; DATA FLOW</text>
+
+            <!-- ── LAYER 1: INPUT SOURCES ── -->
+            <rect x="20" y="50" width="160" height="320" rx="8" fill="rgba(0,67,206,0.12)" stroke="rgba(70,137,255,0.35)" stroke-width="1.5"/>
+            <text x="100" y="72" text-anchor="middle" fill="#78a9ff" font-size="10" font-weight="600" letter-spacing="1.5">INPUT SOURCES</text>
+            <!-- ABAP -->
+            <rect x="34" y="82" width="132" height="38" rx="5" fill="rgba(70,137,255,0.15)" stroke="rgba(70,137,255,0.4)" stroke-width="1"/>
+            <text x="100" y="97" text-anchor="middle" fill="#e8eaf0" font-size="10" font-weight="600">&lt;/&gt; ABAP Code</text>
+            <text x="100" y="111" text-anchor="middle" fill="#6b7694" font-size="9">.abap / .txt / paste</text>
+            <!-- T-Code -->
+            <rect x="34" y="128" width="132" height="38" rx="5" fill="rgba(70,137,255,0.15)" stroke="rgba(70,137,255,0.4)" stroke-width="1"/>
+            <text x="100" y="143" text-anchor="middle" fill="#e8eaf0" font-size="10" font-weight="600">&#8984; T-Code / Program</text>
+            <text x="100" y="157" text-anchor="middle" fill="#6b7694" font-size="9">80,802 USOBT/USOBX</text>
+            <!-- Fiori -->
+            <rect x="34" y="174" width="132" height="38" rx="5" fill="rgba(70,137,255,0.15)" stroke="rgba(70,137,255,0.4)" stroke-width="1"/>
+            <text x="100" y="189" text-anchor="middle" fill="#e8eaf0" font-size="10" font-weight="600">&#9672; Fiori App ID</text>
+            <text x="100" y="203" text-anchor="middle" fill="#6b7694" font-size="9">Catalog / SICF / OData</text>
+            <!-- OData -->
+            <rect x="34" y="220" width="132" height="38" rx="5" fill="rgba(70,137,255,0.15)" stroke="rgba(70,137,255,0.4)" stroke-width="1"/>
+            <text x="100" y="235" text-anchor="middle" fill="#e8eaf0" font-size="10" font-weight="600">&#10021; OData / DPC_EXT</text>
+            <text x="100" y="249" text-anchor="middle" fill="#6b7694" font-size="9">V2 / V4 / RFC</text>
+            <!-- SU53 -->
+            <rect x="34" y="266" width="132" height="38" rx="5" fill="rgba(70,137,255,0.15)" stroke="rgba(70,137,255,0.4)" stroke-width="1"/>
+            <text x="100" y="281" text-anchor="middle" fill="#e8eaf0" font-size="10" font-weight="600">&#9870; SU53 / Trace</text>
+            <text x="100" y="295" text-anchor="middle" fill="#6b7694" font-size="9">STAUTHTRACE paste</text>
+            <!-- WebDynpro -->
+            <rect x="34" y="312" width="132" height="38" rx="5" fill="rgba(70,137,255,0.15)" stroke="rgba(70,137,255,0.4)" stroke-width="1"/>
+            <text x="100" y="327" text-anchor="middle" fill="#e8eaf0" font-size="10" font-weight="600">&#9647; Web Dynpro</text>
+            <text x="100" y="341" text-anchor="middle" fill="#6b7694" font-size="9">WD App / Component</text>
+
+            <!-- Arrows L1 -> L2 -->
+            <line x1="166" y1="210" x2="200" y2="210" stroke="rgba(70,137,255,0.5)" stroke-width="1.5" marker-end="url(#arr)"/>
+
+            <!-- ── LAYER 2: RULE ENGINE ── -->
+            <rect x="200" y="50" width="200" height="320" rx="8" fill="rgba(255,107,0,0.08)" stroke="rgba(255,107,0,0.35)" stroke-width="1.5"/>
+            <text x="300" y="72" text-anchor="middle" fill="#ff6b00" font-size="10" font-weight="600" letter-spacing="1.5">RULE ENGINE</text>
+            <!-- AUTH blocks -->
+            <rect x="214" y="82" width="172" height="56" rx="5" fill="rgba(218,30,40,0.15)" stroke="rgba(218,30,40,0.4)" stroke-width="1"/>
+            <text x="300" y="101" text-anchor="middle" fill="#ff8389" font-size="11" font-weight="700">AUTH-001 to AUTH-024</text>
+            <text x="300" y="116" text-anchor="middle" fill="#b0b8cc" font-size="9">ABAP Static Analysis Rules</text>
+            <text x="300" y="129" text-anchor="middle" fill="#6b7694" font-size="9">Missing checks &bull; SY-SUBRC &bull; Wildcards</text>
+            <!-- COV blocks -->
+            <rect x="214" y="148" width="172" height="56" rx="5" fill="rgba(255,131,43,0.12)" stroke="rgba(255,131,43,0.4)" stroke-width="1"/>
+            <text x="300" y="167" text-anchor="middle" fill="#ff832b" font-size="11" font-weight="700">AUTH-COV-001 to -015</text>
+            <text x="300" y="182" text-anchor="middle" fill="#b0b8cc" font-size="9">DPC_EXT Coverage Rules</text>
+            <text x="300" y="195" text-anchor="middle" fill="#6b7694" font-size="9">CREATE/READ/UPDATE/DELETE/EXECUTE</text>
+            <!-- Version aware -->
+            <rect x="214" y="214" width="172" height="40" rx="5" fill="rgba(241,194,27,0.10)" stroke="rgba(241,194,27,0.35)" stroke-width="1"/>
+            <text x="300" y="230" text-anchor="middle" fill="#f1c21b" font-size="10" font-weight="600">Version-Aware Engine</text>
+            <text x="300" y="245" text-anchor="middle" fill="#6b7694" font-size="9">S/4HANA 1809-2023 &bull; ECC EhP4-8</text>
+            <!-- T-Code DB -->
+            <rect x="214" y="264" width="172" height="40" rx="5" fill="rgba(36,161,72,0.12)" stroke="rgba(36,161,72,0.35)" stroke-width="1"/>
+            <text x="300" y="280" text-anchor="middle" fill="#42be65" font-size="10" font-weight="600">USOBT/USOBX Database</text>
+            <text x="300" y="295" text-anchor="middle" fill="#6b7694" font-size="9">80,802 entries &bull; OKFLAG Y/X</text>
+            <!-- Confidence -->
+            <rect x="214" y="314" width="172" height="36" rx="5" fill="rgba(70,137,255,0.10)" stroke="rgba(70,137,255,0.3)" stroke-width="1"/>
+            <text x="300" y="330" text-anchor="middle" fill="#78a9ff" font-size="10" font-weight="600">Confidence Scoring</text>
+            <text x="300" y="344" text-anchor="middle" fill="#6b7694" font-size="9">HIGH / MEDIUM / LOW / PROBABLE</text>
+
+            <!-- Arrows L2 -> L3 -->
+            <line x1="400" y1="210" x2="434" y2="210" stroke="rgba(255,107,0,0.5)" stroke-width="1.5" marker-end="url(#arr2)"/>
+
+            <!-- ── LAYER 3: ANALYZER MODULES ── -->
+            <rect x="434" y="50" width="190" height="320" rx="8" fill="rgba(19,136,8,0.08)" stroke="rgba(19,136,8,0.35)" stroke-width="1.5"/>
+            <text x="529" y="72" text-anchor="middle" fill="#42be65" font-size="10" font-weight="600" letter-spacing="1.5">ANALYZER MODULES</text>
+            <rect x="448" y="82" width="162" height="28" rx="4" fill="rgba(70,137,255,0.12)" stroke="rgba(70,137,255,0.3)" stroke-width="1"/>
+            <text x="529" y="101" text-anchor="middle" fill="#e8eaf0" font-size="10">&lt;/&gt; ABAP Code Scanner</text>
+            <rect x="448" y="116" width="162" height="28" rx="4" fill="rgba(70,137,255,0.12)" stroke="rgba(70,137,255,0.3)" stroke-width="1"/>
+            <text x="529" y="135" text-anchor="middle" fill="#e8eaf0" font-size="10">&#8984; T-Code Analyzer</text>
+            <rect x="448" y="150" width="162" height="28" rx="4" fill="rgba(70,137,255,0.12)" stroke="rgba(70,137,255,0.3)" stroke-width="1"/>
+            <text x="529" y="169" text-anchor="middle" fill="#e8eaf0" font-size="10">&#9672; Fiori App Analyzer</text>
+            <rect x="448" y="184" width="162" height="28" rx="4" fill="rgba(70,137,255,0.12)" stroke="rgba(70,137,255,0.3)" stroke-width="1"/>
+            <text x="529" y="203" text-anchor="middle" fill="#e8eaf0" font-size="10">&#9647; Web Dynpro Analyzer</text>
+            <rect x="448" y="218" width="162" height="28" rx="4" fill="rgba(70,137,255,0.12)" stroke="rgba(70,137,255,0.3)" stroke-width="1"/>
+            <text x="529" y="237" text-anchor="middle" fill="#e8eaf0" font-size="10">&#10021; OData Service Analyzer</text>
+            <rect x="448" y="252" width="162" height="28" rx="4" fill="rgba(70,137,255,0.12)" stroke="rgba(70,137,255,0.3)" stroke-width="1"/>
+            <text x="529" y="271" text-anchor="middle" fill="#e8eaf0" font-size="10">&#8853; SU24 / SU25 Analysis</text>
+            <rect x="448" y="286" width="162" height="28" rx="4" fill="rgba(255,107,0,0.15)" stroke="rgba(255,107,0,0.4)" stroke-width="1"/>
+            <text x="529" y="305" text-anchor="middle" fill="#ff6b00" font-size="10" font-weight="600">&#11041; Coverage Checker</text>
+            <rect x="448" y="320" width="162" height="28" rx="4" fill="rgba(70,137,255,0.12)" stroke="rgba(70,137,255,0.3)" stroke-width="1"/>
+            <text x="529" y="339" text-anchor="middle" fill="#e8eaf0" font-size="10">&#9873; Audit Evidence</text>
+
+            <!-- Arrows L3 -> L4 -->
+            <line x1="624" y1="210" x2="658" y2="210" stroke="rgba(36,161,72,0.5)" stroke-width="1.5" marker-end="url(#arr3)"/>
+
+            <!-- ── LAYER 4: OUTPUTS ── -->
+            <rect x="658" y="50" width="222" height="320" rx="8" fill="rgba(70,137,255,0.07)" stroke="rgba(70,137,255,0.3)" stroke-width="1.5"/>
+            <text x="769" y="72" text-anchor="middle" fill="#78a9ff" font-size="10" font-weight="600" letter-spacing="1.5">OUTPUTS &amp; EXPORTS</text>
+            <rect x="672" y="82" width="194" height="34" rx="5" fill="rgba(218,30,40,0.12)" stroke="rgba(218,30,40,0.35)" stroke-width="1"/>
+            <text x="769" y="96" text-anchor="middle" fill="#ff8389" font-size="10" font-weight="600">20-Field Finding Cards</text>
+            <text x="769" y="108" text-anchor="middle" fill="#6b7694" font-size="9">ID &bull; Rule &bull; Severity &bull; Line &bull; Corrected Code</text>
+            <rect x="672" y="124" width="194" height="34" rx="5" fill="rgba(70,137,255,0.10)" stroke="rgba(70,137,255,0.3)" stroke-width="1"/>
+            <text x="769" y="138" text-anchor="middle" fill="#78a9ff" font-size="10" font-weight="600">Before / After Code Diff</text>
+            <text x="769" y="150" text-anchor="middle" fill="#6b7694" font-size="9">Side-by-side corrected ABAP</text>
+            <rect x="672" y="166" width="194" height="34" rx="5" fill="rgba(36,161,72,0.10)" stroke="rgba(36,161,72,0.3)" stroke-width="1"/>
+            <text x="769" y="180" text-anchor="middle" fill="#42be65" font-size="10" font-weight="600">Executive Dashboard</text>
+            <text x="769" y="192" text-anchor="middle" fill="#6b7694" font-size="9">11-col drill-down &bull; Risk donut &bull; KPIs</text>
+            <rect x="672" y="208" width="194" height="34" rx="5" fill="rgba(241,194,27,0.10)" stroke="rgba(241,194,27,0.3)" stroke-width="1"/>
+            <text x="769" y="222" text-anchor="middle" fill="#f1c21b" font-size="10" font-weight="600">11-Dimension Coverage Score</text>
+            <text x="769" y="234" text-anchor="middle" fill="#6b7694" font-size="9">CREATE/READ/UPDATE/DELETE/EXECUTE</text>
+            <rect x="672" y="250" width="194" height="34" rx="5" fill="rgba(70,137,255,0.10)" stroke="rgba(70,137,255,0.3)" stroke-width="1"/>
+            <text x="769" y="264" text-anchor="middle" fill="#78a9ff" font-size="10" font-weight="600">Test Plan Generator</text>
+            <text x="769" y="276" text-anchor="middle" fill="#6b7694" font-size="9">Positive &amp; negative test cases per op</text>
+            <rect x="672" y="292" width="194" height="34" rx="5" fill="rgba(255,107,0,0.10)" stroke="rgba(255,107,0,0.3)" stroke-width="1"/>
+            <text x="769" y="306" text-anchor="middle" fill="#ff6b00" font-size="10" font-weight="600">Audit Evidence Package</text>
+            <text x="769" y="318" text-anchor="middle" fill="#6b7694" font-size="9">CSV &bull; JSON &bull; HTML &bull; Full Package</text>
+            <rect x="672" y="334" width="194" height="30" rx="5" fill="rgba(19,136,8,0.12)" stroke="rgba(19,136,8,0.3)" stroke-width="1"/>
+            <text x="769" y="348" text-anchor="middle" fill="#42be65" font-size="10" font-weight="600">13 Report Types</text>
+            <text x="769" y="358" text-anchor="middle" fill="#6b7694" font-size="9">Executive &bull; Matrix &bull; Remediation &bull; Audit</text>
+
+            <!-- Layer labels bottom -->
+            <text x="100" y="390" text-anchor="middle" fill="#6b7694" font-size="9" letter-spacing="0.5">SAP ARTEFACTS</text>
+            <text x="300" y="390" text-anchor="middle" fill="#6b7694" font-size="9" letter-spacing="0.5">DETECTION ENGINE</text>
+            <text x="529" y="390" text-anchor="middle" fill="#6b7694" font-size="9" letter-spacing="0.5">ANALYSIS MODULES</text>
+            <text x="769" y="390" text-anchor="middle" fill="#6b7694" font-size="9" letter-spacing="0.5">FINDINGS &amp; EXPORTS</text>
+
+            <!-- Security shield bottom-centre -->
+            <text x="450" y="408" text-anchor="middle" fill="rgba(70,137,255,0.4)" font-size="9" letter-spacing="1">IBM ENTERPRISE SSO &bull; MFA &bull; NO SERVER REQUIRED &bull; WCAG 2.1 AA &bull; SESSION-ONLY STORAGE</text>
+
+            <!-- Arrow markers -->
+            <defs>
+              <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="rgba(70,137,255,0.7)"/>
+              </marker>
+              <marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="rgba(255,107,0,0.7)"/>
+              </marker>
+              <marker id="arr3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="rgba(36,161,72,0.7)"/>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+      </div>
+
+      <!-- ═══ MODULE SCREENSHOT GALLERY ═══ -->
+      <div class="card" style="margin-bottom:24px;">
+        <div class="ch"><span class="ct">Module Gallery &mdash; Feature Showcase</span><span style="font-size:11px;color:var(--chrome-3);">7 Analyzer Modules &bull; 13 Views</span></div>
+        <div class="cb" style="padding:20px;">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;">
+
+            <!-- ABAP Scanner mockup -->
+            <div style="border:1px solid var(--panel-border);border-radius:var(--r-lg);overflow:hidden;background:rgba(10,14,26,0.8);">
+              <div style="background:rgba(218,30,40,0.12);border-bottom:1px solid rgba(218,30,40,0.3);padding:10px 14px;display:flex;align-items:center;gap:8px;">
+                <span style="font-size:16px;">&lt;/&gt;</span>
+                <span style="font-family:var(--font-cond);font-size:12px;font-weight:700;color:var(--chrome-1);letter-spacing:0.5px;">ABAP CODE SCANNER</span>
+                <span class="badge bc" style="margin-left:auto;">24 Rules</span>
+              </div>
+              <div style="padding:14px;font-family:var(--font-mono);font-size:10.5px;line-height:1.7;">
+                <div style="color:var(--chrome-3);margin-bottom:8px;">&#9654; AUTH-001 &mdash; Missing AUTHORITY-CHECK</div>
+                <div style="background:rgba(218,30,40,0.08);border-left:3px solid var(--critical);padding:6px 10px;border-radius:0 4px 4px 0;margin-bottom:6px;">
+                  <div style="color:#ff8389;font-size:10px;">&#9888; CRITICAL &bull; Line 14 &bull; M_MATE_WRK</div>
+                  <div style="color:var(--chrome-3);font-size:10px;">No AUTHORITY-CHECK before INSERT</div>
+                </div>
+                <div style="background:rgba(255,131,43,0.08);border-left:3px solid var(--high);padding:6px 10px;border-radius:0 4px 4px 0;margin-bottom:6px;">
+                  <div style="color:#ff832b;font-size:10px;">&#9888; HIGH &bull; Line 22 &bull; SY-SUBRC</div>
+                  <div style="color:var(--chrome-3);font-size:10px;">SY-SUBRC not evaluated after check</div>
+                </div>
+                <div style="background:rgba(241,194,27,0.08);border-left:3px solid var(--medium);padding:6px 10px;border-radius:0 4px 4px 0;">
+                  <div style="color:#f1c21b;font-size:10px;">&#9888; MEDIUM &bull; Line 31 &bull; Hardcoded</div>
+                  <div style="color:var(--chrome-3);font-size:10px;">Hardcoded field value '1000'</div>
+                </div>
+                <div style="margin-top:10px;display:flex;gap:6px;">
+                  <span style="background:rgba(70,137,255,0.12);border:1px solid rgba(70,137,255,0.25);border-radius:3px;padding:2px 7px;font-size:9px;color:var(--ibm-blue-40);">Upload .abap</span>
+                  <span style="background:rgba(70,137,255,0.12);border:1px solid rgba(70,137,255,0.25);border-radius:3px;padding:2px 7px;font-size:9px;color:var(--ibm-blue-40);">Drag &amp; Drop</span>
+                  <span style="background:rgba(70,137,255,0.12);border:1px solid rgba(70,137,255,0.25);border-radius:3px;padding:2px 7px;font-size:9px;color:var(--ibm-blue-40);">Export CSV</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- T-Code Analyzer mockup -->
+            <div style="border:1px solid var(--panel-border);border-radius:var(--r-lg);overflow:hidden;background:rgba(10,14,26,0.8);">
+              <div style="background:rgba(70,137,255,0.12);border-bottom:1px solid rgba(70,137,255,0.3);padding:10px 14px;display:flex;align-items:center;gap:8px;">
+                <span style="font-size:16px;">&#8984;</span>
+                <span style="font-family:var(--font-cond);font-size:12px;font-weight:700;color:var(--chrome-1);letter-spacing:0.5px;">T-CODE ANALYZER</span>
+                <span class="badge bi" style="margin-left:auto;">80,802 Entries</span>
+              </div>
+              <div style="padding:14px;font-size:11px;">
+                <div style="background:rgba(70,137,255,0.07);border:1px solid var(--panel-border);border-radius:4px;padding:6px 10px;font-family:var(--font-mono);font-size:10px;color:var(--chrome-2);margin-bottom:10px;">&#128269; ME22N &mdash; live search&hellip;</div>
+                <table style="width:100%;border-collapse:collapse;font-size:10px;">
+                  <tr style="border-bottom:1px solid rgba(70,137,255,0.1);">
+                    <td style="padding:4px 6px;color:var(--saffron);font-family:var(--font-mono);">M_BEST_EKO</td>
+                    <td style="padding:4px 6px;color:var(--chrome-3);">EKORG</td>
+                    <td style="padding:4px;"><span style="background:rgba(70,137,255,0.12);border:1px solid rgba(70,137,255,0.3);border-radius:3px;padding:1px 5px;font-size:9px;color:var(--ibm-blue-40);">SAP-Active</span></td>
+                  </tr>
+                  <tr style="border-bottom:1px solid rgba(70,137,255,0.1);">
+                    <td style="padding:4px 6px;color:var(--saffron);font-family:var(--font-mono);">M_BEST_EKO</td>
+                    <td style="padding:4px 6px;color:var(--chrome-3);">ACTVT</td>
+                    <td style="padding:4px;"><span style="background:rgba(70,137,255,0.12);border:1px solid rgba(70,137,255,0.3);border-radius:3px;padding:1px 5px;font-size:9px;color:var(--ibm-blue-40);">SAP-Active</span></td>
+                  </tr>
+                  <tr>
+                    <td style="padding:4px 6px;color:var(--saffron);font-family:var(--font-mono);">M_BEST_WRK</td>
+                    <td style="padding:4px 6px;color:var(--chrome-3);">WERKS</td>
+                    <td style="padding:4px;"><span style="background:rgba(241,194,27,0.1);border:1px solid rgba(241,194,27,0.3);border-radius:3px;padding:1px 5px;font-size:9px;color:#f1c21b;">SAP-Proposed</span></td>
+                  </tr>
+                </table>
+                <div style="margin-top:8px;font-size:9px;color:var(--chrome-3);">Batch: up to 200 T-Codes &bull; USOBT / USOBX &bull; CSV export</div>
+              </div>
+            </div>
+
+            <!-- Coverage Checker mockup -->
+            <div style="border:1px solid var(--panel-border);border-radius:var(--r-lg);overflow:hidden;background:rgba(10,14,26,0.8);">
+              <div style="background:rgba(255,107,0,0.12);border-bottom:1px solid rgba(255,107,0,0.3);padding:10px 14px;display:flex;align-items:center;gap:8px;">
+                <span style="font-size:16px;">&#11041;</span>
+                <span style="font-family:var(--font-cond);font-size:12px;font-weight:700;color:var(--chrome-1);letter-spacing:0.5px;">COVERAGE CHECKER</span>
+                <span class="badge bh" style="margin-left:auto;">15 Rules</span>
+              </div>
+              <div style="padding:14px;font-size:11px;">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+                  <div style="position:relative;width:52px;height:52px;flex-shrink:0;">
+                    <svg width="52" height="52" viewBox="0 0 52 52" style="transform:rotate(-90deg)">
+                      <circle cx="26" cy="26" r="20" fill="none" stroke="rgba(70,137,255,0.1)" stroke-width="8"/>
+                      <circle cx="26" cy="26" r="20" fill="none" stroke="var(--saffron)" stroke-width="8" stroke-dasharray="125.6" stroke-dashoffset="37.7"/>
+                    </svg>
+                    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-cond);font-size:14px;font-weight:700;color:var(--saffron);">70</div>
+                  </div>
+                  <div style="font-size:10px;color:var(--chrome-2);">11-Dimension<br>Coverage Score</div>
+                </div>
+                <table style="width:100%;border-collapse:collapse;font-size:10px;">
+                  <tr style="border-bottom:1px solid rgba(70,137,255,0.08);">
+                    <td style="padding:3px 5px;color:var(--chrome-2);">CREATE</td>
+                    <td style="padding:3px 5px;"><span style="color:var(--critical);">&#9632;</span> Missing</td>
+                  </tr>
+                  <tr style="border-bottom:1px solid rgba(70,137,255,0.08);">
+                    <td style="padding:3px 5px;color:var(--chrome-2);">READ</td>
+                    <td style="padding:3px 5px;"><span style="color:var(--medium);">&#9632;</span> Partial</td>
+                  </tr>
+                  <tr style="border-bottom:1px solid rgba(70,137,255,0.08);">
+                    <td style="padding:3px 5px;color:var(--chrome-2);">UPDATE</td>
+                    <td style="padding:3px 5px;"><span style="color:var(--critical);">&#9632;</span> Missing</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:3px 5px;color:var(--chrome-2);">DELETE</td>
+                    <td style="padding:3px 5px;"><span style="color:var(--low);">&#9632;</span> Covered</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <!-- SU24/SU25 mockup -->
+            <div style="border:1px solid var(--panel-border);border-radius:var(--r-lg);overflow:hidden;background:rgba(10,14,26,0.8);">
+              <div style="background:rgba(19,136,8,0.10);border-bottom:1px solid rgba(19,136,8,0.3);padding:10px 14px;display:flex;align-items:center;gap:8px;">
+                <span style="font-size:16px;">&#8853;</span>
+                <span style="font-family:var(--font-cond);font-size:12px;font-weight:700;color:var(--chrome-1);letter-spacing:0.5px;">SU24 / SU25 ANALYSIS</span>
+                <span class="badge bp" style="margin-left:auto;">4 Sub-tabs</span>
+              </div>
+              <div style="padding:14px;font-size:11px;">
+                <div style="display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap;">
+                  <span style="background:rgba(70,137,255,0.15);border:1px solid rgba(70,137,255,0.35);border-radius:3px;padding:2px 7px;font-size:9px;color:var(--ibm-blue-40);">SU24 Proposals</span>
+                  <span style="background:rgba(70,137,255,0.07);border:1px solid var(--panel-border);border-radius:3px;padding:2px 7px;font-size:9px;color:var(--chrome-3);">SU25 Upgrade</span>
+                  <span style="background:rgba(70,137,255,0.07);border:1px solid var(--panel-border);border-radius:3px;padding:2px 7px;font-size:9px;color:var(--chrome-3);">PFCG Align</span>
+                  <span style="background:rgba(70,137,255,0.07);border:1px solid var(--panel-border);border-radius:3px;padding:2px 7px;font-size:9px;color:var(--chrome-3);">SU53</span>
+                </div>
+                <div style="background:rgba(36,161,72,0.06);border:1px solid rgba(36,161,72,0.2);border-radius:4px;padding:7px 10px;font-size:10px;">
+                  <div style="color:var(--low);font-weight:600;margin-bottom:4px;">&#10003; ME22N &mdash; 5 Proposals Found</div>
+                  <div style="color:var(--chrome-3);">M_BEST_EKO &bull; EKORG &bull; ACTVT</div>
+                  <div style="color:var(--chrome-3);">M_BEST_WRK &bull; WERKS &bull; ACTVT</div>
+                </div>
+                <div style="margin-top:8px;font-size:9px;color:var(--chrome-3);">Proposal source: SAP-Delivered &bull; Trace-Derived &bull; Inferred</div>
+              </div>
+            </div>
+
+            <!-- OData mockup -->
+            <div style="border:1px solid var(--panel-border);border-radius:var(--r-lg);overflow:hidden;background:rgba(10,14,26,0.8);">
+              <div style="background:rgba(218,30,40,0.10);border-bottom:1px solid rgba(218,30,40,0.25);padding:10px 14px;display:flex;align-items:center;gap:8px;">
+                <span style="font-size:16px;">&#10021;</span>
+                <span style="font-family:var(--font-cond);font-size:12px;font-weight:700;color:var(--chrome-1);letter-spacing:0.5px;">ODATA SERVICE ANALYZER</span>
+                <span class="badge bc" style="margin-left:auto;">Critical</span>
+              </div>
+              <div style="padding:14px;font-size:11px;">
+                <div style="background:rgba(218,30,40,0.08);border-left:3px solid var(--critical);padding:6px 10px;border-radius:0 4px 4px 0;margin-bottom:8px;font-size:10px;">
+                  <div style="color:#ff8389;font-weight:600;">CREATE_ENTITY &mdash; No AUTHORITY-CHECK</div>
+                  <div style="color:var(--chrome-3);">AUTH-COV-001 &bull; ZCL_ZMAT_SRV_DPC_EXT</div>
+                </div>
+                <div style="background:rgba(218,30,40,0.08);border-left:3px solid var(--critical);padding:6px 10px;border-radius:0 4px 4px 0;margin-bottom:8px;font-size:10px;">
+                  <div style="color:#ff8389;font-weight:600;">UPDATE_ENTITY &mdash; No AUTHORITY-CHECK</div>
+                  <div style="color:var(--chrome-3);">AUTH-COV-002 &bull; ACTVT 02 missing</div>
+                </div>
+                <div style="font-size:9px;color:var(--chrome-3);">V2 / V4 &bull; DPC_EXT &bull; /IWBEP/ &bull; /IWFND/ &bull; SICF</div>
+              </div>
+            </div>
+
+            <!-- Audit Evidence mockup -->
+            <div style="border:1px solid var(--panel-border);border-radius:var(--r-lg);overflow:hidden;background:rgba(10,14,26,0.8);">
+              <div style="background:rgba(70,137,255,0.10);border-bottom:1px solid rgba(70,137,255,0.25);padding:10px 14px;display:flex;align-items:center;gap:8px;">
+                <span style="font-size:16px;">&#9873;</span>
+                <span style="font-family:var(--font-cond);font-size:12px;font-weight:700;color:var(--chrome-1);letter-spacing:0.5px;">AUDIT EVIDENCE</span>
+                <span class="badge bi" style="margin-left:auto;">4 Formats</span>
+              </div>
+              <div style="padding:14px;font-size:11px;">
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                  <div style="display:flex;align-items:center;gap:8px;background:rgba(70,137,255,0.06);border:1px solid var(--panel-border);border-radius:4px;padding:6px 10px;">
+                    <span style="font-size:13px;">&#128202;</span>
+                    <span style="font-size:10px;color:var(--chrome-2);">Export as CSV (Excel-compatible)</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;background:rgba(70,137,255,0.06);border:1px solid var(--panel-border);border-radius:4px;padding:6px 10px;">
+                    <span style="font-size:13px;">{}</span>
+                    <span style="font-size:10px;color:var(--chrome-2);">Export as JSON</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;background:rgba(70,137,255,0.06);border:1px solid var(--panel-border);border-radius:4px;padding:6px 10px;">
+                    <span style="font-size:13px;">&#128438;</span>
+                    <span style="font-size:10px;color:var(--chrome-2);">Export as Printable HTML Report</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;background:rgba(15,98,254,0.12);border:1px solid rgba(15,98,254,0.4);border-radius:4px;padding:6px 10px;">
+                    <span style="font-size:13px;">&#128230;</span>
+                    <span style="font-size:10px;color:var(--ibm-blue-40);font-weight:600;">Full Audit Package (All Formats)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- end grid -->
+        </div>
+      </div>
+
+      <!-- ═══ SECURITY PRINCIPLES + IDENTITY SIDE BY SIDE ═══ -->
+      <div class="g2" style="margin-bottom:24px;">
+        <div class="card"><div class="ch"><span class="ct">Security &amp; Compliance Principles</span></div><div class="cb">
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="width:36px;height:36px;border-radius:8px;background:rgba(70,137,255,0.15);border:1px solid rgba(70,137,255,0.35);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">&#128269;</div>
+              <div><div class="g-h3" style="margin:0 0 3px;">Evidence-Based</div><div style="font-size:12px;color:var(--chrome-2);line-height:1.6;">Every finding cites the exact source statement, line number, and detection rule. Inferred values are labelled and distinguished from confirmed findings.</div></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="width:36px;height:36px;border-radius:8px;background:rgba(255,107,0,0.12);border:1px solid rgba(255,107,0,0.35);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">&#128100;</div>
+              <div><div class="g-h3" style="margin:0 0 3px;">Human-in-the-Loop</div><div style="font-size:12px;color:var(--chrome-2);line-height:1.6;">No automated SAP system changes. Every correction requires review by a qualified SAP Security professional. The tool assists &mdash; it does not replace &mdash; human judgment.</div></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="width:36px;height:36px;border-radius:8px;background:rgba(19,136,8,0.12);border:1px solid rgba(19,136,8,0.35);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">&#127981;</div>
+              <div><div class="g-h3" style="margin:0 0 3px;">Clean Core Aligned</div><div style="font-size:12px;color:var(--chrome-2);line-height:1.6;">All remediation recommendations follow SAP Clean Core principles: released APIs, extension points, no standard table modifications, upgrade-stable patterns.</div></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="width:36px;height:36px;border-radius:8px;background:rgba(218,30,40,0.12);border:1px solid rgba(218,30,40,0.35);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">&#128274;</div>
+              <div><div class="g-h3" style="margin:0 0 3px;">Zero External Persistence</div><div style="font-size:12px;color:var(--chrome-2);line-height:1.6;">Session-only storage. No data sent to any external server. IBM enterprise SSO with MFA enforced. WCAG 2.1 AA compliant throughout.</div></div>
+            </div>
+          </div>
+        </div></div>
         <div>
-          <div class="card" style="margin-bottom:16px;"><div class="ch"><span class="ct">Key Capabilities</span></div><div class="cb" style="font-size:12.5px;color:var(--chrome-2);line-height:1.9;">
-            ✓ ABAP authority-check static analysis<br>✓ T-Code authorization proposal analysis<br>✓ Fiori app frontend and backend auth review<br>✓ Web Dynpro authorization coverage<br>✓ OData V2/V4 service protection analysis<br>✓ SU24/SU25 proposal validation<br>✓ SU53 / STAUTHTRACE interpretation<br>✓ Side-by-side before/after code comparison<br>✓ Clean Core compliance flagging<br>✓ Version-aware rule engine<br>✓ Audit evidence export<br>✓ Human approval workflow<br>✓ IBM enterprise SSO integration
+          <div class="card" style="margin-bottom:16px;"><div class="ch"><span class="ct">Tool Identity &amp; Access</span></div><div class="cb">
+            <div style="font-family:var(--font-cond);font-size:20px;font-weight:700;color:var(--chrome-1);margin-bottom:4px;">UM_Authority-Check-Analyzer</div>
+            <div style="font-size:12.5px;color:var(--ibm-blue-40);margin-bottom:14px;font-style:italic;">Engineering Intelligence for SAP Security</div>
+            <table class="dt" style="font-size:11.5px;">
+              <tbody>
+                <tr><td style="color:var(--chrome-3);font-size:10px;white-space:nowrap;">VERSION</td><td>2.1 (August 2026)</td></tr>
+                <tr><td style="color:var(--chrome-3);font-size:10px;white-space:nowrap;">OWNER</td><td>IBM SAP Security Practice</td></tr>
+                <tr><td style="color:var(--chrome-3);font-size:10px;white-space:nowrap;">CLASSIFICATION</td><td>IBM Internal &mdash; Security Tooling</td></tr>
+                <tr><td style="color:var(--chrome-3);font-size:10px;white-space:nowrap;">DEPLOYMENT</td><td>Single-file HTML &mdash; No server required</td></tr>
+                <tr><td style="color:var(--chrome-3);font-size:10px;white-space:nowrap;">AUTH</td><td>IBM Enterprise SSO (OIDC/SAML) + MFA</td></tr>
+                <tr><td style="color:var(--chrome-3);font-size:10px;white-space:nowrap;">LIVE URL</td><td><a href="https://ica-bob.github.io/UM_Authority-Check-Analyzer/" target="_blank" rel="noopener" style="color:var(--ibm-blue-40);">ica-bob.github.io/UM_Authority-Check-Analyzer</a></td></tr>
+                <tr><td style="color:var(--chrome-3);font-size:10px;white-space:nowrap;">SUPPORT</td><td><a href="mailto:sap-security@ibm.com" style="color:var(--ibm-blue-40);">sap-security@ibm.com</a></td></tr>
+              </tbody>
+            </table>
           </div></div>
-          <div class="card"><div class="ch"><span class="ct">Responsible Use Statement</span></div><div class="cb">
-            <div class="g-warn">This tool is for authorized IBM and client security professionals only. Findings are diagnostic and require human expert review. Never apply corrections without SAP Security approval and proper change management. The tool does not access live SAP systems — it analyzes code and metadata provided by the user.</div>
+          <div class="card"><div class="ch"><span class="ct">Responsible Use</span></div><div class="cb">
+            <div class="g-warn">Authorized IBM and client security professionals only. Findings are diagnostic and require human expert review. Never apply corrections without SAP Security approval. The tool does not access live SAP systems.</div>
           </div></div>
         </div>
       </div>
-      <div class="card" style="margin-bottom:16px;"><div class="ch"><span class="ct">Security &amp; Compliance Principles</span></div><div class="cb">
-        <div class="g3">
-          <div style="font-size:12.5px;color:var(--chrome-2);"><div class="g-h3">Evidence-Based</div>Every finding cites the exact source code statement, line number, and detection rule. Inferred values are clearly labelled and distinguished from confirmed findings.</div>
-          <div style="font-size:12.5px;color:var(--chrome-2);"><div class="g-h3">Human-in-the-Loop</div>No automated SAP system changes. Every correction requires review and approval by a qualified SAP Security professional. The tool assists — it does not replace — human judgment.</div>
-          <div style="font-size:12.5px;color:var(--chrome-2);"><div class="g-h3">Clean Core Aligned</div>All remediation recommendations follow SAP Clean Core principles: released APIs, extension points, no standard table modifications, upgrade-stable patterns.</div>
-        </div>
-      </div></div>
-      <div class="card" style="margin-bottom:16px;"><div class="ch"><span class="ct">Full Feature Inventory</span></div><div class="cb">
-        <div class="g3" style="gap:14px;">
+
+      <!-- ═══ FULL FEATURE INVENTORY ═══ -->
+      <div class="card" style="margin-bottom:24px;"><div class="ch"><span class="ct">Full Feature Inventory</span></div><div class="cb">
+        <div class="g3" style="gap:16px;">
           <div>
             <div class="g-h3">Analyzers (7 modules)</div>
             <div style="font-size:12px;color:var(--chrome-2);line-height:1.9;">
-              ✓ <strong>ABAP Code Scanner</strong> — 24 detection rules (AUTH-001–024), version-aware for S/4HANA 1809–2023, ECC EhP4–8, BW/4HANA, NetWeaver. Paste or upload, per-line detection, 20-field finding cards, before/after diff.<br>
-              ✓ <strong>T-Code Analyzer</strong> — 80,802 T-Codes from SAP USOBT/USOBX, live search with suggestions, batch analysis up to 200, full proposal cards, CSV export.<br>
-              ✓ <strong>Fiori App Analyzer</strong> — BSP/SICF service check, OData binding, IAM app descriptor, backend authority-check review.<br>
-              ✓ <strong>Web Dynpro Analyzer</strong> — WD component, BSP app, RFC/BAPI authority-check chain review.<br>
-              ✓ <strong>OData Service Analyzer</strong> — V2/V4 DPC_EXT class protection, operation-level coverage (CREATE/READ/UPDATE/DELETE/EXECUTE), IWBEP/IWFND gateway check.<br>
-              ✓ <strong>SU24/SU25 Analysis</strong> — SU24 proposal lookup, SU25 upgrade impact planner, PFCG alignment check, SU53/STAUTHTRACE interpreter.<br>
-              ✓ <strong>Coverage Checker</strong> — 10-screen DPC_EXT coverage analysis, AUTH-COV-001–015 rules, operation matrix, call graph, test planner, runtime evidence correlation, 13 report types.
+              &#10003; <strong>ABAP Code Scanner</strong> &mdash; 24 rules (AUTH-001&ndash;024), version-aware S/4HANA 1809&ndash;2023, ECC EhP4&ndash;8, BW/4HANA, NetWeaver. Paste or upload, per-line detection, 20-field finding cards, before/after diff.<br>
+              &#10003; <strong>T-Code Analyzer</strong> &mdash; 80,802 T-Codes from USOBT/USOBX, live search, batch up to 200, proposal cards, CSV export.<br>
+              &#10003; <strong>Fiori App Analyzer</strong> &mdash; SICF, OData binding, IAM app descriptor, DPC_EXT backend review, S_SERVICE coverage.<br>
+              &#10003; <strong>Web Dynpro Analyzer</strong> &mdash; WD component, BSP app, RFC/BAPI authority-check chain review.<br>
+              &#10003; <strong>OData Service Analyzer</strong> &mdash; V2/V4 DPC_EXT protection, CREATE/READ/UPDATE/DELETE/EXECUTE, /IWBEP/ / /IWFND/ gateway.<br>
+              &#10003; <strong>SU24/SU25 Analysis</strong> &mdash; Proposal lookup, SU25 upgrade planner, PFCG alignment, SU53/STAUTHTRACE interpreter.<br>
+              &#10003; <strong>Coverage Checker</strong> &mdash; 10-tab DPC_EXT analysis, AUTH-COV-001&ndash;015, operation matrix, call graph, test planner, 13 report types.
             </div>
           </div>
           <div>
             <div class="g-h3">Rule Engine (39 rules)</div>
             <div style="font-size:12px;color:var(--chrome-2);line-height:1.9;">
-              ✓ <strong>AUTH-001–024</strong>: ABAP static analysis rules (missing check, SY-SUBRC skip, post-read, wildcard, hardcode, debug bypass, RFC, OData, CRUD inconsistency, dynamic object, etc.)<br>
-              ✓ <strong>AUTH-COV-001–015</strong>: Coverage rules (missing CREATE/READ/UPDATE/DELETE/EXECUTE guard, no helper auth, silent fail, no BYPASS_BUFFER, mass-read bypass, hardcoded check, recheck after helper call, authority-check in wrong method, etc.)<br>
-              ✓ Version-aware severity overrides per SAP release<br>
-              ✓ Confidence scoring (HIGH/MEDIUM/LOW/PROBABLE)<br>
-              ✓ Manual-review flags with inline notes
+              &#10003; <strong>AUTH-001&ndash;024</strong>: Missing check, SY-SUBRC skip, post-read, wildcard, hardcode, debug bypass, RFC, OData, CRUD inconsistency, dynamic object, loop gaps, dangerous S_* usage.<br>
+              &#10003; <strong>AUTH-COV-001&ndash;015</strong>: Missing CREATE/READ/UPDATE/DELETE/EXECUTE guard, no helper auth, silent fail, no BYPASS_BUFFER, mass-read bypass, hardcoded check, post-read auth.<br>
+              &#10003; Version-aware severity overrides per SAP release<br>
+              &#10003; Confidence scoring: HIGH / MEDIUM / LOW / PROBABLE<br>
+              &#10003; Manual-review flags with inline diagnostic notes
             </div>
           </div>
           <div>
             <div class="g-h3">Output &amp; Integration</div>
             <div style="font-size:12px;color:var(--chrome-2);line-height:1.9;">
-              ✓ Executive Summary dashboard with 11-column drill-down table<br>
-              ✓ Findings &amp; Remediation: filter, false-positive workflow, resolve, evidence attach<br>
-              ✓ Audit Evidence: full trail, CSV/JSON/HTML export package<br>
-              ✓ Operational Guidebook: 20 sections, full-text search<br>
-              ✓ Administration: session controls, rule toggles, RBAC roles, system info<br>
-              ✓ Single-file HTML deployment — no server, no installation<br>
-              ✓ IBM enterprise SSO (OIDC/SAML) + MFA — no passwords stored<br>
-              ✓ WCAG 2.1 AA compliant, ARIA labels throughout
+              &#10003; Executive Summary: 11-column drill-down table<br>
+              &#10003; Findings &amp; Remediation: filter, false-positive, resolve, approve<br>
+              &#10003; Audit Evidence: full trail, CSV / JSON / HTML package<br>
+              &#10003; Coverage Reports: 13 report types including executive HTML<br>
+              &#10003; Operational Guidebook: 20 sections, full-text search<br>
+              &#10003; Administration: session controls, rule toggles, RBAC<br>
+              &#10003; Single-file HTML deployment &mdash; no server, no install<br>
+              &#10003; IBM enterprise SSO (OIDC/SAML) + MFA &mdash; no passwords stored<br>
+              &#10003; WCAG 2.1 AA compliant, ARIA labels throughout
             </div>
           </div>
         </div>
       </div></div>
 
+      <!-- ═══ RELEASE HISTORY ═══ -->
       <div class="card"><div class="ch"><span class="ct">Release History</span></div>
         <table class="dt"><thead><tr><th>Version</th><th>Date</th><th>Key Changes</th></tr></thead>
         <tbody>
-          <tr><td>2.1</td><td>Aug 2026</td><td>Coverage Checker (10 screens, AUTH-COV-001–015), cinematic login UI, Full Feature Inventory, 39 total rules</td></tr>
-          <tr><td>2.0</td><td>Aug 2026</td><td>Full IBM enterprise UI, all 7 analyzer modules, SU53 interpreter, OData V4, Clean Core flags, audit export, 80,802 T-Code DB</td></tr>
-          <tr><td>1.0</td><td>Jul 2026</td><td>Initial release: ABAP scanner, SU24 analysis, OData V2, chat-based interface, IBM BOB + ICA + MCP Gateway</td></tr>
+          <tr><td style="font-family:var(--font-mono);">2.1</td><td>Aug 2026</td><td>Coverage Checker (10 tabs, AUTH-COV-001&ndash;015), cinematic login UI, Full Feature Inventory, About infographic, marketing one-pager, 39 total rules</td></tr>
+          <tr><td style="font-family:var(--font-mono);">2.0</td><td>Aug 2026</td><td>Full IBM enterprise UI, all 7 analyzer modules, SU53 interpreter, OData V4, Clean Core flags, audit export, 80,802 T-Code DB</td></tr>
+          <tr><td style="font-family:var(--font-mono);">1.0</td><td>Jul 2026</td><td>Initial release: ABAP scanner, SU24 analysis, OData V2, chat-based interface, IBM BOB + ICA + MCP Gateway</td></tr>
         </tbody></table>
       </div>
+
     </div>
 
     <!-- ═══════════ COVERAGE CHECKER ═══════════ -->
@@ -3912,5 +4296,363 @@ function covReset() {
     if(el)el.innerHTML='<div style="padding:24px;text-align:center;color:var(--chrome-3);font-size:12px;">Run analysis to populate.</div>';
   });
   var nb=document.getElementById('nbCoverage'); if(nb)nb.style.display='none';
+}
+
+// ═══════════════════════════════════════════════════════
+//  ABOUT TOOL — MARKETING ONE-PAGER DOWNLOAD
+// ═══════════════════════════════════════════════════════
+function aboutDownloadMarketing() {
+  var ts = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  var html = '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
+    '<meta charset="UTF-8">\n' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1.0">\n' +
+    '<title>UM_Authority-Check-Analyzer | IBM SAP Security — Marketing One-Pager</title>\n' +
+    '<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@400;600;700&display=swap" rel="stylesheet">\n' +
+    '<style>\n' +
+    '*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}\n' +
+    ':root{\n' +
+    '  --blue:#0f62fe;--blue-l:#4589ff;--blue-d:#0043ce;\n' +
+    '  --saffron:#ff6b00;--green:#138808;--critical:#da1e28;--high:#ff832b;--medium:#f1c21b;--low:#24a148;\n' +
+    '  --bg:#060810;--bg2:#0a0d1a;--card:rgba(10,14,26,0.95);\n' +
+    '  --chrome-1:#e8eaf0;--chrome-2:#b0b8cc;--chrome-3:#6b7694;\n' +
+    '  --border:rgba(70,137,255,0.18);\n' +
+    '  --ff:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;\n' +
+    '  --fc:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;\n' +
+    '  --fm:"IBM Plex Mono",Consolas,monospace;\n' +
+    '}\n' +
+    'body{font-family:var(--ff);background:var(--bg);color:var(--chrome-1);min-height:100vh;}\n' +
+    '.page{max-width:1100px;margin:0 auto;padding:40px 32px;}\n' +
+    '@media print{body{background:#fff;color:#000;}.page{padding:20px;}.no-print{display:none;}}\n' +
+    /* HERO */
+    '.hero{background:linear-gradient(135deg,rgba(0,67,206,0.2),rgba(255,107,0,0.12),rgba(19,136,8,0.10));border:1px solid var(--border);border-radius:12px;padding:40px 44px;margin-bottom:32px;position:relative;overflow:hidden;}\n' +
+    '.hero::before{content:"";position:absolute;top:-80px;right:-80px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(70,137,255,0.13),transparent 70%);pointer-events:none;}\n' +
+    '.hero-top{display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:24px;}\n' +
+    '.hero-logo{flex-shrink:0;}\n' +
+    '.hero-text{flex:1;min-width:240px;}\n' +
+    '.hero-title{font-family:var(--fc);font-size:36px;font-weight:700;line-height:1.1;margin-bottom:6px;}\n' +
+    '.hero-title .c-b{color:#4589ff;}.hero-title .c-s{color:#ff6b00;}\n' +
+    '.hero-sub{font-size:15px;color:#78a9ff;font-style:italic;margin-bottom:10px;}\n' +
+    '.hero-desc{font-size:13.5px;color:var(--chrome-2);line-height:1.65;max-width:640px;}\n' +
+    '.tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px;}\n' +
+    '.tag{font-family:var(--fm);font-size:11px;padding:3px 11px;border-radius:20px;}\n' +
+    '.tag-b{background:rgba(70,137,255,0.15);border:1px solid rgba(70,137,255,0.4);color:#78a9ff;}\n' +
+    '.tag-s{background:rgba(255,107,0,0.15);border:1px solid rgba(255,107,0,0.4);color:#ff6b00;}\n' +
+    '.tag-g{background:rgba(19,136,8,0.15);border:1px solid rgba(19,136,8,0.4);color:#42be65;}\n' +
+    '.tag-w{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);color:var(--chrome-2);}\n' +
+    /* STAT PILLS */
+    '.stat-row{display:flex;gap:14px;flex-wrap:wrap;}\n' +
+    '.stat{background:rgba(10,14,26,0.85);border:1px solid var(--border);border-radius:10px;padding:14px 22px;text-align:center;min-width:110px;}\n' +
+    '.stat-n{font-family:var(--fc);font-size:34px;font-weight:700;}\n' +
+    '.stat-l{font-size:10px;color:var(--chrome-3);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}\n' +
+    /* SECTION */
+    '.sec{margin-bottom:32px;}\n' +
+    '.sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border);}\n' +
+    '.sec-title{font-family:var(--fc);font-size:16px;font-weight:700;color:var(--chrome-1);letter-spacing:0.3px;}\n' +
+    '.sec-badge{font-family:var(--fm);font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(70,137,255,0.15);border:1px solid rgba(70,137,255,0.3);color:#78a9ff;}\n' +
+    /* GRID */
+    '.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}\n' +
+    '.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}\n' +
+    '.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}\n' +
+    '@media(max-width:800px){.g3,.g5{grid-template-columns:1fr 1fr;}.g2{grid-template-columns:1fr;}.hero-top{flex-direction:column;}}\n' +
+    '@media(max-width:500px){.g2,.g3,.g5{grid-template-columns:1fr;}}\n' +
+    /* CARD */
+    '.card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;}\n' +
+    '.card-hdr{padding:10px 16px;border-bottom:1px solid var(--border);background:rgba(70,137,255,0.04);display:flex;align-items:center;gap:8px;}\n' +
+    '.card-title{font-family:var(--fm);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#78a9ff;}\n' +
+    '.card-body{padding:14px 16px;}\n' +
+    /* MODULE CARD */
+    '.mod{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:rgba(10,14,26,0.85);}\n' +
+    '.mod-hdr{padding:9px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);}\n' +
+    '.mod-icon{font-size:15px;}\n' +
+    '.mod-name{font-family:var(--fc);font-size:11px;font-weight:700;letter-spacing:0.5px;color:var(--chrome-1);}\n' +
+    '.mod-badge{margin-left:auto;font-family:var(--fm);font-size:9px;padding:2px 6px;border-radius:3px;}\n' +
+    '.bc{background:rgba(218,30,40,0.2);border:1px solid rgba(218,30,40,0.4);color:#ff8389;}\n' +
+    '.bh{background:rgba(255,131,43,0.2);border:1px solid rgba(255,131,43,0.4);color:#ff832b;}\n' +
+    '.bi{background:rgba(70,137,255,0.15);border:1px solid rgba(70,137,255,0.35);color:#78a9ff;}\n' +
+    '.bg2{background:rgba(36,161,72,0.12);border:1px solid rgba(36,161,72,0.3);color:#42be65;}\n' +
+    '.mod-body{padding:12px 14px;font-size:11px;line-height:1.75;color:var(--chrome-2);}\n' +
+    /* FINDING ROW */
+    '.fr{padding:5px 8px;border-radius:4px;margin-bottom:5px;border-left:3px solid;}\n' +
+    '.fr-c{background:rgba(218,30,40,0.08);border-color:#da1e28;color:#ff8389;}\n' +
+    '.fr-h{background:rgba(255,131,43,0.08);border-color:#ff832b;color:#ff832b;}\n' +
+    '.fr-m{background:rgba(241,194,27,0.08);border-color:#f1c21b;color:#f1c21b;}\n' +
+    /* INFOGRAPHIC TABLE */
+    '.matrix{width:100%;border-collapse:collapse;font-size:11px;}\n' +
+    '.matrix th{background:rgba(70,137,255,0.08);color:#78a9ff;font-family:var(--fm);font-size:9px;letter-spacing:0.6px;padding:7px 10px;border:1px solid rgba(70,137,255,0.14);text-align:center;}\n' +
+    '.matrix td{padding:7px 10px;border:1px solid rgba(70,137,255,0.07);color:var(--chrome-2);text-align:center;}\n' +
+    '.covered{color:#42be65;font-weight:600;}\n' +
+    '.partial{color:#f1c21b;font-weight:600;}\n' +
+    '.missing{color:#da1e28;font-weight:600;}\n' +
+    /* RULE TABLE */
+    '.rt{width:100%;border-collapse:collapse;font-size:11px;}\n' +
+    '.rt th{font-family:var(--fm);font-size:9px;letter-spacing:0.7px;text-transform:uppercase;color:var(--chrome-3);padding:7px 10px;border-bottom:1px solid var(--border);text-align:left;}\n' +
+    '.rt td{padding:7px 10px;border-bottom:1px solid rgba(70,137,255,0.06);color:var(--chrome-2);vertical-align:top;}\n' +
+    /* FOOTER */
+    '.footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--chrome-3);}\n' +
+    '.ibm-wm{font-size:22px;font-weight:700;color:#4589ff;letter-spacing:4px;}\n' +
+    '.tricolor{display:flex;gap:2px;align-items:center;}\n' +
+    '.tc-s,.tc-w,.tc-g{width:12px;height:3px;border-radius:1px;}\n' +
+    '.tc-s{background:#ff6b00;}.tc-w{background:#e8eaf0;}.tc-g{background:#138808;}\n' +
+    '.print-btn{display:inline-flex;align-items:center;gap:6px;background:#0f62fe;color:#fff;border:none;border-radius:5px;padding:8px 18px;font-family:var(--ff);font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;}\n' +
+    '.print-btn:hover{background:#4589ff;}\n' +
+    '</style>\n' +
+    '</head>\n<body>\n<div class="page">\n\n' +
+    '<!-- HEADER ACTIONS -->\n' +
+    '<div class="no-print" style="display:flex;justify-content:flex-end;gap:10px;margin-bottom:24px;">\n' +
+    '  <button class="print-btn" onclick="window.print()">&#128438; Print / Save as PDF</button>\n' +
+    '  <a class="print-btn" href="https://ica-bob.github.io/UM_Authority-Check-Analyzer/" target="_blank" rel="noopener" style="background:transparent;border:1px solid #4589ff;color:#78a9ff;">&#8599; Open Live Tool</a>\n' +
+    '</div>\n\n' +
+    '<!-- ═══ HERO ═══ -->\n' +
+    '<div class="hero">\n' +
+    '  <div class="hero-top">\n' +
+    '    <div class="hero-logo">\n' +
+    '      <svg width="72" height="72" viewBox="0 0 80 80" fill="none" style="display:block;">\n' +
+    '        <circle cx="40" cy="40" r="36" stroke="rgba(70,137,255,0.6)" stroke-width="2"/>\n' +
+    '        <circle cx="40" cy="40" r="20" stroke="rgba(255,107,0,0.55)" stroke-width="1.5"/>\n' +
+    '        <circle cx="40" cy="40" r="7" fill="rgba(70,137,255,0.9)"/>\n' +
+    '        <line x1="40" y1="4" x2="40" y2="76" stroke="rgba(70,137,255,0.4)" stroke-width="1"/>\n' +
+    '        <line x1="4" y1="40" x2="76" y2="40" stroke="rgba(70,137,255,0.4)" stroke-width="1"/>\n' +
+    '        <line x1="10" y1="10" x2="70" y2="70" stroke="rgba(19,136,8,0.4)" stroke-width="1"/>\n' +
+    '        <line x1="70" y1="10" x2="10" y2="70" stroke="rgba(19,136,8,0.4)" stroke-width="1"/>\n' +
+    '      </svg>\n' +
+    '    </div>\n' +
+    '    <div class="hero-text">\n' +
+    '      <div class="hero-title">UM_<span class="c-b">Authority</span>-<span class="c-s">Check</span>-Analyzer</div>\n' +
+    '      <div class="hero-sub">Engineering Intelligence for SAP Security</div>\n' +
+    '      <div class="hero-desc">The only IBM-native, single-file, zero-install SAP authorization intelligence platform &mdash; covering ABAP static analysis, T-Code proposals, Fiori/OData/DPC_EXT coverage, SU24/SU25/PFCG governance, and complete audit evidence in one tool. No server. No installation. IBM SSO. WCAG 2.1 AA.</div>\n' +
+    '      <div class="tags">\n' +
+    '        <span class="tag tag-b">v2.1 &bull; Aug 2026</span>\n' +
+    '        <span class="tag tag-s">39 Detection Rules</span>\n' +
+    '        <span class="tag tag-g">80,802 T-Codes</span>\n' +
+    '        <span class="tag tag-w">Zero Install</span>\n' +
+    '        <span class="tag tag-b">WCAG 2.1 AA</span>\n' +
+    '        <span class="tag tag-g">Clean Core</span>\n' +
+    '        <span class="tag tag-s">IBM SSO + MFA</span>\n' +
+    '      </div>\n' +
+    '    </div>\n' +
+    '    <div style="flex-shrink:0;text-align:right;">\n' +
+    '      <div style="font-size:26px;font-weight:700;color:#4589ff;letter-spacing:5px;margin-bottom:4px;">IBM</div>\n' +
+    '      <div style="font-size:11px;color:var(--chrome-3);">SAP Security Practice</div>\n' +
+    '    </div>\n' +
+    '  </div>\n' +
+    '  <div class="stat-row">\n' +
+    '    <div class="stat"><div class="stat-n" style="color:#4589ff;">80,802</div><div class="stat-l">T-Code Entries</div></div>\n' +
+    '    <div class="stat"><div class="stat-n" style="color:#ff6b00;">39</div><div class="stat-l">Detection Rules</div></div>\n' +
+    '    <div class="stat"><div class="stat-n" style="color:#42be65;">13</div><div class="stat-l">Analyzer Modules</div></div>\n' +
+    '    <div class="stat"><div class="stat-n" style="color:#f1c21b;">5</div><div class="stat-l">SAP Platforms</div></div>\n' +
+    '    <div class="stat"><div class="stat-n" style="color:#4589ff;">4</div><div class="stat-l">Export Formats</div></div>\n' +
+    '    <div class="stat"><div class="stat-n" style="color:#42be65;">12+</div><div class="stat-l">SAP Releases</div></div>\n' +
+    '  </div>\n' +
+    '</div>\n\n' +
+    '<!-- ═══ ARCHITECTURE INFOGRAPHIC ═══ -->\n' +
+    '<div class="sec">\n' +
+    '  <div class="sec-hdr"><span class="sec-title">Architecture &amp; Data Flow</span><span class="sec-badge">Single-file HTML &bull; No Server</span></div>\n' +
+    '  <svg viewBox="0 0 900 340" width="100%" style="display:block;border:1px solid rgba(70,137,255,0.18);border-radius:10px;" aria-label="Architecture data flow diagram">\n' +
+    '    <rect width="900" height="340" rx="10" fill="rgba(10,14,26,0.9)"/>\n' +
+    '    <text x="450" y="24" text-anchor="middle" fill="#78a9ff" font-size="12" font-weight="600" letter-spacing="1" font-family="IBM Plex Sans,sans-serif">UM_AUTHORITY-CHECK-ANALYZER &mdash; ARCHITECTURE &amp; DATA FLOW</text>\n' +
+    '    <!-- Layer 1 -->\n' +
+    '    <rect x="15" y="38" width="150" height="275" rx="7" fill="rgba(0,67,206,0.12)" stroke="rgba(70,137,255,0.35)" stroke-width="1.5"/>\n' +
+    '    <text x="90" y="56" text-anchor="middle" fill="#78a9ff" font-size="9" font-weight="600" letter-spacing="1.5" font-family="IBM Plex Mono,monospace">INPUT SOURCES</text>\n' +
+    '    <rect x="28" y="64" width="124" height="32" rx="4" fill="rgba(70,137,255,0.14)" stroke="rgba(70,137,255,0.35)" stroke-width="1"/>\n' +
+    '    <text x="90" y="77" text-anchor="middle" fill="#e8eaf0" font-size="9" font-weight="600" font-family="IBM Plex Sans,sans-serif">ABAP Code</text>\n' +
+    '    <text x="90" y="89" text-anchor="middle" fill="#6b7694" font-size="8" font-family="IBM Plex Sans,sans-serif">.abap / .txt / paste</text>\n' +
+    '    <rect x="28" y="103" width="124" height="32" rx="4" fill="rgba(70,137,255,0.14)" stroke="rgba(70,137,255,0.35)" stroke-width="1"/>\n' +
+    '    <text x="90" y="116" text-anchor="middle" fill="#e8eaf0" font-size="9" font-weight="600" font-family="IBM Plex Sans,sans-serif">T-Code / Program</text>\n' +
+    '    <text x="90" y="128" text-anchor="middle" fill="#6b7694" font-size="8" font-family="IBM Plex Sans,sans-serif">80,802 USOBT/USOBX</text>\n' +
+    '    <rect x="28" y="142" width="124" height="32" rx="4" fill="rgba(70,137,255,0.14)" stroke="rgba(70,137,255,0.35)" stroke-width="1"/>\n' +
+    '    <text x="90" y="155" text-anchor="middle" fill="#e8eaf0" font-size="9" font-weight="600" font-family="IBM Plex Sans,sans-serif">Fiori / OData / DPC</text>\n' +
+    '    <text x="90" y="167" text-anchor="middle" fill="#6b7694" font-size="8" font-family="IBM Plex Sans,sans-serif">V2 / V4 / RFC / SICF</text>\n' +
+    '    <rect x="28" y="181" width="124" height="32" rx="4" fill="rgba(70,137,255,0.14)" stroke="rgba(70,137,255,0.35)" stroke-width="1"/>\n' +
+    '    <text x="90" y="194" text-anchor="middle" fill="#e8eaf0" font-size="9" font-weight="600" font-family="IBM Plex Sans,sans-serif">SU53 / STAUTHTRACE</text>\n' +
+    '    <text x="90" y="206" text-anchor="middle" fill="#6b7694" font-size="8" font-family="IBM Plex Sans,sans-serif">Paste trace output</text>\n' +
+    '    <rect x="28" y="220" width="124" height="32" rx="4" fill="rgba(70,137,255,0.14)" stroke="rgba(70,137,255,0.35)" stroke-width="1"/>\n' +
+    '    <text x="90" y="233" text-anchor="middle" fill="#e8eaf0" font-size="9" font-weight="600" font-family="IBM Plex Sans,sans-serif">Web Dynpro</text>\n' +
+    '    <text x="90" y="245" text-anchor="middle" fill="#6b7694" font-size="8" font-family="IBM Plex Sans,sans-serif">WD App / Component</text>\n' +
+    '    <line x1="152" y1="172" x2="185" y2="172" stroke="rgba(70,137,255,0.5)" stroke-width="1.5" marker-end="url(#a1)"/>\n' +
+    '    <!-- Layer 2 -->\n' +
+    '    <rect x="188" y="38" width="178" height="275" rx="7" fill="rgba(255,107,0,0.08)" stroke="rgba(255,107,0,0.35)" stroke-width="1.5"/>\n' +
+    '    <text x="277" y="56" text-anchor="middle" fill="#ff6b00" font-size="9" font-weight="600" letter-spacing="1.5" font-family="IBM Plex Mono,monospace">RULE ENGINE</text>\n' +
+    '    <rect x="200" y="64" width="154" height="48" rx="4" fill="rgba(218,30,40,0.14)" stroke="rgba(218,30,40,0.4)" stroke-width="1"/>\n' +
+    '    <text x="277" y="80" text-anchor="middle" fill="#ff8389" font-size="10" font-weight="700" font-family="IBM Plex Sans,sans-serif">AUTH-001 to AUTH-024</text>\n' +
+    '    <text x="277" y="93" text-anchor="middle" fill="#b0b8cc" font-size="8" font-family="IBM Plex Sans,sans-serif">ABAP Static Analysis Rules</text>\n' +
+    '    <text x="277" y="105" text-anchor="middle" fill="#6b7694" font-size="8" font-family="IBM Plex Sans,sans-serif">Missing &bull; SY-SUBRC &bull; Bypass &bull; RFC</text>\n' +
+    '    <rect x="200" y="120" width="154" height="48" rx="4" fill="rgba(255,131,43,0.12)" stroke="rgba(255,131,43,0.4)" stroke-width="1"/>\n' +
+    '    <text x="277" y="136" text-anchor="middle" fill="#ff832b" font-size="10" font-weight="700" font-family="IBM Plex Sans,sans-serif">AUTH-COV-001 to -015</text>\n' +
+    '    <text x="277" y="149" text-anchor="middle" fill="#b0b8cc" font-size="8" font-family="IBM Plex Sans,sans-serif">DPC_EXT Coverage Rules</text>\n' +
+    '    <text x="277" y="161" text-anchor="middle" fill="#6b7694" font-size="8" font-family="IBM Plex Sans,sans-serif">CREATE/READ/UPDATE/DELETE/EXEC</text>\n' +
+    '    <rect x="200" y="176" width="154" height="35" rx="4" fill="rgba(241,194,27,0.10)" stroke="rgba(241,194,27,0.3)" stroke-width="1"/>\n' +
+    '    <text x="277" y="190" text-anchor="middle" fill="#f1c21b" font-size="9" font-weight="600" font-family="IBM Plex Sans,sans-serif">Version-Aware Engine</text>\n' +
+    '    <text x="277" y="204" text-anchor="middle" fill="#6b7694" font-size="8" font-family="IBM Plex Sans,sans-serif">S/4HANA 1809-2023 &bull; ECC EhP4-8</text>\n' +
+    '    <rect x="200" y="218" width="154" height="35" rx="4" fill="rgba(36,161,72,0.10)" stroke="rgba(36,161,72,0.3)" stroke-width="1"/>\n' +
+    '    <text x="277" y="232" text-anchor="middle" fill="#42be65" font-size="9" font-weight="600" font-family="IBM Plex Sans,sans-serif">80,802-Entry T-Code DB</text>\n' +
+    '    <text x="277" y="246" text-anchor="middle" fill="#6b7694" font-size="8" font-family="IBM Plex Sans,sans-serif">USOBT (Y) / USOBX (X) OKFLAG</text>\n' +
+    '    <line x1="366" y1="172" x2="399" y2="172" stroke="rgba(255,107,0,0.5)" stroke-width="1.5" marker-end="url(#a2)"/>\n' +
+    '    <!-- Layer 3 -->\n' +
+    '    <rect x="402" y="38" width="172" height="275" rx="7" fill="rgba(19,136,8,0.08)" stroke="rgba(19,136,8,0.35)" stroke-width="1.5"/>\n' +
+    '    <text x="488" y="56" text-anchor="middle" fill="#42be65" font-size="9" font-weight="600" letter-spacing="1.5" font-family="IBM Plex Mono,monospace">ANALYZER MODULES</text>\n' +
+    '    <rect x="414" y="64" width="148" height="24" rx="3" fill="rgba(70,137,255,0.12)" stroke="rgba(70,137,255,0.25)" stroke-width="1"/>\n' +
+    '    <text x="488" y="80" text-anchor="middle" fill="#e8eaf0" font-size="9" font-family="IBM Plex Sans,sans-serif">ABAP Code Scanner</text>\n' +
+    '    <rect x="414" y="94" width="148" height="24" rx="3" fill="rgba(70,137,255,0.12)" stroke="rgba(70,137,255,0.25)" stroke-width="1"/>\n' +
+    '    <text x="488" y="110" text-anchor="middle" fill="#e8eaf0" font-size="9" font-family="IBM Plex Sans,sans-serif">T-Code Analyzer</text>\n' +
+    '    <rect x="414" y="124" width="148" height="24" rx="3" fill="rgba(70,137,255,0.12)" stroke="rgba(70,137,255,0.25)" stroke-width="1"/>\n' +
+    '    <text x="488" y="140" text-anchor="middle" fill="#e8eaf0" font-size="9" font-family="IBM Plex Sans,sans-serif">Fiori App Analyzer</text>\n' +
+    '    <rect x="414" y="154" width="148" height="24" rx="3" fill="rgba(70,137,255,0.12)" stroke="rgba(70,137,255,0.25)" stroke-width="1"/>\n' +
+    '    <text x="488" y="170" text-anchor="middle" fill="#e8eaf0" font-size="9" font-family="IBM Plex Sans,sans-serif">Web Dynpro Analyzer</text>\n' +
+    '    <rect x="414" y="184" width="148" height="24" rx="3" fill="rgba(70,137,255,0.12)" stroke="rgba(70,137,255,0.25)" stroke-width="1"/>\n' +
+    '    <text x="488" y="200" text-anchor="middle" fill="#e8eaf0" font-size="9" font-family="IBM Plex Sans,sans-serif">OData Service Analyzer</text>\n' +
+    '    <rect x="414" y="214" width="148" height="24" rx="3" fill="rgba(70,137,255,0.12)" stroke="rgba(70,137,255,0.25)" stroke-width="1"/>\n' +
+    '    <text x="488" y="230" text-anchor="middle" fill="#e8eaf0" font-size="9" font-family="IBM Plex Sans,sans-serif">SU24 / SU25 Analysis</text>\n' +
+    '    <rect x="414" y="244" width="148" height="24" rx="3" fill="rgba(255,107,0,0.14)" stroke="rgba(255,107,0,0.4)" stroke-width="1"/>\n' +
+    '    <text x="488" y="260" text-anchor="middle" fill="#ff6b00" font-size="9" font-weight="600" font-family="IBM Plex Sans,sans-serif">Coverage Checker</text>\n' +
+    '    <line x1="574" y1="172" x2="607" y2="172" stroke="rgba(36,161,72,0.5)" stroke-width="1.5" marker-end="url(#a3)"/>\n' +
+    '    <!-- Layer 4 -->\n' +
+    '    <rect x="610" y="38" width="272" height="275" rx="7" fill="rgba(70,137,255,0.07)" stroke="rgba(70,137,255,0.3)" stroke-width="1.5"/>\n' +
+    '    <text x="746" y="56" text-anchor="middle" fill="#78a9ff" font-size="9" font-weight="600" letter-spacing="1.5" font-family="IBM Plex Mono,monospace">OUTPUTS &amp; EXPORTS</text>\n' +
+    '    <rect x="622" y="64" width="246" height="30" rx="4" fill="rgba(218,30,40,0.12)" stroke="rgba(218,30,40,0.3)" stroke-width="1"/>\n' +
+    '    <text x="745" y="77" text-anchor="middle" fill="#ff8389" font-size="9" font-weight="600" font-family="IBM Plex Sans,sans-serif">20-Field Finding Cards + Before/After Diff</text>\n' +
+    '    <text x="745" y="88" text-anchor="middle" fill="#6b7694" font-size="8" font-family="IBM Plex Sans,sans-serif">ID &bull; Rule &bull; Severity &bull; Line &bull; Corrected ABAP</text>\n' +
+    '    <rect x="622" y="101" width="246" height="30" rx="4" fill="rgba(36,161,72,0.10)" stroke="rgba(36,161,72,0.25)" stroke-width="1"/>\n' +
+    '    <text x="745" y="114" text-anchor="middle" fill="#42be65" font-size="9" font-weight="600" font-family="IBM Plex Sans,sans-serif">Executive Dashboard + 11-Col Drill-Down</text>\n' +
+    '    <text x="745" y="125" text-anchor="middle" fill="#6b7694" font-size="8" font-family="IBM Plex Sans,sans-serif">Risk donut &bull; KPIs &bull; Severity distribution</text>\n' +
+    '    <rect x="622" y="138" width="246" height="30" rx="4" fill="rgba(241,194,27,0.10)" stroke="rgba(241,194,27,0.25)" stroke-width="1"/>\n' +
+    '    <text x="745" y="151" text-anchor="middle" fill="#f1c21b" font-size="9" font-weight="600" font-family="IBM Plex Sans,sans-serif">11-Dimension Coverage Scorecard</text>\n' +
+    '    <text x="745" y="162" text-anchor="middle" fill="#6b7694" font-size="8" font-family="IBM Plex Sans,sans-serif">CREATE/READ/UPDATE/DELETE/EXECUTE</text>\n' +
+    '    <rect x="622" y="175" width="246" height="30" rx="4" fill="rgba(70,137,255,0.10)" stroke="rgba(70,137,255,0.25)" stroke-width="1"/>\n' +
+    '    <text x="745" y="188" text-anchor="middle" fill="#78a9ff" font-size="9" font-weight="600" font-family="IBM Plex Sans,sans-serif">Test Plan Generator (per operation)</text>\n' +
+    '    <text x="745" y="199" text-anchor="middle" fill="#6b7694" font-size="8" font-family="IBM Plex Sans,sans-serif">Positive &amp; negative test cases</text>\n' +
+    '    <rect x="622" y="212" width="246" height="30" rx="4" fill="rgba(255,107,0,0.10)" stroke="rgba(255,107,0,0.25)" stroke-width="1"/>\n' +
+    '    <text x="745" y="225" text-anchor="middle" fill="#ff6b00" font-size="9" font-weight="600" font-family="IBM Plex Sans,sans-serif">Audit Evidence Package</text>\n' +
+    '    <text x="745" y="236" text-anchor="middle" fill="#6b7694" font-size="8" font-family="IBM Plex Sans,sans-serif">CSV &bull; JSON &bull; HTML &bull; Full Package</text>\n' +
+    '    <rect x="622" y="249" width="246" height="26" rx="4" fill="rgba(19,136,8,0.10)" stroke="rgba(19,136,8,0.25)" stroke-width="1"/>\n' +
+    '    <text x="745" y="261" text-anchor="middle" fill="#42be65" font-size="9" font-weight="600" font-family="IBM Plex Sans,sans-serif">13 Report Types (Executive, Matrix, Audit...)</text>\n' +
+    '    <!-- bottom labels -->\n' +
+    '    <text x="90" y="322" text-anchor="middle" fill="#6b7694" font-size="8" font-family="IBM Plex Mono,monospace" letter-spacing="0.5">SAP ARTEFACTS</text>\n' +
+    '    <text x="277" y="322" text-anchor="middle" fill="#6b7694" font-size="8" font-family="IBM Plex Mono,monospace" letter-spacing="0.5">DETECTION ENGINE</text>\n' +
+    '    <text x="488" y="322" text-anchor="middle" fill="#6b7694" font-size="8" font-family="IBM Plex Mono,monospace" letter-spacing="0.5">MODULES</text>\n' +
+    '    <text x="746" y="322" text-anchor="middle" fill="#6b7694" font-size="8" font-family="IBM Plex Mono,monospace" letter-spacing="0.5">FINDINGS &amp; EXPORTS</text>\n' +
+    '    <text x="450" y="334" text-anchor="middle" fill="rgba(70,137,255,0.4)" font-size="8" font-family="IBM Plex Mono,monospace" letter-spacing="0.8">IBM SSO &bull; MFA &bull; NO SERVER &bull; WCAG 2.1 AA &bull; SESSION-ONLY STORAGE</text>\n' +
+    '    <defs>\n' +
+    '      <marker id="a1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="rgba(70,137,255,0.7)"/></marker>\n' +
+    '      <marker id="a2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="rgba(255,107,0,0.7)"/></marker>\n' +
+    '      <marker id="a3" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="rgba(36,161,72,0.7)"/></marker>\n' +
+    '    </defs>\n' +
+    '  </svg>\n' +
+    '</div>\n\n' +
+    '<!-- ═══ MODULE SHOWCASE ═══ -->\n' +
+    '<div class="sec">\n' +
+    '  <div class="sec-hdr"><span class="sec-title">Module Showcase</span><span class="sec-badge">7 Analyzers &bull; 13 Views &bull; 39 Rules</span></div>\n' +
+    '  <div class="g3">\n' +
+    '    <div class="mod"><div class="mod-hdr" style="background:rgba(218,30,40,0.12);border-color:rgba(218,30,40,0.3);"><span class="mod-icon">&lt;/&gt;</span><span class="mod-name">ABAP CODE SCANNER</span><span class="mod-badge bc">24 Rules</span></div><div class="mod-body"><div class="fr fr-c">CRITICAL &bull; AUTH-001: No AUTHORITY-CHECK before INSERT</div><div class="fr fr-h">HIGH &bull; AUTH-002: SY-SUBRC not evaluated</div><div class="fr fr-m">MEDIUM &bull; AUTH-005: Hardcoded field value</div><div style="margin-top:8px;font-size:10px;color:#6b7694;">Upload .abap / .txt &bull; Drag &amp; drop &bull; 20-field finding cards &bull; Before/after diff &bull; CSV export</div></div></div>\n' +
+    '    <div class="mod"><div class="mod-hdr" style="background:rgba(70,137,255,0.12);border-color:rgba(70,137,255,0.3);"><span class="mod-icon">&#8984;</span><span class="mod-name">T-CODE ANALYZER</span><span class="mod-badge bi">80,802</span></div><div class="mod-body"><div style="font-family:var(--fm);font-size:10px;background:rgba(70,137,255,0.07);border:1px solid rgba(70,137,255,0.18);border-radius:4px;padding:5px 9px;margin-bottom:8px;color:#b0b8cc;">&#128269; ME22N / FB01 / VA01&hellip;</div><div style="font-size:10px;color:#6b7694;">M_BEST_EKO &bull; EKORG &bull; ACTVT &bull; SAP-Active<br>M_BEST_WRK &bull; WERKS &bull; ACTVT &bull; SAP-Proposed<br>Live search &bull; Batch 200 T-Codes &bull; CSV export</div></div></div>\n' +
+    '    <div class="mod"><div class="mod-hdr" style="background:rgba(255,107,0,0.12);border-color:rgba(255,107,0,0.3);"><span class="mod-icon">&#11041;</span><span class="mod-name">COVERAGE CHECKER</span><span class="mod-badge bh">15 Rules</span></div><div class="mod-body"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><div style="font-family:var(--fc);font-size:24px;font-weight:700;color:#ff6b00;">70</div><div style="font-size:10px;color:#6b7694;">11-Dimension<br>Coverage Score</div></div><div style="font-size:10px;color:#6b7694;">CREATE: &#10007; Missing &bull; READ: Partial &bull; UPDATE: &#10007; Missing &bull; DELETE: &#10003; Covered<br>10 tabs &bull; Call graph &bull; Test planner &bull; 13 report types</div></div></div>\n' +
+    '    <div class="mod"><div class="mod-hdr" style="background:rgba(19,136,8,0.10);border-color:rgba(19,136,8,0.3);"><span class="mod-icon">&#8853;</span><span class="mod-name">SU24 / SU25 ANALYSIS</span><span class="mod-badge bg2">4 Tabs</span></div><div class="mod-body"><div style="font-size:10px;color:#6b7694;">SU24 Proposals &bull; SU25 Upgrade Impact<br>PFCG Alignment &bull; SU53 / STAUTHTRACE Interpreter<br>SAP-Delivered &bull; Trace-Derived &bull; Inferred proposals</div></div></div>\n' +
+    '    <div class="mod"><div class="mod-hdr" style="background:rgba(218,30,40,0.10);border-color:rgba(218,30,40,0.25);"><span class="mod-icon">&#10021;</span><span class="mod-name">ODATA SERVICE ANALYZER</span><span class="mod-badge bc">Critical</span></div><div class="mod-body"><div class="fr fr-c" style="font-size:10px;padding:4px 8px;">CREATE_ENTITY: No AUTHORITY-CHECK (AUTH-COV-001)</div><div class="fr fr-c" style="font-size:10px;padding:4px 8px;">UPDATE_ENTITY: No AUTHORITY-CHECK (AUTH-COV-002)</div><div style="font-size:10px;color:#6b7694;margin-top:6px;">V2 / V4 &bull; DPC_EXT &bull; /IWBEP/ &bull; /IWFND/ &bull; SICF</div></div></div>\n' +
+    '    <div class="mod"><div class="mod-hdr" style="background:rgba(70,137,255,0.10);border-color:rgba(70,137,255,0.25);"><span class="mod-icon">&#9873;</span><span class="mod-name">AUDIT EVIDENCE</span><span class="mod-badge bi">4 Formats</span></div><div class="mod-body"><div style="font-size:10px;color:#6b7694;">&#128202; CSV (Excel-compatible)<br>{} JSON package<br>&#128438; Printable HTML report<br>&#128230; Full Audit Package (all formats)<br>Auto-logged: LOGIN &bull; SCAN &bull; EXPORT events</div></div></div>\n' +
+    '  </div>\n' +
+    '</div>\n\n' +
+    '<!-- ═══ RULE ENGINE ═══ -->\n' +
+    '<div class="sec">\n' +
+    '  <div class="sec-hdr"><span class="sec-title">Rule Engine &mdash; 39 Detection Rules</span><span class="sec-badge">Version-Aware &bull; Confidence Scoring</span></div>\n' +
+    '  <div class="g2">\n' +
+    '    <div class="card"><div class="card-hdr"><span class="card-title">AUTH-001 through AUTH-024 &mdash; ABAP Static Analysis</span></div><div class="card-body">\n' +
+    '      <table class="rt"><thead><tr><th>Rule ID</th><th>Detection</th><th>Severity</th></tr></thead><tbody>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">AUTH-001</td><td>Missing AUTHORITY-CHECK before sensitive operation</td><td style="color:#da1e28;">CRITICAL</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">AUTH-002</td><td>SY-SUBRC not evaluated after check</td><td style="color:#da1e28;">CRITICAL</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">AUTH-003</td><td>Authorization check performed after database read</td><td style="color:#ff832b;">HIGH</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">AUTH-004</td><td>Wildcard or blank field value (unrestricted access)</td><td style="color:#ff832b;">HIGH</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">AUTH-005</td><td>Hardcoded authorization field value</td><td style="color:#f1c21b;">MEDIUM</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">AUTH-006</td><td>Unreachable or dead authorization check</td><td style="color:#ff832b;">HIGH</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">AUTH-007</td><td>Missing org-level field restriction</td><td style="color:#ff832b;">HIGH</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">AUTH-008</td><td>Debug / bypass pattern detected</td><td style="color:#da1e28;">CRITICAL</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">AUTH-009</td><td>RFC-enabled FM without S_RFC check</td><td style="color:#ff832b;">HIGH</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">AUTH-010</td><td>OData DPC_EXT unprotected operation</td><td style="color:#da1e28;">CRITICAL</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">AUTH-011</td><td>Inconsistent CRUD check coverage</td><td style="color:#f1c21b;">MEDIUM</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">AUTH-012+</td><td>Dynamic objects, loop gaps, BAdI, dangerous S_* usage</td><td style="color:#78a9ff;">INFO-MED</td></tr>\n' +
+    '      </tbody></table>\n' +
+    '    </div></div>\n' +
+    '    <div class="card"><div class="card-hdr"><span class="card-title">AUTH-COV-001 through AUTH-COV-015 &mdash; DPC_EXT Coverage</span></div><div class="card-body">\n' +
+    '      <table class="rt"><thead><tr><th>Rule ID</th><th>Detection</th><th>Severity</th></tr></thead><tbody>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">COV-001</td><td>Missing AUTHORITY-CHECK in CREATE_ENTITY</td><td style="color:#da1e28;">CRITICAL</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">COV-002</td><td>Missing AUTHORITY-CHECK in UPDATE_ENTITY</td><td style="color:#da1e28;">CRITICAL</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">COV-003</td><td>Missing AUTHORITY-CHECK in DELETE_ENTITY</td><td style="color:#da1e28;">CRITICAL</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">COV-004</td><td>Missing AUTHORITY-CHECK in GET_ENTITY (read)</td><td style="color:#ff832b;">HIGH</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">COV-005</td><td>Missing AUTHORITY-CHECK in GET_ENTITYSET (query)</td><td style="color:#ff832b;">HIGH</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">COV-006</td><td>EXECUTE (FunctionImport) handler unprotected</td><td style="color:#da1e28;">CRITICAL</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">COV-007</td><td>SY-SUBRC not evaluated after DPC_EXT check</td><td style="color:#ff832b;">HIGH</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">COV-008</td><td>Auth delegated to helper, not verified on return</td><td style="color:#f1c21b;">MEDIUM</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">COV-009</td><td>$batch operation method has no authority check</td><td style="color:#ff832b;">HIGH</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">COV-010</td><td>Mass-read QUERY bypasses per-record auth</td><td style="color:#f1c21b;">MEDIUM</td></tr>\n' +
+    '        <tr><td style="font-family:var(--fm);color:#78a9ff;">COV-011+</td><td>Hardcoded values, dynamic objects, $expand, post-read</td><td style="color:#f1c21b;">LOW-MED</td></tr>\n' +
+    '      </tbody></table>\n' +
+    '    </div></div>\n' +
+    '  </div>\n' +
+    '</div>\n\n' +
+    '<!-- ═══ PLATFORM MATRIX ═══ -->\n' +
+    '<div class="sec">\n' +
+    '  <div class="sec-hdr"><span class="sec-title">Supported SAP Platform Matrix</span></div>\n' +
+    '  <div class="card"><div class="card-body" style="padding:0;overflow-x:auto;">\n' +
+    '    <table class="matrix">\n' +
+    '      <thead><tr><th style="text-align:left;">Platform</th><th>Versions</th><th>ABAP Scan</th><th>Fiori</th><th>OData</th><th>SU24</th><th>Coverage</th></tr></thead>\n' +
+    '      <tbody>\n' +
+    '        <tr><td style="text-align:left;color:var(--chrome-2);">SAP S/4HANA On-Premise</td><td>1809, 1909, 2020, 2021, 2022, 2023</td><td class="covered">&#10003;</td><td class="covered">&#10003;</td><td class="covered">&#10003;</td><td class="covered">&#10003;</td><td class="covered">&#10003;</td></tr>\n' +
+    '        <tr><td style="text-align:left;color:var(--chrome-2);">SAP S/4HANA Private Edition</td><td>2021, 2022, 2023</td><td class="covered">&#10003;</td><td class="covered">&#10003;</td><td class="covered">&#10003;</td><td class="covered">&#10003;</td><td class="covered">&#10003;</td></tr>\n' +
+    '        <tr><td style="text-align:left;color:var(--chrome-2);">SAP ECC 6.0</td><td>EhP4 &ndash; EhP8</td><td class="covered">&#10003;</td><td class="partial">Partial</td><td class="partial">Partial</td><td class="covered">&#10003;</td><td class="partial">Partial</td></tr>\n' +
+    '        <tr><td style="text-align:left;color:var(--chrome-2);">SAP BW/4HANA</td><td>2.0</td><td class="covered">&#10003;</td><td class="partial">Partial</td><td class="partial">Partial</td><td class="covered">&#10003;</td><td class="covered">&#10003;</td></tr>\n' +
+    '        <tr><td style="text-align:left;color:var(--chrome-2);">SAP BW (NetWeaver)</td><td>7.4, 7.5</td><td class="covered">&#10003;</td><td class="missing">&mdash;</td><td class="partial">Partial</td><td class="covered">&#10003;</td><td class="partial">Partial</td></tr>\n' +
+    '        <tr><td style="text-align:left;color:var(--chrome-2);">SAP NetWeaver ABAP</td><td>7.40 &ndash; 7.57</td><td class="covered">&#10003;</td><td class="missing">&mdash;</td><td class="partial">Partial</td><td class="covered">&#10003;</td><td class="partial">Partial</td></tr>\n' +
+    '      </tbody>\n' +
+    '    </table>\n' +
+    '  </div></div>\n' +
+    '</div>\n\n' +
+    '<!-- ═══ SECURITY PRINCIPLES ═══ -->\n' +
+    '<div class="sec">\n' +
+    '  <div class="sec-hdr"><span class="sec-title">Security &amp; Compliance Principles</span></div>\n' +
+    '  <div class="g2">\n' +
+    '    <div style="display:flex;flex-direction:column;gap:12px;">\n' +
+    '      <div style="display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;">\n' +
+    '        <div style="font-size:22px;flex-shrink:0;">&#128269;</div><div><div style="font-family:var(--fc);font-size:13px;font-weight:700;color:#78a9ff;margin-bottom:3px;">Evidence-Based</div><div style="font-size:12px;color:var(--chrome-2);line-height:1.6;">Every finding cites the exact source statement, line number, and detection rule. Inferred values clearly labelled.</div></div>\n' +
+    '      </div>\n' +
+    '      <div style="display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;">\n' +
+    '        <div style="font-size:22px;flex-shrink:0;">&#128100;</div><div><div style="font-family:var(--fc);font-size:13px;font-weight:700;color:#ff6b00;margin-bottom:3px;">Human-in-the-Loop</div><div style="font-size:12px;color:var(--chrome-2);line-height:1.6;">No automated SAP changes. Every correction requires SAP Security approval. Tool assists, does not replace, human judgment.</div></div>\n' +
+    '      </div>\n' +
+    '    </div>\n' +
+    '    <div style="display:flex;flex-direction:column;gap:12px;">\n' +
+    '      <div style="display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;">\n' +
+    '        <div style="font-size:22px;flex-shrink:0;">&#127981;</div><div><div style="font-family:var(--fc);font-size:13px;font-weight:700;color:#42be65;margin-bottom:3px;">Clean Core Aligned</div><div style="font-size:12px;color:var(--chrome-2);line-height:1.6;">Remediation follows SAP Clean Core: released APIs, extension points, no standard modifications, upgrade-stable patterns.</div></div>\n' +
+    '      </div>\n' +
+    '      <div style="display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;">\n' +
+    '        <div style="font-size:22px;flex-shrink:0;">&#128274;</div><div><div style="font-family:var(--fc);font-size:13px;font-weight:700;color:#4589ff;margin-bottom:3px;">Zero External Persistence</div><div style="font-size:12px;color:var(--chrome-2);line-height:1.6;">Session-only storage. No external server. IBM enterprise SSO + MFA. WCAG 2.1 AA. Single-file HTML, no installation.</div></div>\n' +
+    '      </div>\n' +
+    '    </div>\n' +
+    '  </div>\n' +
+    '</div>\n\n' +
+    '<!-- ═══ RELEASE HISTORY ═══ -->\n' +
+    '<div class="sec">\n' +
+    '  <div class="sec-hdr"><span class="sec-title">Release History</span></div>\n' +
+    '  <div class="card"><div class="card-body" style="padding:0;">\n' +
+    '    <table class="rt"><thead><tr><th>Version</th><th>Date</th><th>Key Changes</th></tr></thead><tbody>\n' +
+    '      <tr><td style="font-family:var(--fm);color:#78a9ff;">2.1</td><td>' + ts + '</td><td>Coverage Checker (10 tabs, AUTH-COV-001&ndash;015), About Tool infographic &amp; marketing one-pager, cinematic login UI, 39 total rules</td></tr>\n' +
+    '      <tr><td style="font-family:var(--fm);color:#78a9ff;">2.0</td><td>Aug 2026</td><td>Full IBM enterprise UI, 7 analyzer modules, SU53 interpreter, OData V4, Clean Core flags, audit export, 80,802 T-Code DB</td></tr>\n' +
+    '      <tr><td style="font-family:var(--fm);color:#78a9ff;">1.0</td><td>Jul 2026</td><td>Initial release: ABAP scanner, SU24 analysis, OData V2, chat interface, IBM BOB + ICA + MCP Gateway</td></tr>\n' +
+    '    </tbody></table>\n' +
+    '  </div></div>\n' +
+    '</div>\n\n' +
+    '<!-- ═══ FOOTER ═══ -->\n' +
+    '<div class="footer">\n' +
+    '  <div style="display:flex;align-items:center;gap:14px;">\n' +
+    '    <div class="ibm-wm">IBM</div>\n' +
+    '    <div style="display:flex;flex-direction:column;gap:2px;">\n' +
+    '      <div style="font-weight:600;color:#b0b8cc;">UM_Authority-Check-Analyzer v2.1</div>\n' +
+    '      <div>IBM SAP Security Practice &bull; &copy; 2026 IBM Corporation &bull; IBM Proprietary</div>\n' +
+    '    </div>\n' +
+    '  </div>\n' +
+    '  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">\n' +
+    '    <div class="tricolor"><div class="tc-s"></div><div class="tc-w"></div><div class="tc-g"></div></div>\n' +
+    '    <div>&#128279; <a href="https://ica-bob.github.io/UM_Authority-Check-Analyzer/" style="color:#78a9ff;">ica-bob.github.io/UM_Authority-Check-Analyzer</a></div>\n' +
+    '    <div>Generated: ' + ts + ' &bull; All findings require human review before SAP changes</div>\n' +
+    '  </div>\n' +
+    '</div>\n\n' +
+    '</div><!-- end .page -->\n</body>\n</html>';
+  downloadBlob(html, 'text/html', 'UM_Authority-Check-Analyzer_Marketing_OnePager.html');
 }
 </script>
